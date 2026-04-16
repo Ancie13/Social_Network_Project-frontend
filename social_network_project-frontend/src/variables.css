@@ -1,0 +1,22 @@
+:root
+{
+    --bg-color: #121313;
+    --card-color: #171819;
+    --primary-color: #5100cb;
+    --primary-color-hover: #4900b8;
+    --primary-color-active: #4300a8;
+    --text-color: #ffffff;
+    --secondary-text: #aaaaaa;
+    --input-bg-color: #181a1b;
+    --border-color: #363a3c;
+    --race-color: #ffffff;
+}
+
+/* .dark-theme
+{
+    --bg-color: #121313;
+    --card-color: #171819;
+    --input-bg-color: #181a1b;
+    --text-color: #ffffff;
+    --secondary-text: #aaaaaa;
+} */
