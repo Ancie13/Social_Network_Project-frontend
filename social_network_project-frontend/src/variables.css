@@ -9,7 +9,8 @@
     --secondary-text: #aaaaaa;
     --input-bg-color: #181a1b;
     --border-color: #363a3c;
-    --race-color: #ffffff;
+    --race-color: #3bff5e;
+    --header-offset: 10vh;
 }
 
 /* .dark-theme
@@ -20,3 +21,16 @@
     --text-color: #ffffff;
     --secondary-text: #aaaaaa;
 } */
+
+.light-theme
+{
+    --bg-color: #f5f6f8;
+    --card-color: #ffffff;
+    --primary-color: #5100cb;
+    --primary-color-hover: #6a2cff;
+    --primary-color-active: #4300a8;
+    --text-color: #111111;
+    --secondary-text: #555555;
+    --input-bg-color: #ffffff;
+    --border-color: #d0d0d0;
+}

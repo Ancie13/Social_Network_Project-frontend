@@ -1,0 +1,63 @@
+.footer
+{
+    width: 100%;
+    background-color: var(--card-color);
+    border-top: 1px solid var(--border-color);
+    margin-top: 50px;
+    padding: 20px 0;
+}
+
+.footerContent
+{
+    width: 80%;
+    margin: 0 auto;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footerLeft
+{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.footerTitle
+{
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.footerText
+{
+    color: var(--secondary-text);
+    font-size: 14px;
+}
+
+.footerCenter
+{
+    display: flex;
+    gap: 20px;
+}
+
+.footerLink
+{
+    color: var(--secondary-text);
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.footerLink:hover
+{
+    color: var(--primary-color);
+}
+
+.footerRight
+{
+    color: var(--secondary-text);
+    font-size: 14px;
+}

@@ -1,0 +1,46 @@
+.themeBtn
+{
+    width: 44px !important;
+    height: 44px !important;
+
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50% !important;
+
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color) !important;
+}
+
+.themeBtn svg
+{
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.themeBtn.dark
+{
+    background-color: var(--card-color) !important;
+    color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(81, 0, 203, 0.25);
+}
+
+.themeBtn.dark:hover
+{
+    border-color: var(--primary-color-hover) !important;
+    box-shadow: 0 0 15px rgba(81, 0, 203, 0.4);
+}
+
+.themeBtn.light
+{
+    background-color: #ffffff !important;
+    color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(81, 0, 203, 0.15);
+}
+
+.themeBtn.light:hover
+{
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 15px rgba(81, 0, 203, 0.35);
+}

@@ -1,0 +1,73 @@
+
+.homeContainer
+{
+    width: 100%;
+    max-width: 1200px;
+    height: auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 20px;
+    margin-left: 20vh;
+}
+
+.postsConteiner
+{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    align-items: center;
+}
+
+.postCard
+{
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+
+    background-color: var(--card-color);
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+.menuContainer
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 200px;
+    transition: transform 0.3s ease;
+
+    position: sticky;
+    top: var(--header-offset);
+}
+
+.menuItem
+{
+    text-align: left;
+    transition: all 0.25s ease;
+    background: transparent !important;
+    color: var(--secondary-text);
+    border: 1px solid var(--border-color);
+}
+
+.menuItem:hover
+{
+    transform: translateX(3px);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.menuItem.active
+{
+    transform: scale(1.08) translateX(10px);
+    background: var(--primary-color) !important;
+    color: #000 !important;
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    z-index: 2;
+}
+

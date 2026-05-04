@@ -1,0 +1,89 @@
+.searchModal .ant-modal-content
+{
+    background-color: var(--card-color) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px;
+    padding: 16px;
+    
+}
+
+.ant-modal .ant-modal-container 
+{
+  min-width: 400px;
+  min-height: 80vh;
+}
+
+
+.searchModal .ant-modal-body
+{
+    padding: 0 !important;
+}
+
+.searchInput
+{
+    margin-bottom: 15px;
+    background-color: var(--input-bg-color) !important;
+    border: 1px solid var(--border-color) !important;
+    max-width: 95%;
+}
+
+.ant-input
+{
+    color: var(--text-color) !important;
+}
+
+.searchResults
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.userRow
+{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-direction: column;
+
+    padding: 10px 12px;
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.userRow:hover
+{
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.avatarBlock
+{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.nickname
+{
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 23px;
+    line-height: 1.2;
+}
+
+.login
+{
+    color: var(--secondary-text);
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+.emptyState
+{
+    padding: 20px;
+    text-align: center;
+    color: var(--secondary-text);
+    font-size: 14px;
+}

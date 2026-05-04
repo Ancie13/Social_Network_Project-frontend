@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./AdditioanlInfoStyle.css";
 import { Button, Form, Input, Progress } from "antd";
 import { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 
 export default function AdditionalInfoPage() {
+    const navigate = useNavigate();
     const [current, setCurrent] = useState(1);
     const total = 4;
     const [selectedRace, setSelectedRace] = useState<number | null>(null);
@@ -73,7 +74,7 @@ export default function AdditionalInfoPage() {
         }
         else
         {
-            return <><Link to="/mainPage"></Link></>
+            navigate("/main");
         }
     };
 
