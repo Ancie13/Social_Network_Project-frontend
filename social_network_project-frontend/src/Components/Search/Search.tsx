@@ -1,7 +1,7 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { Avatar, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
-import logo from "../../assets/logo_holder.webp";
+import logo from "../../assets/logo_holder.png";
 import "./SearchStyle.css";
 
 export default function SearchModal({ open, onClose })

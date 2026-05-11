@@ -74,7 +74,7 @@ export default function AdditionalInfoPage() {
         }
         else
         {
-            navigate("/main");
+            navigate("/home");
         }
     };
 

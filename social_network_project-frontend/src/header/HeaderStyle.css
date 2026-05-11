@@ -73,10 +73,10 @@
 
 .tabText
 {
-    color: var(--primary-color) !important;
+    color: var(--text-color) !important;
 }
 
-.tabText:hover
+.tabText:active
 {
     color: var(--primary-color) !important;
 }
@@ -215,3 +215,39 @@
     opacity: 0.75;
     color: var(--text-color) !important;
 }
+
+/* AddPostBtn______________________________________________________________________ */
+.profileBtnsGroup
+{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.addPostBtn
+{
+    width: 40px !important;
+    height: 40px !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: transparent !important;
+    border: 2px solid var(--border-color) !important;
+
+    transition: all 0.2s ease;
+}
+
+.addPostBtn:hover
+{
+    /* background-color: var(--) !important; */
+    transform: scale(1.05);
+}
+
+.addPostBtn:active
+{
+    /* background-color: var(--primary-color-active) !important; */
+    transform: scale(0.98);
+}
+

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import "./LoginStyle.css";
 import { Button, Form, Input } from "antd";
-import logo from "../assets/logo_holder.webp";
+import logo from "../assets/logo_holder.png";
 import preview from "../assets/Preview.webp";
 
 export default function LoginPage() {
@@ -10,7 +10,7 @@ export default function LoginPage() {
         <div className="loginWrapper">
             <img src={logo} alt="logo" className="logo" />
             <div className="previewBox">
-                <span>Enjoy speaking in NAME with your friends!</span>
+                <span>Enjoy speaking in EtherLink with your friends!</span>
                 <img src={preview} alt="preview" className="preview" />
             </div>
             

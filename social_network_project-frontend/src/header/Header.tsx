@@ -1,5 +1,5 @@
 import "./HeaderStyle.css";
-import logo from "../assets/logo_holder.webp";
+import logo from "../assets/logo_holder.png";
 import { Avatar, Button, Input, Tabs } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -9,13 +9,14 @@ import {
     LikeOutlined,
     MessageFilled,
     MessageOutlined,
+    PlusOutlined,
     StarFilled,
     StarOutlined,
 } from "@ant-design/icons";
 import ThemeToggle from "../Components/Theme/ThemeToggle";
 import { Link, useLocation } from "react-router-dom";
 
-export default function Header({ onOpenSearch })
+export default function Header({ onOpenSearch, onOpenAddPost })
 {
     const location = useLocation();
 
@@ -133,20 +134,29 @@ export default function Header({ onOpenSearch })
                         activeKey={activeTab}
                     />
                 </div>
-
-                <Link to="/profile">
+                <div className="profileBtnsGroup">
                     <Button
-                        className="profileBtn"
-                        type="text"
-                    >
-                        <Avatar
-                            size={40}
-                            src={logo}
-                        />
-                        <div className="profileText">Profile</div>
-                        
-                    </Button>
-                </Link>
+                        className="addPostBtn"
+                        type="primary"
+                        shape="circle"
+                        icon={<PlusOutlined />}
+                        onClick={onOpenAddPost}
+                    />
+                    <Link to="/profile">
+                        <Button
+                            className="profileBtn"
+                            type="text"
+                        >
+                            <Avatar
+                                size={40}
+                                src={logo}
+                            />
+                            <div className="profileText">Profile</div>
+                            
+                        </Button>
+                    </Link>
+                </div>
+                
                 
 
             </div>
