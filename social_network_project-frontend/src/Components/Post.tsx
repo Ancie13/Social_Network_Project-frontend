@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Input } from "antd";
+import { Button, Input, Tag } from "antd";
 import {
     LikeOutlined,
     LikeFilled,
@@ -18,13 +18,21 @@ type Comment = {
     text: string;
 };
 
+type TagType = {
+    id: number;
+    name: string;
+    color: string;
+};
+
 type PostProps = {
     id: number;
     text: string;
     image?: string | null;
+    description?: string;
+    tags: TagType[];
 };
 
-export default function Post({ text, image }: PostProps)
+export default function Post({ text, image, description, tags }: PostProps)
 {
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
@@ -60,7 +68,20 @@ export default function Post({ text, image }: PostProps)
 
             <div className="postText">{text}</div>
 
+            <div className="tagsBox">
+                {tags.map((tag, index) => (
+                    <Tag
+                        key={tag.id}
+                        className="customTag"
+                        style={{ "--interest-color": tag.color } as React.CSSProperties}
+                    >{tag.name}</Tag>
+                ))}
+            </div>
+            
+
             {image && <img className="postImage" src={image} />}
+
+            {description && <div className="postDesc">{description}</div>}
 
             <div className="postActions">
 

@@ -40,11 +40,9 @@ export default function LoginPage() {
 
                 <div className="loginFooter">
                     No account?{" "}
-                    <a href="#" className="loginLink">
-                        <Link to="/registration">
-                            Create one
-                        </Link>
-                    </a>
+                    <Link to="/registration" className="loginLink">
+                        Create one
+                    </Link>
                 </div>
             </div>
         </div>

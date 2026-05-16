@@ -74,9 +74,9 @@ export default function ProfilePage()
 
             <div className="postsConteiner">
 
-                <Post id={1} text="Test post 1" image={preview} />
-                <Post id={2} text="Second post without image" />
-                <Post id={3} text="Test post 3" image={preview} />
+                <Post id={1} text="Test post 1" image={preview} description="" tags={[]} />
+                <Post id={2} text="Second post without image" description="" tags={[]} />
+                <Post id={3} text="Test post 3" image={preview} description="" tags={[]} />
 
             </div>
 

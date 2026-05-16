@@ -30,7 +30,7 @@ export default function MainPage() {
         />
         <AddPost
             open={IsAddPostOpen}
-            onClose={() => setIsAddPostOpen(false)}
+            onClose={() => setIsAddPostOpen(false )}
         />
     </>
 }

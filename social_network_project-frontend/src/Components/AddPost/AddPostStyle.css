@@ -11,6 +11,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    max-height: 80vh;
 }
 
 .postInput
@@ -82,6 +83,14 @@
     background-color: var(--primary-color-active) !important;
 }
 
+.createPostBtnContainer
+{
+    display: flex;
+    align-items: flex-end;
+    margin-top: auto;
+    padding-top: 16px;
+}
+
 /* Errors_________________________________________________________________________ */
 .formField
 {
@@ -121,12 +130,18 @@
 
 
 /* Drag&Drop ____________________________________________________________________________*/
+.ant-upload-wrapper .ant-upload-drag
+{
+    max-height: 17vh !important;
+}
+
 .uploadDragger
 {
     background-color: var(--input-bg-color) !important;
     border: 1px dashed var(--border-color) !important;
     border-radius: 10px;
 
+    
     transition: all 0.2s ease;
 }
 
@@ -171,6 +186,7 @@
     width: 100%;
     border-radius: 10px;
     object-fit: cover;
+    max-height: 20vh;
 }
 
 .removeImageBtn

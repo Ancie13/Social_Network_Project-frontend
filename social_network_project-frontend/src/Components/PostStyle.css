@@ -1,7 +1,6 @@
 .postContainer
 {
-    width: 100%;
-    max-width: 50vh;
+    width: 25vw;
     background: var(--card-color);
     border: 1px solid var(--border-color);
     border-radius: 12px;
@@ -13,6 +12,14 @@
 {
     color: var(--text-color);
     margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.postDesc
+{
+    color: var(--secondary-text);
+    margin-top: 10px;
+    font-size: 15px;
 }
 
 .postImage
@@ -20,6 +27,7 @@
     width: 100%;
     border-radius: 10px;
     margin-bottom: 10px;
+    height: 65%;
 }
 
 .postActions
@@ -67,6 +75,36 @@
 {
     color: var(--primary-color) !important;
     font-size: 18px;
+}
+
+.customTag
+{
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: color-mix(in srgb, var(--interest-color) 20%, transparent);
+    color: var(--interest-color);
+
+    height: 30px;
+    width: auto;
+
+    font-size: 13px;
+
+    backdrop-filter: blur(4px);
+}
+
+.tagsBox
+{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: row;
+
+    gap: 3px;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 /*  quickEmojis_____________________________________________________________________*/

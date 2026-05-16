@@ -4,6 +4,7 @@ import { InboxOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
 import Dragger from "antd/es/upload/Dragger";
+import { AddPostApi } from "../../api/userApi";
 
 export default function AddPost({ open, onClose })
 {
@@ -12,6 +13,14 @@ export default function AddPost({ open, onClose })
     const [SelectedTags, setSelectedTags] = useState([]);
     const [Visibility, setVisibility] = useState("public");
     const [Image, setImage] = useState(null);
+
+    // const [data, setData] = useState({
+    //     UserId: "",
+    //     Title: "",
+    //     PostImage: null as File | null,
+    //     Bio: "",
+    //     Interests: [] as number[]
+    // });
 
     const [Errors, setErrors] = useState({
         title: "",
@@ -49,11 +58,11 @@ export default function AddPost({ open, onClose })
             setSelectedTags([...SelectedTags, tag]);
     };
 
-    const handleSubmit = () =>
+    const handleSubmit = async () =>
     {
         let newErrors = {
-        title: "",
-        tags: ""
+            title: "",
+            tags: ""
         };
 
         if (!Title.trim())
@@ -67,8 +76,42 @@ export default function AddPost({ open, onClose })
         if (newErrors.title || newErrors.tags)
             return;
 
+        
+        const payload = {
+            UserId: "UserId",
+            Title: Title,
+            PostImage: Image,
+            Bio: Description,
+            Interests: SelectedTags
+        };
+
+        try
+        {
+            await AddPostApi(payload);
+        }
+            catch(error)
+        {
+            console.log(error);
+        }
+
         console.log({ Title, Description, SelectedTags, Visibility, Image });
+
+        resetForm();
         onClose();
+    };
+
+    const resetForm = () =>
+    {
+        setTitle("");
+        setDescription("");
+        setSelectedTags([]);
+        setVisibility("public");
+        setImage(null);
+
+        setErrors({
+            title: "",
+            tags: ""
+        });
     };
 
     return <>
@@ -177,14 +220,17 @@ export default function AddPost({ open, onClose })
                     <Radio value="race">Only my race</Radio>
                 </Radio.Group>
 
-                <Button
-                    className="createPostBtn"
-                    type="primary"
-                    block
-                    onClick={handleSubmit}
-                >
-                    Create Post
-                </Button>
+                <div className="createPostBtnContainer">
+                    <Button
+                        className="createPostBtn"
+                        type="primary"
+                        block
+                        onClick={handleSubmit}
+                    >
+                        Create Post
+                    </Button>
+                </div>
+                
 
             </div>
 
