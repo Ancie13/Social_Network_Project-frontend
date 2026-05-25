@@ -7,7 +7,7 @@ export default function Footer()
             <div className="footerContent">
 
                 <div className="footerLeft">
-                    <span className="footerTitle">Your Social Network</span>
+                    <span className="footerTitle">EtherLink</span>
                     <span className="footerText">© 2026 All rights reserved</span>
                 </div>
 

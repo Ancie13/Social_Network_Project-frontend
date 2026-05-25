@@ -1,11 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./LoginStyle.css";
 import { Button, Form, Input } from "antd";
 import logo from "../assets/logo_holder.png";
 import preview from "../assets/Preview.webp";
+import Base64 from "../shared/Base64";
+import { SignIn } from "../api/userApi";
 
 export default function LoginPage() {
-
+    const navigate = useNavigate();
+    
     return <>
         <div className="loginWrapper">
             <img src={logo} alt="logo" className="logo" />
@@ -17,7 +20,21 @@ export default function LoginPage() {
 
             <div className="loginContainer">
                 <h2 className="loginTitle">Sign in</h2>
-                <Form>
+                <Form
+                    onFinish={async (values) => {
+                        const data = "Basic " + Base64.encode(values.login + ":" + values.password);
+                        // "Basic " + Base64Password
+                        console.log(data);
+                        try {
+                            SignIn(data)
+                            navigate("/home");
+                        }
+                        catch(e)
+                        {
+                            console.log(e.message);
+                        }
+                    }} 
+                >
                     <Form.Item name="login" rules={[{ required: true, message: "Enter login" }]}>
                         <Input className="loginInput" placeholder="Login" size="large" />
                     </Form.Item>
@@ -28,6 +45,7 @@ export default function LoginPage() {
 
                     <Form.Item>
                         <Button
+                            htmlType="submit"
                             className="loginButton"
                             type="primary"
                             block

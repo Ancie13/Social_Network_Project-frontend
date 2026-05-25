@@ -1,0 +1,188 @@
+.postModal .ant-modal-content
+{
+    padding: 0;
+    overflow: hidden;
+    border-radius: 20px;
+    height: 80vh;
+}
+
+.modalContent
+{
+    display: flex;
+    height: 77vh;
+}
+
+.leftSide
+{
+    width: 65%;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 13px 0px 0px 13px;
+    background: #111;
+}
+
+.postTitle
+{
+    margin-bottom: 10px;
+    color: white;
+}
+
+.modalTags
+{
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.modalTag
+{
+    border: none;
+    background:
+    color-mix(
+        in srgb,
+        var(--interest-color) 30%,
+        transparent
+    );
+
+    color: white;
+}
+
+.modalImage
+{
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    border-radius: 15px;
+}
+
+.rightSide
+{
+    width: 35%;
+
+    display: flex;
+    flex-direction: column;
+
+    border-left: 1px solid #222;
+}
+
+.userHeader
+{
+    display: flex;
+    gap: 15px;
+
+    padding: 15px;
+
+    border-bottom: 1px solid #222;
+}
+
+.userInfo
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.nickname
+{
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.username
+{
+    color: gray;
+    cursor: pointer;
+}
+
+.username:hover
+{
+    text-decoration: underline;
+}
+
+.descriptionBox
+{
+    padding: 15px;
+    border-bottom: 1px solid #222;
+    color: var(--text-color);
+}
+
+.commentsSection
+{
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 15px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+.modalComment
+{
+    display: flex;
+    gap: 10px;
+}
+
+.userAvatar
+{
+    cursor: pointer;
+}
+
+.commentContent
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.commentUser
+{
+    font-weight: bold;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.commentUser:hover
+{
+    text-decoration: underline;
+}
+
+.commentText
+{
+    color: var(--secondary-text);
+}
+
+.commentBottom
+{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    
+
+    padding: 15px;
+
+    border-top: 1px solid #222;
+}
+
+.commentField 
+{
+    flex: 1;
+}
+
+.pickerBox
+{
+    position: absolute;
+
+    right: 20px;
+    bottom: 80px;
+
+    z-index: 1000;
+}

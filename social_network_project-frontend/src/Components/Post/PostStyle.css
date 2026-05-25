@@ -11,6 +11,7 @@
 .postText
 {
     color: var(--text-color);
+    margin-top: 7px;
     margin-bottom: 10px;
     font-size: 20px;
 }
@@ -170,4 +171,54 @@
     background-color: var(--card-color) !important;
     border: 1px solid var(--border-color);
     border-radius: 10px;
+}
+
+.epr_-tzp699
+{
+    border: 1px solid var(--border-color) !important;
+}
+
+.epr_-8623pq
+{
+    background-color: var(--card-color) !important;
+}
+
+.epr_-99lr9q
+{
+    background-color: var(--card-color) !important;
+}
+
+.userHeaderPost
+{
+    display: flex;
+    gap: 10px;
+    
+    padding-bottom: 10px;
+    border-bottom: 1px solid #222;
+}
+
+.userInfoPost
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.nicknamePost
+{
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.usernamePost
+{
+    font-size: 13px;
+    color: gray;
+    cursor: pointer;
+}
+
+.usernamePost:hover
+{
+    text-decoration: underline;
 }

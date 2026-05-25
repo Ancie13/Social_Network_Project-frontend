@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Input, Tag } from "antd";
+import { Avatar, Button, Input, Tag } from "antd";
 import {
     LikeOutlined,
     LikeFilled,
@@ -7,69 +7,82 @@ import {
     SendOutlined,
     StarFilled,
     StarOutlined,
-    CloseOutlined,
-    SmileOutlined
 } from "@ant-design/icons";
 import "./PostStyle.css";
-import EmojiPicker from "emoji-picker-react";
 
-type Comment = {
+export type Comment = {
     id: number;
     text: string;
 };
 
-type TagType = {
+export type TagType = {
     id: number;
     name: string;
     color: string;
 };
 
-type PostProps = {
+export type PostProps = {
     id: number;
     text: string;
     image?: string | null;
     description?: string;
     tags: TagType[];
+    onClick?: () => void;
 };
 
-export default function Post({ text, image, description, tags }: PostProps)
+export default function Post({ text, image, description, tags, onClick }: PostProps)
 {
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
-    const [showComments, setShowComments] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [isQuickEmojisOpen, setIsQuickEmojisOpen] = useState(false);
-    const [isPickerOpen, setIsPickerOpen] = useState(false);
 
     const quickEmojis = ["🔥", "😂", "❤️", "👍", "😢", "😀"];
     const addEmoji = (emoji: string) => {
         setCommentText(prev => prev + emoji);
     };
 
-    const [comments, setComments] = useState<Comment[]>([
-        { id: 1, text: "Nice 🔥" },
-        { id: 2, text: "Cool post!" }
-    ]);
 
     const sendComment = () =>
     {
         if (!commentText.trim()) return;
 
-        setComments(prev => [
-            ...prev,
-            { id: Date.now(), text: commentText }
-        ]);
+        // setComments(prev => [
+        //     ...prev,
+        //     { id: Date.now(), text: commentText }
+        // ]);
 
         setCommentText("");
     };
 
     return (
-        <div className="postContainer">
+        <div className="postContainer" onClick={onClick}>
+            
+            <div className="userHeaderPost">
+                <Avatar
+                    size={40}
+                >
+                    U
+                </Avatar>
+
+                <div className="userInfoPost">
+
+                    <div className="nicknamePost">
+                        User Nickname
+                    </div>
+
+                    <div className="usernamePost">
+                        @username
+                    </div>
+
+                </div>
+            </div>
+            
 
             <div className="postText">{text}</div>
 
             <div className="tagsBox">
-                {tags.map((tag, index) => (
+                {tags.map((tag) => (
                     <Tag
                         key={tag.id}
                         className="customTag"
@@ -88,34 +101,28 @@ export default function Post({ text, image, description, tags }: PostProps)
                 <Button
                     type="text"
                     icon={liked ? <LikeFilled /> : <LikeOutlined />}
-                    onClick={() => setLiked(!liked)}
+                    onClick={(e) => {
+                        setLiked(!liked);
+                        e.stopPropagation();
+                    }}
                 />
 
                 <Button
                     type="text"
                     icon={<MessageOutlined />}
-                    onClick={() => setShowComments(v => !v)}
                 />
 
                 <Button
                     type="text"
                     icon={saved ? <StarFilled/> : <StarOutlined/>}
-                    onClick={() => setSaved(!saved)}
+                    onClick={(e) => {
+                        setSaved(!saved);
+                        e.stopPropagation();
+                    }}
                 />
             </div>
 
             {/* COMMENTS */}
-            {showComments && (
-                <div className="commentsBox">
-
-                    {comments.map(c => (
-                        <div key={c.id} className="comment">
-                            {c.text}
-                        </div>
-                    ))}
-
-                </div>
-            )}
             {isQuickEmojisOpen && (
                 <div className="emojiBar">
 
@@ -123,32 +130,15 @@ export default function Post({ text, image, description, tags }: PostProps)
                     <button
                         key={i}
                         className="emojiBtn"
-                        onClick={() => addEmoji(emoji)}
+                        onClick={(e) => {
+                            addEmoji(emoji);
+                            setIsQuickEmojisOpen(false);
+                            e.stopPropagation();
+                        }}
                     >
                         {emoji}
                     </button>
                 ))}
-
-                <button
-                    className="emojiBtn pickerBtn"
-                    onClick={() => setIsPickerOpen(v => !v)}
-                >
-                    {isPickerOpen ? <CloseOutlined /> : <SmileOutlined /> }
-                </button>
-                {isPickerOpen && (
-                    <div className="emojiWrapper">
-                        <div className="emojiPicker">
-                            <EmojiPicker
-                                className="EmojiPickerReact"
-                                onEmojiClick={(emoji) => {
-                                    setCommentText(prev => prev + emoji.emoji);
-                                    setIsPickerOpen(false);
-                                }}
-                            />
-                        </div>
-                    </div>
-                    
-                )}
                 </div>
             )}
             
@@ -159,6 +149,8 @@ export default function Post({ text, image, description, tags }: PostProps)
                     placeholder="Write a comment..."
                     className="commentField"
                     onFocus={() => setIsQuickEmojisOpen(true)}
+                    onClick={(e) => e.stopPropagation()}
+                    // onBlur={() => setIsQuickEmojisOpen(false)}
                     // onBlur={() => {
                     //     setTimeout(() => setIsQuickEmojisOpen(false), 150);
                     // }}
@@ -168,7 +160,10 @@ export default function Post({ text, image, description, tags }: PostProps)
                     type="text"
                     className="sendBtn"
                     icon={<SendOutlined />}
-                    onClick={sendComment}
+                    onClick={(e) => {
+                        sendComment;
+                        e.stopPropagation();
+                    }}
                 />
             </div>
 

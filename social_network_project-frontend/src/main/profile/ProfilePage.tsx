@@ -1,7 +1,7 @@
 import "./ProfileStyle.css";
 import { Avatar, Button, Divider, Modal } from "antd";
 import logo from "../../assets/logo_holder.png";
-import Post from "../../Components/Post";
+import Post from "../../Components/Post/Post";
 import preview from "../../assets/Preview.webp";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import { useState } from "react";

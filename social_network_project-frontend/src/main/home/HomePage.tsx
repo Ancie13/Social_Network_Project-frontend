@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import "./HomeStyle.css";
 import { Button } from "antd";
-import Post from "../../Components/Post";
+import Post, { type PostProps } from "../../Components/Post/Post";
 import { GetPostsHome } from "../../api/userApi";
+import PostModal from "../../Components/Post/PostModal";
 
 
 export default function HomeContent() 
 {
     const [active, setActive] = useState<"first" | "second">("first");
     const [posts, setPosts] = useState<any[]>([]);
+    const [selectedPost, setSelectedPost] = useState<PostProps | null>(null);
+    const [openModal, setOpenModal] = useState(false);
 
     const Posts = () => {
         
@@ -32,13 +35,40 @@ export default function HomeContent()
             <>
                 {posts.map((post, index) => (
                     <Post
+                        key={post.id}
                         id={post.id}
                         text={post.title}
                         image={post.imageUrl}
                         description={post.bio}
                         tags={post.interests}
+                        onClick={() =>
+                        {
+                            setSelectedPost({
+                                id: post.id,
+                                text: post.title,
+                                image: post.imageUrl,
+                                description: post.bio,
+                                tags: post.interests
+                            });
+
+                            setOpenModal(true);
+                        }}
                     />
                 ))}
+                {selectedPost && (
+                    <PostModal
+                        open={openModal}
+                        onClose={() =>
+                        {
+                            setOpenModal(false);
+                            setSelectedPost(null);
+                        }}
+                        text={selectedPost.text}
+                        image={selectedPost.image}
+                        description={selectedPost.description}
+                        tags={selectedPost.tags}
+                    />
+                )}
             </>
         );
     };

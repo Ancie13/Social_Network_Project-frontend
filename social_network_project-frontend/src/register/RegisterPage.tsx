@@ -4,28 +4,10 @@ import { Button, Form, Input } from "antd";
 import logo from "../assets/logo_holder.png";
 import preview from "../assets/Preview.webp";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import Base64 from "../shared/Base64";
 
 export default function RegisterPage() {
     const navigate = useNavigate();
-    const [data, setData] = useState({
-        Login: "",
-        Email: "",
-        Base64Password: ""
-    })
-
-    const toBase64 = (str: string) =>
-    {
-        const bytes = new TextEncoder().encode(str);
-        let binary = "";
-
-        bytes.forEach(b =>
-        {
-            binary += String.fromCharCode(b);
-        });
-
-        return btoa(binary);
-    };
 
     return <>
         <div className="registerWrapper">
@@ -41,15 +23,19 @@ export default function RegisterPage() {
                 <Form
                     onFinish={(values) =>
                     {
-                        setData(prev => ({
-                            ...prev,
-
-                            Login: values.login, 
+                        const registerData = {
+                            Login: values.login,
                             Email: values.email,
-                            Base64Password: toBase64(values.password)
-                        }));
+                            Base64Password: Base64.encode(
+                                values.login + ":" + values.password
+                            )
+                        };
 
-                        navigate("/addInfo");
+                        console.log(registerData);
+
+                        navigate("/addInfo", {
+                            state: registerData
+                        });
                     }}
                 >
                     <Form.Item name="login" rules={[{ required: true, message: "Enter login" }]}>

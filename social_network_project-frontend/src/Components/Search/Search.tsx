@@ -1,29 +1,38 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { Avatar, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
-import logo from "../../assets/logo_holder.png";
 import "./SearchStyle.css";
+import { GetSearch } from "../../api/userApi";
+
+type User = {
+    id: string,
+    nickname: string,
+    login: string,
+    imageUrl?: string,
+    themeColorHex: string
+}
 
 export default function SearchModal({ open, onClose })
 {
     const [SearchValue, setSearchValue] = useState("");
     const [IsSearching, setIsSearching] = useState(false);
 
-    const users =
-    [
-        { id: 1, nickname: "User Name1", login: "@user1", avatar: logo },
-        { id: 2, nickname: "User Name2", login: "@user2", avatar: logo },
-        { id: 3, nickname: "User Name3", login: "@user3", avatar: logo },
-        { id: 4, nickname: "Qwe Zxc", login: "@qwe", avatar: logo },
-    ];
+    // const users =
+    // [
+    //     { id: 1, nickname: "User Name1", login: "@user1", avatar: logo },
+    //     { id: 2, nickname: "User Name2", login: "@user2", avatar: logo },
+    //     { id: 3, nickname: "User Name3", login: "@user3", avatar: logo },
+    //     { id: 4, nickname: "Qwe Zxc", login: "@qwe", avatar: logo },
+    // ];
 
-    const [FilteredUsers, setFilteredUsers] = useState(users);
+    const [users, setUsers] = useState<Array<User>>([]);
+
+    // const [FilteredUsers, setFilteredUsers] = useState(users);
 
 
     useEffect(() => {
 
         if (SearchValue === "") {
-            setFilteredUsers([]);
             setIsSearching(false);
             return;
         }
@@ -35,15 +44,20 @@ export default function SearchModal({ open, onClose })
             const Query = SearchValue;
 
             if (Query === "") {
-                setFilteredUsers([]);
                 return;
             }
+            
+            GetSearch(Query)
+                .then(j => setUsers(j.data));
+                
+            // setUsers(prev => ({
+            //     ...prev,
+                
+            // }));
+            
 
-            const Result = users.filter(user =>
-                user.login.includes(Query)
-            );
 
-            setFilteredUsers(Result);
+            // setFilteredUsers(response);
             setIsSearching(false);
 
         }, 1500);
@@ -81,16 +95,16 @@ export default function SearchModal({ open, onClose })
                         <div className="emptyState">
                             Searching...
                         </div>
-                    ) : FilteredUsers.length > 0 ? (
-                        FilteredUsers.map(user => (
+                    ) : users.length > 0 ? (
+                        users.map(user => (
                             <div key={user.id} className="userRow">
 
                                 <div className="avatarBlock">
-                                    <Avatar src={user.avatar} />
+                                    <Avatar src={user.imageUrl} />
                                     <div className="nickname">{user.nickname}</div>
                                 </div>
 
-                                <div className="login">{user.login}</div>
+                                <div className="login">@{user.login}</div>
 
                             </div>
                         ))

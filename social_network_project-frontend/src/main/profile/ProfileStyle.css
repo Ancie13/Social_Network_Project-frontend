@@ -118,7 +118,6 @@ body.header-visible .profileCard {
 
 .ant-modal-container
 {
-    max-height: 600px !important;
     background-color: var(--card-color) !important;
     border: 1px solid var(--border-color) !important;
 }
@@ -131,6 +130,7 @@ body.header-visible .profileCard {
 
     padding: 14px !important;
 
+    max-height: 50vh !important;
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.65) !important;
 }
 
