@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import "./HomeStyle.css";
 import { Button } from "antd";
 import Post, { type PostProps } from "../../Components/Post/Post";
-import { GetPostsHome } from "../../api/userApi";
+import { GetOwn, GetPostsHome } from "../../api/postsApi";
 import PostModal from "../../Components/Post/PostModal";
+import Loader from "../../Components/loader/Loader";
 
 
 export default function HomeContent() 
@@ -12,13 +13,13 @@ export default function HomeContent()
     const [posts, setPosts] = useState<any[]>([]);
     const [selectedPost, setSelectedPost] = useState<PostProps | null>(null);
     const [openModal, setOpenModal] = useState(false);
+    const [loading, setLoading] = useState(true);
+
 
     const Posts = () => {
         
         useEffect(() =>
         {
-            
-
             const loadPosts = async () =>
             {
                 const res = await GetPostsHome();
@@ -26,17 +27,37 @@ export default function HomeContent()
                 // console.log(JSON.stringify(res, null, 2));s
 
                 setPosts(res.data);
+                
             };
             
             loadPosts();
         }, []);
 
+        useEffect(() => {
+            if(posts){
+                setLoading(false);
+            }
+        }, [posts]); 
+
+        // const loadOwn = async (userId:string) =>
+        // {
+        //     const res = await GetOwn(userId);
+
+        //     console.log(res.stringify);
+        // };
+
+
+        // if(loading) {
+        //     return <Loader></Loader>;
+        // }
         return (
             <>
-                {posts.map((post, index) => (
+                {!loading ?
+                posts.map((post, index) => (
                     <Post
                         key={post.id}
                         id={post.id}
+                        userId={post.userId}
                         text={post.title}
                         image={post.imageUrl}
                         description={post.bio}
@@ -45,6 +66,7 @@ export default function HomeContent()
                         {
                             setSelectedPost({
                                 id: post.id,
+                                userId: post.userId,
                                 text: post.title,
                                 image: post.imageUrl,
                                 description: post.bio,
@@ -54,7 +76,7 @@ export default function HomeContent()
                             setOpenModal(true);
                         }}
                     />
-                ))}
+                )) : <Loader></Loader>}
                 {selectedPost && (
                     <PostModal
                         open={openModal}

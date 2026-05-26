@@ -23,8 +23,6 @@ export default function LoginPage() {
                 <Form
                     onFinish={async (values) => {
                         const data = "Basic " + Base64.encode(values.login + ":" + values.password);
-                        // "Basic " + Base64Password
-                        console.log(data);
                         try {
                             SignIn(data)
                             navigate("/home");

@@ -1,5 +1,5 @@
 import "./ProfileStyle.css";
-import { Avatar, Button, Divider, Modal } from "antd";
+import { Avatar, Button, Divider, Modal, Tag } from "antd";
 import logo from "../../assets/logo_holder.png";
 import Post from "../../Components/Post/Post";
 import preview from "../../assets/Preview.webp";
@@ -10,17 +10,20 @@ import { useState } from "react";
 export default function ProfilePage()
 {
     const [IsAvatarOpen, setIsAvatarOpen] = useState(false);
+    const user = JSON.parse(localStorage.getItem("user"));
 
-    const user =
-    {
-        nickname: "User Name",
-        login: "@login",
-        bio: "Bio about user Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis, voluptates.",
-        posts: 12,
-        followers: 340,
-        following: 128,
-        race: "elf"
-    };
+    console.log(user);
+
+    // const user =
+    // {
+    //     nickname: "User Name",
+    //     login: "@login",
+    //     bio: "Bio about user Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis, voluptates.",
+    //     posts: 12,
+    //     followers: 340,
+    //     following: 128,
+    //     race: "elf"
+    // };
 
     return <>
         <div className="profileWrapper">
@@ -33,13 +36,13 @@ export default function ProfilePage()
                         className="avatarWrapper"
                         onClick={() => setIsAvatarOpen(true)}
                     >
-                        <Avatar className="avatar" size={100} src={logo} icon={<UserOutlined />} />
+                        <Avatar className="avatar" size={100} src={user.data.imageUrl || logo} icon={<UserOutlined />} />
                     </div>
 
                     <div className="profileNames">
-                        <div className="nickname">{user.nickname}</div>
-                        <div className="login">{user.login}</div>
-                        <div className="race">{user.race}</div>
+                        <div className="nickname">{user.data.nickname}</div>
+                        <div className="login">@{user.data.login}</div>
+                        <div className="race" style={{ color: user.data.race.themeColorHex }}>{user.data.race.name}</div>
                     </div>
 
                 </div>
@@ -48,7 +51,7 @@ export default function ProfilePage()
 
 
                 <div className="profileBio">
-                    {user.bio}
+                    {user.data.bio || "Write something about you..."} 
                 </div>
 
                 <Divider className="divider" />
@@ -60,10 +63,21 @@ export default function ProfilePage()
                 </div>
 
                 <Divider className="divider" />
+                <div className="tagsBoxProfile">
+                    {user.data.interests.map((tag) => (
+                        <Tag
+                            key={tag.id}
+                            className="customTagProfile"
+                            style={{ "--interest-color": tag.color } as React.CSSProperties}
+                        >{tag.name}</Tag>
+                    ))}
+                </div>
+                <Divider className="divider" />
 
                 <Button
                     type="primary"
-                    icon={<EditOutlined />}
+                    className="editProfileBtn"
+                    icon={<EditOutlined className="editIcon"/>}
                     block
                 >
                     Edit Profile
@@ -74,9 +88,9 @@ export default function ProfilePage()
 
             <div className="postsConteiner">
 
-                <Post id={1} text="Test post 1" image={preview} description="" tags={[]} />
-                <Post id={2} text="Second post without image" description="" tags={[]} />
-                <Post id={3} text="Test post 3" image={preview} description="" tags={[]} />
+                <Post id={1} userId="" text="Test post 1" image={preview} description="" tags={[]} />
+                <Post id={2} userId="" text="Second post without image" description="" tags={[]} />
+                <Post id={3} userId="" text="Test post 3" image={preview} description="" tags={[]} />
 
             </div>
 
@@ -91,7 +105,7 @@ export default function ProfilePage()
             className="avatarModal"
         >
             <div className="avatarModalContent">
-                <img src={logo} className="avatarPreview" />
+                <img src={user.data.imageUrl || logo} className="avatarPreview" />
             </div>
         </Modal>
     </>

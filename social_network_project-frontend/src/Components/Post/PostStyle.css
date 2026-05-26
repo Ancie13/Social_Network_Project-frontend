@@ -29,6 +29,7 @@
     border-radius: 10px;
     margin-bottom: 10px;
     height: 65%;
+    object-fit: contain !important;
 }
 
 .postActions
@@ -221,4 +222,9 @@
 .usernamePost:hover
 {
     text-decoration: underline;
+}
+
+.userAvatarPost:hover
+{
+    cursor: pointer;
 }

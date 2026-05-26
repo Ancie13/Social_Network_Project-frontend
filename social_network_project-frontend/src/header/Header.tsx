@@ -19,6 +19,7 @@ import { Link, useLocation } from "react-router-dom";
 export default function Header({ onOpenSearch, onOpenAddPost })
 {
     const location = useLocation();
+    const user = JSON.parse(localStorage.getItem("user") || "null");
 
     const activeTab = (() => {
         if (location.pathname === "/home") return "home";
@@ -149,7 +150,7 @@ export default function Header({ onOpenSearch, onOpenAddPost })
                         >
                             <Avatar
                                 size={40}
-                                src={logo}
+                                src={user.data.imageUrl || logo}
                             />
                             <div className="profileText">Profile</div>
                             

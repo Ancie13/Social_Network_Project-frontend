@@ -4,7 +4,7 @@ import { InboxOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
 import Dragger from "antd/es/upload/Dragger";
-import { AddPostApi } from "../../api/userApi";
+import { AddPostApi } from "../../api/postsApi";
 
 export default function AddPost({ open, onClose })
 {

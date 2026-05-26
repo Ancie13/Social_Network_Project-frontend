@@ -1,0 +1,20 @@
+.loaderScreen
+{
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--bg-color);
+}
+
+.loaderText
+{
+    margin-top: 12px;
+    color: var(--primary-color);
+    font-size: 16px;
+    letter-spacing: 1px;
+}

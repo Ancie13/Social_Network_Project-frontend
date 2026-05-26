@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, Button, Input, Tag } from "antd";
 import {
     LikeOutlined,
@@ -9,6 +9,7 @@ import {
     StarOutlined,
 } from "@ant-design/icons";
 import "./PostStyle.css";
+import { GetOwn } from "../../api/postsApi";
 
 export type Comment = {
     id: number;
@@ -23,6 +24,7 @@ export type TagType = {
 
 export type PostProps = {
     id: number;
+    userId: string;
     text: string;
     image?: string | null;
     description?: string;
@@ -30,7 +32,7 @@ export type PostProps = {
     onClick?: () => void;
 };
 
-export default function Post({ text, image, description, tags, onClick }: PostProps)
+export default function Post({ userId, text, image, description, tags, onClick }: PostProps)
 {
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
@@ -42,6 +44,17 @@ export default function Post({ text, image, description, tags, onClick }: PostPr
         setCommentText(prev => prev + emoji);
     };
 
+    // useEffect(() =>
+    // {
+    //     loadOwn(userId);
+    // }, []);
+
+    // const loadOwn = async (userId: string) =>
+    // {
+    //     const res = await GetOwn(userId);
+
+    //     console.log(res);
+    // };
 
     const sendComment = () =>
     {
@@ -55,11 +68,13 @@ export default function Post({ text, image, description, tags, onClick }: PostPr
         setCommentText("");
     };
 
-    return (
+    return <>
+        {/* {loadOwn(userId)} */}
         <div className="postContainer" onClick={onClick}>
             
             <div className="userHeaderPost">
                 <Avatar
+                    className="userAvatarPost"
                     size={40}
                 >
                     U
@@ -168,5 +183,5 @@ export default function Post({ text, image, description, tags, onClick }: PostPr
             </div>
 
         </div>
-    );
+    </>;
 }

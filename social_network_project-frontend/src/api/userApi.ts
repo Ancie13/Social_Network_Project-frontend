@@ -22,7 +22,6 @@ export async function SignUp(data: any)
         formData.append(`Interests[${index}]`, x);
     });
 
-    formData.delete("Avatar");
     const response = await fetch(
         `${API_URL}/api/user/signup`,
         {
@@ -40,6 +39,11 @@ export async function SignUp(data: any)
     {
         throw new Error("Registration failed");
     }
+
+    localStorage.setItem(
+        "user",
+        JSON.stringify(dataResponse)
+    );
 
     return dataResponse;
 }
@@ -68,77 +72,14 @@ export async function SignIn(data: any)
         throw new Error("Logining failed");
     }
 
-    return dataResponse;
-}
-
-
-// /api/home/post/add
-
-export async function AddPostApi(data: any)
-{
-    const formData = new FormData();
-
-    formData.append("UserId", data.UserId);
-    formData.append("Title", data.Title);
-    formData.append("Bio", data.Bio);
-
-    if (data.PostImage) {
-        formData.append("PostImage", data.PostImage);
-    }
-
-    data.Interests.forEach((x: string, index: number) =>
-    {
-        formData.append(`Interests[${index}]`, x);
-    });
-
-    const response = await fetch(
-        `${API_URL}/api/post/add`,
-        {
-            method: "POST",
-            body: formData
-        }
+    localStorage.setItem(
+        "user",
+        JSON.stringify(dataResponse)
     );
 
-    const dataResponse = await response.json();
-    
-    console.log("STATUS:", response.status);
-    console.log("BODY:", dataResponse);
-
-    if(!response.ok)
-    {
-        throw new Error("Post failed");
-    }
-
     return dataResponse;
 }
 
-// /api/home/posts
-
-let postsCache: any[] | null = null;
-
-export async function GetPostsHome()
-{
-    if (postsCache)
-    {
-        return { data: postsCache };
-    }
-
-    const response = await fetch(
-        `${API_URL}/api/home/posts`,
-        {
-            method: "GET",
-        }
-    );
-
-    const dataResponse = await response.json();
-
-    if (!response.ok)
-    {
-        throw new Error(dataResponse?.message || "Failed to fetch posts");
-    }
-
-    return dataResponse;
-}
 
 // /api/user/users/find
 
@@ -163,3 +104,30 @@ export async function GetSearch(value: string)
     return dataResponse;
 }
 
+// /api/reference/additionalSignUpInfo
+
+export async function GetAdditionalInfo()
+{
+    const response = await fetch(
+        `${API_URL}/api/reference/additionalSignUpInfo`,
+        {
+            method: "GET",
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    console.log("BODY:", dataResponse);
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch posts");
+    }
+
+    localStorage.setItem(
+        "addInfo",
+        JSON.stringify(dataResponse)
+    );
+
+    return dataResponse;
+}
