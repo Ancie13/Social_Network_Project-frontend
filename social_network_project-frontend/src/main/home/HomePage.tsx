@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import "./HomeStyle.css";
 import { Button } from "antd";
-import Post, { type PostProps } from "../../Components/Post/Post";
 import { GetOwn, GetPostsHome } from "../../api/postsApi";
 import PostModal from "../../Components/Post/PostModal";
 import Loader from "../../Components/loader/Loader";
+import type { PostProps } from "../../types/Types";
+import Post from "../../Components/Post/Post";
 
 
 export default function HomeContent() 

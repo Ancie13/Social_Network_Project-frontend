@@ -5,25 +5,20 @@ import Post from "../../Components/Post/Post";
 import preview from "../../assets/Preview.webp";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import type { User, Race } from "../../types/Types";
 
 
+
+
+
+// userData?: User
 export default function ProfilePage()
 {
     const [IsAvatarOpen, setIsAvatarOpen] = useState(false);
-    const user = JSON.parse(localStorage.getItem("user"));
+    // const user = userData ? userData : JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user")) as User;
 
     console.log(user);
-
-    // const user =
-    // {
-    //     nickname: "User Name",
-    //     login: "@login",
-    //     bio: "Bio about user Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis, voluptates.",
-    //     posts: 12,
-    //     followers: 340,
-    //     following: 128,
-    //     race: "elf"
-    // };
 
     return <>
         <div className="profileWrapper">
@@ -36,13 +31,13 @@ export default function ProfilePage()
                         className="avatarWrapper"
                         onClick={() => setIsAvatarOpen(true)}
                     >
-                        <Avatar className="avatar" size={100} src={user.data.imageUrl || logo} icon={<UserOutlined />} />
+                        <Avatar className="avatar" size={100} src={user.imageUrl || logo} icon={<UserOutlined />} />
                     </div>
 
                     <div className="profileNames">
-                        <div className="nickname">{user.data.nickname}</div>
-                        <div className="login">@{user.data.login}</div>
-                        <div className="race" style={{ color: user.data.race.themeColorHex }}>{user.data.race.name}</div>
+                        <div className="nickname">{user.nickname}</div>
+                        <div className="login">@{user.login}</div>
+                        <div className="race" style={{ color: user.race.themeColorHex }}>{user.race.name}</div>
                     </div>
 
                 </div>
@@ -51,7 +46,7 @@ export default function ProfilePage()
 
 
                 <div className="profileBio">
-                    {user.data.bio || "Write something about you..."} 
+                    {user.bio || "Write something about you..."} 
                 </div>
 
                 <Divider className="divider" />
@@ -64,7 +59,7 @@ export default function ProfilePage()
 
                 <Divider className="divider" />
                 <div className="tagsBoxProfile">
-                    {user.data.interests.map((tag) => (
+                    {user.interests.map((tag) => (
                         <Tag
                             key={tag.id}
                             className="customTagProfile"
@@ -105,7 +100,7 @@ export default function ProfilePage()
             className="avatarModal"
         >
             <div className="avatarModalContent">
-                <img src={user.data.imageUrl || logo} className="avatarPreview" />
+                <img src={user.imageUrl || logo} className="avatarPreview" />
             </div>
         </Modal>
     </>

@@ -10,27 +10,9 @@ import {
 } from "@ant-design/icons";
 import "./PostStyle.css";
 import { GetOwn } from "../../api/postsApi";
+import type { PostProps } from "../../types/Types";
 
-export type Comment = {
-    id: number;
-    text: string;
-};
 
-export type TagType = {
-    id: number;
-    name: string;
-    color: string;
-};
-
-export type PostProps = {
-    id: number;
-    userId: string;
-    text: string;
-    image?: string | null;
-    description?: string;
-    tags: TagType[];
-    onClick?: () => void;
-};
 
 export default function Post({ userId, text, image, description, tags, onClick }: PostProps)
 {

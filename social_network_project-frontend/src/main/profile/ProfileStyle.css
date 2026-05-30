@@ -14,13 +14,14 @@
 
 .profileCard
 {
-    height: 60vh;
+    min-height: 60vh;
     width: 22vw;
 
     display: flex;
     flex-direction: column;
 
     /* overflow: hidden; */
+    align-self: flex-start;
 
     position: sticky;
     top: var(--header-offset);
@@ -163,7 +164,7 @@ body.header-visible .profileCard {
 .avatarPreview
 {
     width: 100%;
-    max-width: 440px;
+    width: 60vw;
     aspect-ratio: 1 / 1;
 
     object-fit: cover;

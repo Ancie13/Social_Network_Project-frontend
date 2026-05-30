@@ -42,7 +42,7 @@ export async function SignUp(data: any)
 
     localStorage.setItem(
         "user",
-        JSON.stringify(dataResponse)
+        JSON.stringify(dataResponse.data)
     );
 
     return dataResponse;
@@ -74,7 +74,7 @@ export async function SignIn(data: any)
 
     localStorage.setItem(
         "user",
-        JSON.stringify(dataResponse)
+        JSON.stringify(dataResponse.data)
     );
 
     return dataResponse;
@@ -128,6 +128,30 @@ export async function GetAdditionalInfo()
         "addInfo",
         JSON.stringify(dataResponse)
     );
+
+    return dataResponse;
+}
+
+// /api/user/profile/{userId}
+
+export async function GetUserProfile(data: any)
+{
+    const response = await fetch(
+        `${API_URL}/api/user/profile/${data}`,
+        {
+            method: "GET",
+        }
+    );
+
+    const dataResponse = await response.json();
+    
+    console.log("BODY:", dataResponse);
+
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch profile");
+    }
 
     return dataResponse;
 }

@@ -15,11 +15,12 @@ import {
 } from "@ant-design/icons";
 import ThemeToggle from "../Components/Theme/ThemeToggle";
 import { Link, useLocation } from "react-router-dom";
+import type { User } from "../types/Types";
 
 export default function Header({ onOpenSearch, onOpenAddPost })
 {
     const location = useLocation();
-    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const user = JSON.parse(localStorage.getItem("user") || "null") as User;
 
     const activeTab = (() => {
         if (location.pathname === "/home") return "home";
@@ -150,7 +151,7 @@ export default function Header({ onOpenSearch, onOpenAddPost })
                         >
                             <Avatar
                                 size={40}
-                                src={user.data.imageUrl || logo}
+                                src={user.imageUrl || logo}
                             />
                             <div className="profileText">Profile</div>
                             

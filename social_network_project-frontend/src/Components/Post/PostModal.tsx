@@ -1,5 +1,4 @@
 import "./PostModalStyle.css";
-import type { Comment, TagType } from "./Post";
 import { Modal, Tag, Input, Button, Avatar } from "antd";
 import {
     SendOutlined,
@@ -10,15 +9,8 @@ import {
 import { useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 import "./PostModalStyle.css";
+import type { Comment, PostPropsModal } from "../../types/Types";
 
-type PostProps = {
-    open: boolean;
-    onClose: () => void;
-    text: string;
-    image?: string | null;
-    description?: string;
-    tags: TagType[];
-};
 
 export default function PostModal({
     open,
@@ -27,7 +19,7 @@ export default function PostModal({
     image,
     description,
     tags
-}: PostProps)
+}: PostPropsModal)
 {
     const [commentText, setCommentText] = useState("");
     const [isPickerOpen, setIsPickerOpen] = useState(false);
