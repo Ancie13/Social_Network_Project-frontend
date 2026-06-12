@@ -25,6 +25,7 @@ export async function SignUp(data: any)
     const response = await fetch(
         `${API_URL}/api/user/signup`,
         {
+            credentials: "include",
             method: "POST",
             body: formData
         }
@@ -40,10 +41,18 @@ export async function SignUp(data: any)
         throw new Error("Registration failed");
     }
 
-    localStorage.setItem(
-        "user",
-        JSON.stringify(dataResponse.data)
-    );
+
+    if (dataResponse?.status?.isOk && dataResponse?.data)
+    {
+        sessionStorage.setItem(
+            "user",
+            JSON.stringify(dataResponse.data)
+        );
+    }
+    else
+    {
+        console.log("Already signed in or login failed");
+    }
 
     return dataResponse;
 }
@@ -55,6 +64,7 @@ export async function SignIn(data: any)
     const response = await fetch(
         `${API_URL}/api/user/signin`,
         {
+            credentials: "include",
             method: "POST",
             headers: {
                 Authorization: data
@@ -137,7 +147,7 @@ export async function GetAdditionalInfo()
 export async function GetUserProfile(data: any)
 {
     const response = await fetch(
-        `${API_URL}/api/user/profile/${data}`,
+        `${API_URL}/api/user/profileById/${data}`,
         {
             method: "GET",
         }
@@ -153,5 +163,27 @@ export async function GetUserProfile(data: any)
         throw new Error(dataResponse?.message || "Failed to fetch profile");
     }
 
-    return dataResponse;
+    return dataResponse.data;
+}
+
+export async function GetUserProfileByLogin(data: any)
+{
+    const response = await fetch(
+        `${API_URL}/api/user/profileByLogin/${data}`,
+        {
+            method: "GET",
+        }
+    );
+
+    const dataResponse = await response.json();
+    
+    console.log("BODY:", dataResponse);
+
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch profile");
+    }
+
+    return dataResponse.data;
 }

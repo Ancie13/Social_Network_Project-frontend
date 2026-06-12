@@ -9,21 +9,43 @@ import {
     StarOutlined,
 } from "@ant-design/icons";
 import "./PostStyle.css";
-import { GetOwn } from "../../api/postsApi";
-import type { PostProps } from "../../types/Types";
+import type { PostProps, User } from "../../types/Types";
+import { useNavigate } from "react-router-dom";
+import Loader from "../loader/Loader";
+import { GetUserProfile } from "../../api/userApi";
 
-
-
-export default function Post({ userId, text, image, description, tags, onClick }: PostProps)
+export default function Post(
+{       userId,
+        text,
+        image,
+        description,
+        tags,
+        onClick
+    }: PostProps)
 {
+    const navigate = useNavigate();
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [isQuickEmojisOpen, setIsQuickEmojisOpen] = useState(false);
-
+    const [user, setUser] = useState<User | null>(null);
+ 
     const quickEmojis = ["🔥", "😂", "❤️", "👍", "😢", "😀"];
     const addEmoji = (emoji: string) => {
         setCommentText(prev => prev + emoji);
+    };
+    useEffect(() =>
+    {
+        if (!userId) return;
+
+        loadUser(userId);
+    }, [userId]);
+
+    const loadUser = async (userId: string) =>
+    {
+        const res = await GetUserProfile(userId);
+        setUser(res);
+        // console.log(res);
     };
 
     // useEffect(() =>
@@ -50,8 +72,15 @@ export default function Post({ userId, text, image, description, tags, onClick }
         setCommentText("");
     };
 
+    // console.log(user);
+
+    if (!user)
+    {
+        return <Loader/>;
+    }
     return <>
         {/* {loadOwn(userId)} */}
+        
         <div className="postContainer" onClick={onClick}>
             
             <div className="userHeaderPost">
@@ -64,12 +93,15 @@ export default function Post({ userId, text, image, description, tags, onClick }
 
                 <div className="userInfoPost">
 
-                    <div className="nicknamePost">
-                        User Nickname
+                    <div className="nicknamePost" 
+                        onClick={() => {
+                                navigate(`/profile/${user.login}`);
+                        }}>
+                        {user.nickname}
                     </div>
 
-                    <div className="usernamePost">
-                        @username
+                    <div className="usernamePost" onClick={() => navigate(`/profile/${user.login}`)}>
+                        @{user.login}
                     </div>
 
                 </div>
@@ -165,5 +197,5 @@ export default function Post({ userId, text, image, description, tags, onClick }
             </div>
 
         </div>
-    </>;
+    </>
 }

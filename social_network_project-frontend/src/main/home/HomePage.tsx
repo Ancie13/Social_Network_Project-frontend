@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react";
 import "./HomeStyle.css";
 import { Button } from "antd";
-import { GetOwn, GetPostsHome } from "../../api/postsApi";
+import { GetPostsHome, GetPostsRace } from "../../api/postsApi";
 import PostModal from "../../Components/Post/PostModal";
 import Loader from "../../Components/loader/Loader";
-import type { PostProps } from "../../types/Types";
+import type { PostProps, User } from "../../types/Types";
 import Post from "../../Components/Post/Post";
+import { GetUserProfile } from "../../api/userApi";
 
 
 export default function HomeContent() 
 {
     const [active, setActive] = useState<"first" | "second">("first");
     const [posts, setPosts] = useState<any[]>([]);
+    const [postsRace, setPostsRace] = useState<any[]>([]);
     const [selectedPost, setSelectedPost] = useState<PostProps | null>(null);
     const [openModal, setOpenModal] = useState(false);
     const [loading, setLoading] = useState(true);
-
+    const [users, setUsers] = useState<Record<number, User>>({});
+    const [isRacePage, setIsRacePage] = useState(false);
 
     const Posts = () => {
         
@@ -24,21 +27,48 @@ export default function HomeContent()
             const loadPosts = async () =>
             {
                 const res = await GetPostsHome();
-
-                // console.log(JSON.stringify(res, null, 2));s
+                // const resRace = await GetPostsRace();
 
                 setPosts(res.data);
-                
+                // setPostsRace(resRace.data);
             };
-            
+
             loadPosts();
         }, []);
 
-        useEffect(() => {
-            if(posts){
+        useEffect(() =>
+        {
+            if (posts.length > 0)
+            {
                 setLoading(false);
             }
-        }, [posts]); 
+        }, [posts]);
+
+        useEffect(() =>
+        {
+            const LoadUsers = async () =>
+            {
+                const map: Record<number, User> = {};
+
+                await Promise.all(
+                    posts.map(async (post) =>
+                    {
+                        if (!map[post.userId])
+                        {
+                            const user = await GetUserProfile(post.userId);
+                            map[post.userId] = user;
+                        }
+                    })
+                );
+
+                setUsers(map);
+            };
+
+            if (posts.length > 0)
+            {
+                LoadUsers();
+            }
+        }, [posts]);
 
         // const loadOwn = async (userId:string) =>
         // {
@@ -54,7 +84,7 @@ export default function HomeContent()
         return (
             <>
                 {!loading ?
-                posts.map((post, index) => (
+                (isRacePage ? postsRace : posts).map((post) => (
                     <Post
                         key={post.id}
                         id={post.id}
@@ -71,7 +101,7 @@ export default function HomeContent()
                                 text: post.title,
                                 image: post.imageUrl,
                                 description: post.bio,
-                                tags: post.interests
+                                tags: post.interests,
                             });
 
                             setOpenModal(true);
@@ -101,14 +131,21 @@ export default function HomeContent()
             <div className="menuContainer">
                 <Button
                     className={`menuItem ${active === "first" ? "active" : ""}`}
-                    onClick={() => setActive("first")}
+                    onClick={() => {
+                        setActive("first")
+                        setIsRacePage(false)
+                    }}
                 >
                     Option 1
                 </Button>
 
                 <Button
                     className={`menuItem ${active === "second" ? "active" : ""}`}
-                    onClick={() => setActive("second")}
+                    onClick={() => {
+                        setActive("second")
+                        setIsRacePage(true)
+
+                    }}
                 >
                     Option 2
                 </Button>

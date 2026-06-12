@@ -9,6 +9,7 @@ import ProfilePage from "./main/profile/ProfilePage";
 import MessagesPage from "./main/messages/MessagesPage";
 import LikesPage from "./main/likes/LikesPage";
 import SavedPage from "./main/saved/SavedPage";
+import Profile from "./Components/profile/Profile";
 
 export default function App() {
   return (
@@ -24,7 +25,8 @@ export default function App() {
                 
                 <Route element={<MainPage />}>
                         <Route path="/home" element={<HomePage />} />
-                        <Route path="/profile" element={<ProfilePage />} />
+                        <Route path="/profile/:login" element={<Profile />} />
+                        <Route path="/profile/" element={<ProfilePage />} />
                         <Route path="/messages" element={<MessagesPage />} />
                         <Route path="/likes" element={<LikesPage />} />
                         <Route path="/saved" element={<SavedPage />} />

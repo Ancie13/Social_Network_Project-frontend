@@ -21,7 +21,6 @@ export async function GetPostsHome()
     
     console.log("BODY:", dataResponse);
 
-
     if (!response.ok)
     {
         throw new Error(dataResponse?.message || "Failed to fetch posts");
@@ -56,17 +55,17 @@ export async function GetOwn(data: any)
 
 // /api/home/posts/private/{page?}/?pageSize={pageSize}
 
-let postsCachePrivate: any[] | null = null;
+let postsCacheRace: any[] | null = null;
 
-export async function GetPostsPrivate()
+export async function GetPostsRace()
 {
-    if (postsCachePrivate)
+    if (postsCacheRace)
     {
-        return { data: postsCachePrivate };
+        return { data: postsCacheRace };
     }
 
     const response = await fetch(
-        `${API_URL}/api/home/posts`,
+        `${API_URL}/api/home/posts/private`,
         {
             method: "GET",
         }

@@ -13,7 +13,8 @@
     width: 100%;
     margin-top: 14vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     background-color: var(--bg-color);
     font-family: Arial, sans-serif;
+    flex: 1;
 }

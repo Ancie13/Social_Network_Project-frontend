@@ -5,15 +5,16 @@ import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SearchModal from "../Components/Search/Search";
 import AddPost from "../Components/AddPost/AddPost";
+import type { User } from "../types/Types";
 
 export default function MainPage() {
     const [IsSearchOpen, setIsSearchOpen] = useState(false);
     const [IsAddPostOpen, setIsAddPostOpen] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState<{ data: { race: { themeColorHex: string } } } | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     
     useEffect(() => {
-        setUser(JSON.parse(localStorage.getItem("user") || "null"));
+        setUser(JSON.parse(sessionStorage.getItem("user") || "null")as User);
     }, []);
 
     useEffect(() => {
@@ -21,7 +22,7 @@ export default function MainPage() {
         {
             document.documentElement.style.setProperty(
                 "--race-color",
-                user.data.race.themeColorHex
+                user.race.themeColorHex
             );
         }
 

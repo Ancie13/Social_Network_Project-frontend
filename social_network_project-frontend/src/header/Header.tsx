@@ -20,7 +20,7 @@ import type { User } from "../types/Types";
 export default function Header({ onOpenSearch, onOpenAddPost })
 {
     const location = useLocation();
-    const user = JSON.parse(localStorage.getItem("user") || "null") as User;
+    const user = JSON.parse(sessionStorage.getItem("user") || "null") as User;
 
     const activeTab = (() => {
         if (location.pathname === "/home") return "home";

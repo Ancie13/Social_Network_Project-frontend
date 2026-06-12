@@ -3,7 +3,6 @@
     height: auto;
     width: 100%;
     display: flex;
-    flex: 1;
 
     display: grid;
     grid-template-columns: 220px 1fr 220px;
@@ -20,11 +19,10 @@
     display: flex;
     flex-direction: column;
 
-    /* overflow: hidden; */
     align-self: flex-start;
 
-    position: sticky;
-    top: var(--header-offset);
+    position: fixed;
+    top: 0;
 
     background-color: var(--card-color);
     border: 5px solid var(--border-color);
@@ -33,6 +31,10 @@
     padding: 20px;
     gap: 10px;
     margin-left: 9.3vw;
+    margin-top: 30px;
+
+    transform: translateY(var(--header-offset));
+    transition: transform 0.3s ease;
 }
 
 body.header-visible .profileCard {
@@ -211,6 +213,13 @@ body.header-visible .profileCard {
     width: 100%;
 }
 
+.editProfileBtnBox
+{
+    display: flex;
+    align-items: flex-end;
+    flex: 1;
+}
+
 .editProfileBtn
 {
     background-color: var(--primary-color);
@@ -230,4 +239,54 @@ body.header-visible .profileCard {
 .editIcon
 {
     color: black !important;
+}
+
+.followBtn
+{
+    width: 100%;
+    height: 38px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    border-radius: 8px !important;
+
+    border: 2px solid var(--border-color) !important;
+
+    background-color: var(--primary-color);
+    color: white !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s ease;
+}
+
+.followBtn:hover
+{
+    background-color: var(--primary-color-hover) !important;
+    border-color: var(--primary-color-hover) !important;
+    transform: translateY(-1px);
+}
+
+.followBtn:active
+{
+    background-color: var(--primary-color-active) !important;
+    transform: translateY(0px);
+}
+
+.followBtn.following
+{
+    background-color: var(--card-color) !important;
+    color: var(--text-color) !important;
+
+    border: 2px solid var(--primary-color) !important;
+}
+
+.followBtn.following:hover
+{
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color-hover) !important;
 }

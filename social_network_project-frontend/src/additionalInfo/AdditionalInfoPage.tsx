@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import { GetAdditionalInfo, SignUp } from "../api/userApi";
 import Dragger from "antd/es/upload/Dragger";
+import Loader from "../Components/loader/Loader";
 
 type interes = {
   id: string;
@@ -58,7 +59,7 @@ export default function AdditionalInfoPage() {
         }
     };
       fetchAdditionalInfo();
-  }, []);
+  }, []); // TODO: Move it on app page and preload
 
   const toggle = (index: number) => {
     setSelectedInterests((prev) => {
@@ -251,7 +252,7 @@ export default function AdditionalInfoPage() {
 
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader></Loader>;
   }
   return (
     <>
