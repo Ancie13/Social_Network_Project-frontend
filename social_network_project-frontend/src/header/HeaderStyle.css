@@ -252,3 +252,131 @@
     transform: scale(0.98);
 }
 
+
+
+/* MOBILE___________________________________________________________________________ */
+@media (max-width: 768px)
+{
+    .wrapperHeader
+    {
+        width: 95%;
+        height: auto;
+
+        padding: 8px;
+
+        /* allow wrapping */
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px;
+
+        border-width: 2px;
+    }
+
+    .logoHeader
+    {
+        height: 45px;
+    }
+
+    /* Tabs take full width below top row */
+    .customTabs
+    {
+        order: 3;
+        width: 100%;
+
+        overflow: visible !important;
+    }
+
+    .customTabs .ant-tabs-nav
+    {
+        width: 100%;
+    }
+
+    .customTabs .ant-tabs-tab
+    {
+        padding: 8px 12px !important;
+    }
+
+    .tabText
+    {
+        /* optional: hide labels, keep icons */
+        font-size: 10px;
+    }
+
+    .tabItem svg
+    {
+        font-size: 20px;
+    }
+
+    /* Search shrinks */
+    .searchBox
+    {
+        width: 140px;
+    }
+
+    .searchInput
+    {
+        height: 32px;
+        font-size: 14px;
+    }
+
+    /* Buttons tighter */
+    .btnsBox
+    {
+        gap: 8px;
+    }
+
+    .profileBtnsGroup
+    {
+        gap: 6px;
+    }
+
+    .profileBtn
+    {
+        width: 55px;
+        height: 55px !important;
+        padding: 4px !important;
+    }
+
+    .profileBtn .ant-avatar
+    {
+        width: 30px !important;
+        height: 30px !important;
+    }
+
+    .profileText
+    {
+        font-size: 10px; /* hide username text */
+    }
+
+    .addPostBtn
+    {
+        width: 34px !important;
+        height: 34px !important;
+    }
+
+    .pageContent
+    {
+        margin-top: 18vh; /* because header now wraps */
+    }
+
+    .customTabs .ant-tabs-tab
+    {
+        padding: 4px 6px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .tabItem svg
+    {
+        font-size: 12px;
+    }
+
+    .tabText
+    {
+        font-size: 10px;
+    }
+
+    .tabItem
+    {
+        gap: 0px;
+    }
+}

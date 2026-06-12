@@ -3,6 +3,7 @@ import { Avatar, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
 import "./SearchStyle.css";
 import { GetSearch } from "../../api/userApi";
+import { useNavigate } from "react-router-dom";
 
 type User = {
     id: string,
@@ -16,6 +17,7 @@ export default function SearchModal({ open, onClose })
 {
     const [SearchValue, setSearchValue] = useState("");
     const [IsSearching, setIsSearching] = useState(false);
+    const navigate = useNavigate();
 
     // const users =
     // [
@@ -97,7 +99,14 @@ export default function SearchModal({ open, onClose })
                         </div>
                     ) : users.length > 0 ? (
                         users.map(user => (
-                            <div key={user.id} className="userRow">
+                            <div 
+                                key={user.id} 
+                                className="userRow" 
+                                onClick={() => {
+                                    navigate(`/profile/${user.login}`);
+                                    onClose();
+                                }
+                            }>
 
                                 <div className="avatarBlock">
                                     <Avatar src={user.imageUrl} />

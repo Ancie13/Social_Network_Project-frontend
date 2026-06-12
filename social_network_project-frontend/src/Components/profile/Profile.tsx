@@ -23,7 +23,7 @@ export default function Profile() {
         if (login)
         {
             loadUser(login);
-            if(login === JSON.parse(localStorage.getItem("user")).login)
+            if(login === JSON.parse(sessionStorage.getItem("user")).login)
             {
                 setIsMe(true);
             }

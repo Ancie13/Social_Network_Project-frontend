@@ -290,3 +290,111 @@ body.header-visible .profileCard {
     color: white !important;
     border-color: var(--primary-color-hover) !important;
 }
+
+
+/* MOBILE___________________________________________________________________________ */
+@media (max-width: 768px)
+{
+    .profileWrapper
+    {
+        display: flex;
+        flex-direction: column;
+
+        width: 100%;
+        padding: 0;
+        justify-content: center;
+
+        background-color: var(--bg-color);
+    }
+
+    /* TURN CARD INTO FULL PAGE SECTION */
+    .profileCard
+    {
+        position: relative !important;
+        top: auto !important;
+        transform: none !important;
+
+        width: 100%;
+        max-width: 95%;
+
+        margin: 0;
+        border: none;
+        border-radius: 0;
+
+        padding: 16px;
+
+        min-height: auto;
+
+        background-color: var(--bg-color);
+    }
+
+    /* HEADER AREA STACKED LIKE FACEBOOK */
+    .profileHeader
+    {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .profileNames
+    {
+        align-items: center;
+    }
+
+    .nickname
+    {
+        font-size: 20px;
+    }
+
+    .login
+    {
+        font-size: 14px;
+    }
+
+    .race
+    {
+        font-size: 16px;
+    }
+
+    /* STATS BECOME BIG TOUCH ROW */
+    .profileStats
+    {
+        justify-content: space-around;
+        padding: 10px 0;
+
+        font-size: 13px;
+    }
+
+    /* TAGS CENTER LIKE FACEBOOK INTERESTS */
+    .tagsBoxProfile
+    {
+        justify-content: center;
+    }
+
+    /* FOLLOW BUTTON FULL WIDTH CTA */
+    .followBtn
+    {
+        width: 100%;
+        max-width: 420px;
+
+        height: 44px;
+        font-size: 15px;
+
+        margin: 10px auto;
+    }
+
+    /* REMOVE DESKTOP SPACING GAPS */
+    .divider
+    {
+        margin: 10px 0;
+    }
+
+    /* OPTIONAL: avatar scaling */
+    .avatarWrapper
+    {
+        display: flex;
+        justify-content: center;
+    }
+}
+

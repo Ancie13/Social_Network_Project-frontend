@@ -44,3 +44,45 @@
     border-color: var(--primary-color) !important;
     box-shadow: 0 0 15px rgba(81, 0, 203, 0.35);
 }
+
+
+
+@media (max-width: 768px)
+{
+    .themeBtn
+    {
+        width: 36px !important;
+        height: 36px !important;
+
+        border-radius: 50% !important;
+
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+
+        border-width: 1px !important;
+    }
+
+    .themeBtn svg
+    {
+        font-size: 16px;
+    }
+
+    .themeBtn.dark
+    {
+        box-shadow: 0 0 8px rgba(81, 0, 203, 0.2);
+    }
+
+    .themeBtn.light
+    {
+        box-shadow: 0 0 8px rgba(81, 0, 203, 0.12);
+    }
+
+    .themeBtn.dark:hover,
+    .themeBtn.light:hover
+    {
+        box-shadow: 0 0 10px rgba(81, 0, 203, 0.25);
+    }
+}

@@ -18,3 +18,29 @@
     font-family: Arial, sans-serif;
     flex: 1;
 }
+
+@media (max-width: 768px)
+{
+    .pageLayout
+    {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mainWrapper
+    {
+        flex: 1;
+
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+
+        width: 100%;
+        margin-top: 5vh;
+
+        padding: 10px;
+        box-sizing: border-box;
+    }
+}
