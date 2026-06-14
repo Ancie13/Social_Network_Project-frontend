@@ -30,6 +30,7 @@ export default function HomeContent()
                 // const resRace = await GetPostsRace();
 
                 setPosts(res.data);
+                console.log(setPostsRace);
                 // setPostsRace(resRace.data);
                 console.log(users); // REMOVE____________________________
             };
