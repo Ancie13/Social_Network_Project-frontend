@@ -10,7 +10,7 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
 {
     const [Title, setTitle] = useState("");
     const [Description, setDescription] = useState("");
-    const [SelectedTags, setSelectedTags] = useState([]);
+    const [SelectedTags, setSelectedTags] = useState<string[]>([]);
     const [Visibility, setVisibility] = useState("public");
     const [Image, setImage] = useState(null);
 

@@ -17,7 +17,8 @@ import ThemeToggle from "../Components/Theme/ThemeToggle";
 import { Link, useLocation } from "react-router-dom";
 import type { User } from "../types/Types";
 
-export default function Header({ onOpenSearch, onOpenAddPost })
+export default function Header({ onOpenSearch, onOpenAddPost }:
+     { onOpenSearch: () => void; onOpenAddPost: () => void })
 {
     const location = useLocation();
     const user = JSON.parse(sessionStorage.getItem("user") || "null") as User;

@@ -31,6 +31,7 @@ export default function HomeContent()
 
                 setPosts(res.data);
                 // setPostsRace(resRace.data);
+                console.log(users); // REMOVE____________________________
             };
 
             loadPosts();
