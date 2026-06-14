@@ -27,9 +27,10 @@ export default function LoginPage() {
                             SignIn(data)
                             navigate("/home");
                         }
-                        catch(e)
+                        catch(error: unknown)
                         {
-                            console.log(e.message);
+                            const errorMessage = error instanceof Error ? error.message : String(error);
+                            console.log(errorMessage);
                         }
                     }} 
                 >

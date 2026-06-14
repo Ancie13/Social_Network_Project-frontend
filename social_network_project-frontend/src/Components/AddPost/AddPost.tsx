@@ -6,7 +6,7 @@ import { useState } from "react";
 import Dragger from "antd/es/upload/Dragger";
 import { AddPostApi } from "../../api/postsApi";
 
-export default function AddPost({ open, onClose })
+export default function AddPost({ open, onClose }: { open: boolean; onClose: () => void })
 {
     const [Title, setTitle] = useState("");
     const [Description, setDescription] = useState("");
@@ -50,7 +50,7 @@ export default function AddPost({ open, onClose })
         { name: "Space", emoji: "🚀", color: "#002f9dff" }
     ];
 
-    const toggleTag = (tag) =>
+    const toggleTag = (tag: string) =>
     {
         if (SelectedTags.includes(tag))
             setSelectedTags(SelectedTags.filter(t => t !== tag));
@@ -144,7 +144,7 @@ export default function AddPost({ open, onClose })
                 {!Image && (
                     <Dragger
                         className="uploadDragger"
-                        beforeUpload={(file) =>
+                        beforeUpload={(file: any) =>
                         {
                             setImage(file);
                             return false;

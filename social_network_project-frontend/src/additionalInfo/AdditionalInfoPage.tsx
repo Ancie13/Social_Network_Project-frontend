@@ -35,7 +35,7 @@ export default function AdditionalInfoPage() {
   const [data, setData] = useState({
     Nickname: "",
     Avatar: null as File | null,
-    RaceId: null,
+    RaceId: null as string | null,
     Interests: [] as string[],
   });
 
@@ -184,7 +184,7 @@ export default function AdditionalInfoPage() {
           </button>
 
           <img
-            src={avatarPreview}
+            src={avatarPreview || ""}
             className="avatarPreview"
           />
         </div>
@@ -203,7 +203,7 @@ export default function AdditionalInfoPage() {
 
                   setData((prev) => ({
                     ...prev,
-                    RaceId: races[index].id,
+                    RaceId: races[index].id as string,
                   }));
                 }}
               >

@@ -13,7 +13,12 @@ type User = {
     themeColorHex: string
 }
 
-export default function SearchModal({ open, onClose })
+interface SearchModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function SearchModal({ open, onClose }: SearchModalProps)
 {
     const [SearchValue, setSearchValue] = useState("");
     const [IsSearching, setIsSearching] = useState(false);

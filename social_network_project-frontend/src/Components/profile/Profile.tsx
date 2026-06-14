@@ -1,12 +1,11 @@
 import { Avatar, Button, Divider, Modal, Tag } from "antd";
 import logo from "../../assets/logo_holder.png";
-import Post from "../../Components/Post/Post";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import type { User } from "../../types/Types";
 import { useParams } from "react-router-dom";
 import Loader from "../loader/Loader";
-import { GetUserFollowers, GetUserFollowing, GetUserProfile, GetUserProfileByLogin } from "../../api/userApi";
+import { GetUserFollowers, GetUserFollowing, GetUserProfileByLogin } from "../../api/userApi";
 
 export default function Profile() {
     const [IsAvatarOpen, setIsAvatarOpen] = useState(false);
@@ -46,6 +45,7 @@ export default function Profile() {
             setFollowing(res2);
             console.log("Res1: " + res1);
             console.log("Res2: " + res2);
+            setIsLoading(false);
         };
         fetchFollowers();
     }, [user]);
@@ -54,7 +54,10 @@ export default function Profile() {
     {   
         let res = null;
 
-        res = await GetUserProfileByLogin(login);
+        if(login) {
+            res = await GetUserProfileByLogin(login);
+        }
+        
         
         setUser(res);
         console.log(res);
