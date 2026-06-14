@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./HomeStyle.css";
 import { Button } from "antd";
-import { GetPostsHome, GetPostsRace } from "../../api/postsApi";
+import { GetPostsHome } from "../../api/postsApi";
 import PostModal from "../../Components/Post/PostModal";
 import Loader from "../../Components/loader/Loader";
 import type { PostProps, User } from "../../types/Types";

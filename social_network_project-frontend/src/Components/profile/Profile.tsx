@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type { User } from "../../types/Types";
 import { useParams } from "react-router-dom";
 import Loader from "../loader/Loader";
-import { GetUserFollowers, GetUserFollowing, GetUserProfileByLogin } from "../../api/userApi";
+import { GetUserProfileByLogin } from "../../api/userApi";
 
 export default function Profile() {
     const [IsAvatarOpen, setIsAvatarOpen] = useState(false);
@@ -13,10 +13,6 @@ export default function Profile() {
     const [user, setUser] = useState<User | null>(null);
     const [isMe, setIsMe] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
-    const [IsHovered, SetHovered] = useState(false);
-    const [followers, setFollowers] = useState(0);
-    const [following, setFollowing] = useState(0);
-    const [isLoading, setIsLoading] = useState(true);
 
 
     console.log(login);
@@ -26,38 +22,19 @@ export default function Profile() {
         if (login)
         {
             loadUser(login);
-            if(login === JSON.parse(sessionStorage.getItem("user")).login)
+            const currentUser = JSON.parse(sessionStorage.getItem("user") || "null") as User | null;
+            if(currentUser && login === currentUser.login)
             {
                 setIsMe(true);
             }
         }
     }, [login]);
 
-    useEffect(() =>  {
-        const fetchFollowers = async () => {
-            let res1 = null;
-            let res2 = null;
-
-            res1 = await GetUserFollowers(user.id);
-            res2 = await GetUserFollowing(user.id);
-
-            setFollowers(res1);
-            setFollowing(res2);
-            console.log("Res1: " + res1);
-            console.log("Res2: " + res2);
-            setIsLoading(false);
-        };
-        fetchFollowers();
-    }, [user]);
-
     const loadUser = async (login: string) =>
     {   
         let res = null;
 
-        if(login) {
-            res = await GetUserProfileByLogin(login);
-        }
-        
+        res = await GetUserProfileByLogin(login);
         
         setUser(res);
         console.log(res);
@@ -70,7 +47,7 @@ export default function Profile() {
 
     console.log(user);
 
-    if (!user || isLoading)
+    if (!user)
     {
         return <Loader/>
     }
@@ -85,23 +62,7 @@ export default function Profile() {
                         className="avatarWrapper"
                         onClick={() => setIsAvatarOpen(true)}
                     >
-                        <div
-                            onMouseEnter={() => SetHovered(true)}
-                            onMouseLeave={() => SetHovered(false)}
-                        >
-                            <Avatar 
-                                className="avatar" 
-                                size={100} 
-                                src={user.imageUrl || logo} 
-                                icon={<UserOutlined />}
-                                
-                                style={{ boxShadow: IsHovered
-                                        ? `0 0 0 2px ${user.race.themeColorHex}`
-                                        : "none" 
-                                }}
-                            />
-                        </div>
-                        
+                        <Avatar className="avatar" size={100} src={user.imageUrl || logo} icon={<UserOutlined />} />
                     </div>
 
                     <div className="profileNames">
@@ -162,6 +123,9 @@ export default function Profile() {
                 }
                 </div>
                 
+
+                
+
             </div>
 
 
