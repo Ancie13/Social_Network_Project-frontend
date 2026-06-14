@@ -136,7 +136,7 @@ export default function HomeContent()
                         setIsRacePage(false)
                     }}
                 >
-                    Option 1
+                    Main
                 </Button>
 
                 <Button
@@ -147,7 +147,7 @@ export default function HomeContent()
 
                     }}
                 >
-                    Option 2
+                    Race
                 </Button>
             </div>
             <div className="postsConteiner">

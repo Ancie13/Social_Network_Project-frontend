@@ -104,7 +104,7 @@ export async function GetSearch(value: string)
 
     const dataResponse = await response.json();
 
-    console.log("BODY:", dataResponse);
+    // console.log("BODY:", dataResponse);
 
     if (!response.ok)
     {
@@ -155,7 +155,7 @@ export async function GetUserProfile(data: any)
 
     const dataResponse = await response.json();
     
-    console.log("BODY:", dataResponse);
+    // console.log("BODY:", dataResponse);
 
 
     if (!response.ok)
@@ -177,7 +177,55 @@ export async function GetUserProfileByLogin(data: any)
 
     const dataResponse = await response.json();
     
-    console.log("BODY:", dataResponse);
+    // console.log("BODY:", dataResponse);
+
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch profile");
+    }
+
+    return dataResponse.data;
+}
+
+// /api/user/{userId}/followers
+
+export async function GetUserFollowers(data: any)
+{
+    const response = await fetch(
+        `${API_URL}/api/user/${data}/followers`,
+        {
+            method: "GET",
+        }
+    );
+
+    const dataResponse = await response.json();
+    
+    console.log("get followers BODY:", dataResponse);
+
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch profile");
+    }
+
+    return dataResponse.data;
+}
+
+// /api/user/{userId}/following
+
+export async function GetUserFollowing(data: any)
+{
+    const response = await fetch(
+        `${API_URL}/api/user/${data}/following`,
+        {
+            method: "GET",
+        }
+    );
+
+    const dataResponse = await response.json();
+    
+    console.log("get followers BODY:", dataResponse);
 
 
     if (!response.ok)

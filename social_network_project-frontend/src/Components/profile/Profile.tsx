@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import type { User } from "../../types/Types";
 import { useParams } from "react-router-dom";
 import Loader from "../loader/Loader";
-import { GetUserProfile, GetUserProfileByLogin } from "../../api/userApi";
+import { GetUserFollowers, GetUserFollowing, GetUserProfile, GetUserProfileByLogin } from "../../api/userApi";
 
 export default function Profile() {
     const [IsAvatarOpen, setIsAvatarOpen] = useState(false);
@@ -14,6 +14,10 @@ export default function Profile() {
     const [user, setUser] = useState<User | null>(null);
     const [isMe, setIsMe] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
+    const [IsHovered, SetHovered] = useState(false);
+    const [followers, setFollowers] = useState(0);
+    const [following, setFollowing] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
 
     console.log(login);
@@ -29,6 +33,22 @@ export default function Profile() {
             }
         }
     }, [login]);
+
+    useEffect(() =>  {
+        const fetchFollowers = async () => {
+            let res1 = null;
+            let res2 = null;
+
+            res1 = await GetUserFollowers(user.id);
+            res2 = await GetUserFollowing(user.id);
+
+            setFollowers(res1);
+            setFollowing(res2);
+            console.log("Res1: " + res1);
+            console.log("Res2: " + res2);
+        };
+        fetchFollowers();
+    }, [user]);
 
     const loadUser = async (login: string) =>
     {   
@@ -47,7 +67,7 @@ export default function Profile() {
 
     console.log(user);
 
-    if (!user)
+    if (!user || isLoading)
     {
         return <Loader/>
     }
@@ -62,7 +82,23 @@ export default function Profile() {
                         className="avatarWrapper"
                         onClick={() => setIsAvatarOpen(true)}
                     >
-                        <Avatar className="avatar" size={100} src={user.imageUrl || logo} icon={<UserOutlined />} />
+                        <div
+                            onMouseEnter={() => SetHovered(true)}
+                            onMouseLeave={() => SetHovered(false)}
+                        >
+                            <Avatar 
+                                className="avatar" 
+                                size={100} 
+                                src={user.imageUrl || logo} 
+                                icon={<UserOutlined />}
+                                
+                                style={{ boxShadow: IsHovered
+                                        ? `0 0 0 2px ${user.race.themeColorHex}`
+                                        : "none" 
+                                }}
+                            />
+                        </div>
+                        
                     </div>
 
                     <div className="profileNames">
@@ -123,9 +159,6 @@ export default function Profile() {
                 }
                 </div>
                 
-
-                
-
             </div>
 
 

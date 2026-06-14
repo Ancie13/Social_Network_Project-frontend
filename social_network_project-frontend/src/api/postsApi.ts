@@ -19,7 +19,7 @@ export async function GetPostsHome()
 
     const dataResponse = await response.json();
     
-    console.log("BODY:", dataResponse);
+    // console.log("BODY:", dataResponse);
 
     if (!response.ok)
     {

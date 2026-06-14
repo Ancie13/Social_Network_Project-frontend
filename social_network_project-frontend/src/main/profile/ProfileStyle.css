@@ -109,11 +109,6 @@ body.header-visible .profileCard {
     display: inline-flex;
 }
 
-.avatar:hover
-{
-    box-shadow: 0 0 0 2px var(--race-color);
-}
-
 .ant-modal-close
 {
     color: var(--text-color);
