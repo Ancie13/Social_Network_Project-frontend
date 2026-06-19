@@ -1,12 +1,15 @@
 :root
 {
     --bg-color: #121313;
+    --bg-color-add: #111111;
+    --bg-color-hover: rgba(255, 255, 255, 0.05);
     --card-color: #171819;
     --primary-color: #5100cb;
     --primary-color-hover: #4900b8;
     --primary-color-active: #4300a8;
     --text-color: #ffffff;
     --secondary-text: #aaaaaa;
+    --secondary-text-add: #6d6d6d;
     --input-bg-color: #181a1b;
     --border-color: #363a3c;
     --race-color: #3bff5e;
@@ -26,11 +29,14 @@
 {
     --bg-color: #f5f6f8;
     --card-color: #ffffff;
+    --bg-color-add: #cfcfcf;
+    --bg-color-hover: rgba(220, 217, 217, 0.792);
     --primary-color: #5100cb;
     --primary-color-hover: #6a2cff;
     --primary-color-active: #4300a8;
     --text-color: #111111;
     --secondary-text: #555555;
+    --secondary-text-add: #3e3e3e;
     --input-bg-color: #ffffff;
     --border-color: #d0d0d0;
 }

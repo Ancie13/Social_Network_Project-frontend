@@ -4,7 +4,7 @@ import { Button, Form, Input } from "antd";
 import logo from "../assets/logo_holder.png";
 import preview from "../assets/Preview.webp";
 import { useNavigate } from "react-router-dom";
-import Base64 from "../shared/Base64";
+import Base64 from "../shared/Base64/Base64";
 
 export default function RegisterPage() {
     const navigate = useNavigate();

@@ -195,6 +195,7 @@ export async function GetUserFollowers(data: any)
     const response = await fetch(
         `${API_URL}/api/user/${data}/followers`,
         {
+            credentials: "include",
             method: "GET",
         }
     );
@@ -219,13 +220,38 @@ export async function GetUserFollowing(data: any)
     const response = await fetch(
         `${API_URL}/api/user/${data}/following`,
         {
+            credentials: "include",
             method: "GET",
         }
     );
 
     const dataResponse = await response.json();
     
-    console.log("get followers BODY:", dataResponse);
+    console.log("get following BODY:", dataResponse);
+
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch profile");
+    }
+
+    return dataResponse.data;
+}
+
+// /api/user/toggleFollow/{userId}
+export async function FollowUser(data: any)
+{
+    const response = await fetch(
+        `${API_URL}/api/user/toggleFollow/${data}`,
+        {
+            credentials: "include",
+            method: "POST",
+        }
+    );
+
+    const dataResponse = await response.json();
+    
+    console.log("follow BODY:", dataResponse);
 
 
     if (!response.ok)

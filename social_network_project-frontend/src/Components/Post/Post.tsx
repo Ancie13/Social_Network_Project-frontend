@@ -9,6 +9,7 @@ import {
     StarOutlined,
 } from "@ant-design/icons";
 import "./PostStyle.css";
+import avatarHolder from "../../assets/avatar_holder.jpg";
 import type { PostProps, User } from "../../types/Types";
 import { useNavigate } from "react-router-dom";
 import Loader from "../loader/Loader";
@@ -17,7 +18,7 @@ import { GetUserProfile } from "../../api/userApi";
 export default function Post(
 {       userId,
         text,
-        image,
+        imageUrl,
         description,
         tags,
         onClick
@@ -48,18 +49,6 @@ export default function Post(
         // console.log(res);
     };
 
-    // useEffect(() =>
-    // {
-    //     loadOwn(userId);
-    // }, []);
-
-    // const loadOwn = async (userId: string) =>
-    // {
-    //     const res = await GetOwn(userId);
-
-    //     console.log(res);
-    // };
-
     const sendComment = () =>
     {
         if (!commentText.trim()) return;
@@ -79,7 +68,6 @@ export default function Post(
         return <Loader/>;
     }
     return <>
-        {/* {loadOwn(userId)} */}
         
         <div className="postContainer" onClick={onClick}>
             
@@ -87,15 +75,17 @@ export default function Post(
                 <Avatar
                     className="userAvatarPost"
                     size={40}
-                >
-                    U
-                </Avatar>
+                    src={user.imageUrl || avatarHolder}
+                    onClick={() => {
+                        navigate(`/profile/${user.login}`);
+                    }}
+                />
 
                 <div className="userInfoPost">
 
                     <div className="nicknamePost" 
                         onClick={() => {
-                                navigate(`/profile/${user.login}`);
+                            navigate(`/profile/${user.login}`);
                         }}>
                         {user.nickname}
                     </div>
@@ -121,7 +111,7 @@ export default function Post(
             </div>
             
 
-            {image && <img className="postImage" src={image} />}
+            {imageUrl && <img className="postImage" src={imageUrl} />}
 
             {description && <div className="postDesc">{description}</div>}
 

@@ -6,8 +6,7 @@ export type User = {
     race:Race;
     imageUrl:string;
     posts:string;
-    followers:string;
-    following:string;
+    isFollowing:boolean;
     interests:TagType[];
     lastLoginAt?:string;
     deletedAt?:string;
@@ -15,8 +14,13 @@ export type User = {
 };
 
 export type Comment = {
-    id: number;
-    text: string;
+    id: string;
+    userId: string;
+    postId: string;
+    likesQnt: number;
+    isLiked: boolean;
+    createdAt: string;
+    bio: string;
 };
 
 export type TagType = {
@@ -29,19 +33,22 @@ export type PostProps = {
     id: number;
     userId: string;
     text: string;
-    image?: string | null;
+    imageUrl?: string | null;
     description?: string;
     tags: TagType[];
     onClick?: () => void;
+    comments: Comment[] | [];
 };
 
 export type PostPropsModal = {
     open: boolean;
     onClose: () => void;
     text: string;
-    image?: string | null;
+    imageUrl?: string | null;
     description?: string;
     tags: TagType[];
+    user: User;
+    comments: Comment[] | [];
 };
 
 export type Race = {

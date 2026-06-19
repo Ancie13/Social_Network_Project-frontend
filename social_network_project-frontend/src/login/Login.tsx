@@ -3,7 +3,7 @@ import "./LoginStyle.css";
 import { Button, Form, Input } from "antd";
 import logo from "../assets/logo_holder.png";
 import preview from "../assets/Preview.webp";
-import Base64 from "../shared/Base64";
+import Base64 from "../shared/Base64/Base64";
 import { SignIn } from "../api/userApi";
 
 export default function LoginPage() {

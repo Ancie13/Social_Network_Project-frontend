@@ -1,5 +1,6 @@
 import "./HeaderStyle.css";
 import logo from "../assets/logo_holder.png";
+import avatarHolder from "../assets/avatar_holder.jpg";
 import { Avatar, Button, Input, Tabs } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -152,7 +153,7 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
                         >
                             <Avatar
                                 size={40}
-                                src={user.imageUrl || logo}
+                                src={user.imageUrl || avatarHolder}
                             />
                             <div className="profileText">Profile</div>
                             

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./HomeStyle.css";
 import { Button } from "antd";
-import { GetPostsHome } from "../../api/postsApi";
+import { GetPostsHome, GetPostsRace } from "../../api/postsApi";
 import PostModal from "../../Components/Post/PostModal";
 import Loader from "../../Components/loader/Loader";
 import type { PostProps, User } from "../../types/Types";
@@ -18,6 +18,7 @@ export default function HomeContent()
     const [openModal, setOpenModal] = useState(false);
     const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState<Record<number, User>>({});
+    const [usersRace, setUsersRace] = useState<Record<number, User>>({});
     const [isRacePage, setIsRacePage] = useState(false);
 
     const Posts = () => {
@@ -27,11 +28,11 @@ export default function HomeContent()
             const loadPosts = async () =>
             {
                 const res = await GetPostsHome();
-                // const resRace = await GetPostsRace();
+                const resRace = await GetPostsRace();
 
                 setPosts(res.data);
-                console.log(setPostsRace);
-                // setPostsRace(resRace.data);
+                // console.log(setPostsRace);
+                setPostsRace(resRace.data);
                 console.log(users); // REMOVE____________________________
             };
 
@@ -44,13 +45,14 @@ export default function HomeContent()
             {
                 setLoading(false);
             }
-        }, [posts]);
+        }, [posts, postsRace]);
 
         useEffect(() =>
         {
             const LoadUsers = async () =>
             {
                 const map: Record<number, User> = {};
+                const map2: Record<number, User> = {};
 
                 await Promise.all(
                     posts.map(async (post) =>
@@ -63,7 +65,19 @@ export default function HomeContent()
                     })
                 );
 
+                await Promise.all(
+                    postsRace.map(async (post) =>
+                    {
+                        if (!map2[post.userId])
+                        {
+                            const user = await GetUserProfile(post.userId);
+                            map2[post.userId] = user;
+                        }
+                    })
+                );
+
                 setUsers(map);
+                setUsersRace(map2);
             };
 
             if (posts.length > 0)
@@ -92,18 +106,20 @@ export default function HomeContent()
                         id={post.id}
                         userId={post.userId}
                         text={post.title}
-                        image={post.imageUrl}
+                        imageUrl={post.imageUrl}
                         description={post.bio}
                         tags={post.interests}
+                        comments={post.comments}
                         onClick={() =>
                         {
                             setSelectedPost({
                                 id: post.id,
                                 userId: post.userId,
                                 text: post.title,
-                                image: post.imageUrl,
+                                imageUrl: post.imageUrl,
                                 description: post.bio,
                                 tags: post.interests,
+                                comments: post.comments,
                             });
 
                             setOpenModal(true);
@@ -119,9 +135,11 @@ export default function HomeContent()
                             setSelectedPost(null);
                         }}
                         text={selectedPost.text}
-                        image={selectedPost.image}
+                        imageUrl={selectedPost.imageUrl}
                         description={selectedPost.description}
                         tags={selectedPost.tags}
+                        user={active === "first" ? users[selectedPost.userId] : usersRace[selectedPost.userId]}
+                        comments={selectedPost.comments}
                     />
                 )}
             </>

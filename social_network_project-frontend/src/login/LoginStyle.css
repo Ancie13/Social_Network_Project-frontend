@@ -10,7 +10,7 @@
 
 .loginContainer 
 {
-    width: 500px;
+    width: 27vw;
     height: 90%;
     padding: 30px;
     background-color: var(--card-color);
@@ -94,10 +94,11 @@
     width: 100px;
     padding-bottom: 41%;
     padding-left: 2%;
+    object-fit: cover;
 }
 .previewBox
 {
-    font-size: 45px;
+    font-size: 4vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -108,6 +109,6 @@
 .preview
 {
     padding-top: 20px;
-    height: 650px;
-    width: 650px;
+    height: 65vh;
+    width: 65vw;
 }

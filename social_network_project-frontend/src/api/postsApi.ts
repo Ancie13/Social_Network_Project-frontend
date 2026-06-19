@@ -67,6 +67,7 @@ export async function GetPostsRace()
     const response = await fetch(
         `${API_URL}/api/home/posts/private`,
         {
+            credentials: "include",
             method: "GET",
         }
     );
@@ -81,6 +82,7 @@ export async function GetPostsRace()
         throw new Error(dataResponse?.message || "Failed to fetch posts");
     }
 
+    return dataResponse;
 }
 
 // /api/home/post/add

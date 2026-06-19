@@ -24,17 +24,7 @@ export default function SearchModal({ open, onClose }: SearchModalProps)
     const [IsSearching, setIsSearching] = useState(false);
     const navigate = useNavigate();
 
-    // const users =
-    // [
-    //     { id: 1, nickname: "User Name1", login: "@user1", avatar: logo },
-    //     { id: 2, nickname: "User Name2", login: "@user2", avatar: logo },
-    //     { id: 3, nickname: "User Name3", login: "@user3", avatar: logo },
-    //     { id: 4, nickname: "Qwe Zxc", login: "@qwe", avatar: logo },
-    // ];
-
     const [users, setUsers] = useState<Array<User>>([]);
-
-    // const [FilteredUsers, setFilteredUsers] = useState(users);
 
 
     useEffect(() => {
@@ -57,14 +47,7 @@ export default function SearchModal({ open, onClose }: SearchModalProps)
             GetSearch(Query)
                 .then(j => setUsers(j.data));
                 
-            // setUsers(prev => ({
-            //     ...prev,
-                
-            // }));
-            
 
-
-            // setFilteredUsers(response);
             setIsSearching(false);
 
         }, 1500);
@@ -104,21 +87,29 @@ export default function SearchModal({ open, onClose }: SearchModalProps)
                         </div>
                     ) : users.length > 0 ? (
                         users.map(user => (
-                            <div 
-                                key={user.id} 
-                                className="userRow" 
-                                onClick={() => {
+                            <div
+                                key={user.id}
+                                className="userRow"
+                                onClick={() =>
+                                {
                                     navigate(`/profile/${user.login}`);
                                     onClose();
-                                }
-                            }>
+                                }}
+                            >
+                                <Avatar
+                                    size={40}
+                                    src={user.imageUrl}
+                                />
 
-                                <div className="avatarBlock">
-                                    <Avatar src={user.imageUrl} />
-                                    <div className="nickname">{user.nickname}</div>
+                                <div className="userInfo">
+                                    <div className="nickname">
+                                        {user.nickname}
+                                    </div>
+
+                                    <div className="login">
+                                        @{user.login}
+                                    </div>
                                 </div>
-
-                                <div className="login">@{user.login}</div>
 
                             </div>
                         ))

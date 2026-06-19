@@ -43,19 +43,17 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    flex-direction: column;
 
-    padding: 10px 12px;
+    padding: 10px;
     border-radius: 10px;
-
     cursor: pointer;
 
-    transition: background 0.2s ease, transform 0.1s ease;
+    transition: background 0.2s ease;
 }
 
 .userRow:hover
 {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--bg-color-hover);
 }
 
 .avatarBlock

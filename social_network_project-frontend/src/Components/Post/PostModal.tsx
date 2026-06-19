@@ -6,46 +6,82 @@ import {
     SmileOutlined
 } from "@ant-design/icons";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 import "./PostModalStyle.css";
-import type { Comment, PostPropsModal } from "../../types/Types";
+import avatarHolder from "../../assets/avatar_holder.jpg";
+import type { PostPropsModal, User } from "../../types/Types";
+import { useNavigate } from "react-router-dom";
+import { GetUserProfile } from "../../api/userApi";
+import Loader from "../loader/Loader";
+import formatDate from "../../shared/Date/FormatDate";
 
 
 export default function PostModal({
     open,
     onClose,
     text,
-    image,
+    imageUrl,
     description,
-    tags
+    tags,
+    user,
+    comments
 }: PostPropsModal)
 {
     const [commentText, setCommentText] = useState("");
     const [isPickerOpen, setIsPickerOpen] = useState(false);
+    const [commentators, setCommentators] = useState<Record<number, User>>({});
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
-    const [comments, setComments] = useState<Comment[]>([
-        { id: 1, text: "Nice 🔥" },
-        { id: 2, text: "Looks good!" },
-        { id: 3, text: "Amazing" }
-    ]);
+    const LoadCommentators = async () =>
+    {
+        const map: Record<number, User> = {};
+
+        await Promise.all(
+            comments.map(async (comment) =>
+            {
+                if (!map[comment.userId])
+                {
+                    const user = await GetUserProfile(comment.userId);
+                    map[comment.userId] = user;
+                }
+            })
+        );
+
+        setCommentators(map);
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        if(comments.length > 0)
+        {
+            setLoading(true);
+            LoadCommentators();
+        }
+        setLoading(false);
+    }, [comments]);
 
     const sendComment = () =>
     {
         if(!commentText.trim())
             return;
 
-        setComments(prev => [
-            ...prev,
-            {
-                id: Date.now(),
-                text: commentText
-            }
-        ]);
+        // setComments(prev => [
+        //     ...prev,
+        //     {
+        //         id: Date.now(),
+        //         text: commentText
+        //     }
+        // ]);
 
         setCommentText("");
     };
 
+
+    if(loading) {
+        return <Loader/>
+    }
     return (
         <Modal
             open={open}
@@ -78,9 +114,9 @@ export default function PostModal({
 
                     </div>
 
-                    {image && (
+                    {imageUrl && (
                         <img
-                            src={image}
+                            src={imageUrl}
                             className="modalImage"
                         />
                     )}
@@ -94,18 +130,30 @@ export default function PostModal({
                         <Avatar
                             size={50}
                             className="userAvatar"
-                        >
-                            U
-                        </Avatar>
+                            src={user.imageUrl || avatarHolder}
+                            onClick={() => {
+                                navigate(`/profile/${user.login}`);
+                            }}
+                        />
 
                         <div className="userInfo">
 
-                            <div className="nickname">
-                                User Nickname
+                            <div 
+                                className="nickname"
+                                onClick={() => {
+                                    navigate(`/profile/${user.login}`);
+                                }}
+                            >
+                                {user.nickname}
                             </div>
 
-                            <div className="username">
-                                @username
+                            <div 
+                                className="username"
+                                onClick={() => {
+                                    navigate(`/profile/${user.login}`);
+                                }}
+                            >
+                                @{user.login}
                             </div>
 
                         </div>
@@ -124,18 +172,32 @@ export default function PostModal({
                                 key={comment.id}
                                 className="modalComment"
                             >
-                                <Avatar size={32} className="userAvatar">
-                                    U
-                                </Avatar>
+                                <Avatar 
+                                    size={32}
+                                    className="userAvatar"
+                                    src={commentators[comment.userId]?.imageUrl || avatarHolder}
+                                    onClick={() => {
+                                        navigate(`/profile/${commentators[comment.userId].login}`);
+                                    }}
+                                />
 
                                 <div className="commentContent">
 
-                                    <span className="commentUser">
-                                        User
+                                    <span 
+                                        className="commentUser"
+                                        onClick={() => {
+                                            navigate(`/profile/${commentators[comment.userId].login}`);
+                                        }}
+                                    >
+                                        {commentators[comment.userId]?.nickname}
                                     </span>
 
                                     <span className="commentText">
-                                        {comment.text}
+                                        {comment.bio}
+                                    </span>
+
+                                    <span className="commentDate">
+                                        {formatDate(comment.createdAt)}
                                     </span>
 
                                 </div>

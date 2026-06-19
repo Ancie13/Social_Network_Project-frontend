@@ -1,11 +1,12 @@
 import { Avatar, Button, Divider, Modal, Tag } from "antd";
-import logo from "../../assets/logo_holder.png";
+import avatarHolder from "../../assets/avatar_holder.jpg";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import type { User } from "../../types/Types";
 import { useParams } from "react-router-dom";
 import Loader from "../loader/Loader";
-import { GetUserProfileByLogin } from "../../api/userApi";
+import { FollowUser, GetUserFollowers, GetUserFollowing, GetUserProfileByLogin } from "../../api/userApi";
+import FollowersModal from "../Followers/FollowersModal";
 
 export default function Profile() {
     const [IsAvatarOpen, setIsAvatarOpen] = useState(false);
@@ -13,22 +14,62 @@ export default function Profile() {
     const [user, setUser] = useState<User | null>(null);
     const [isMe, setIsMe] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
-
-
-    console.log(login);
+    const [IsHovered, SetHovered] = useState(false);
+    const [followers, setFollowers] = useState<Array<User>>([]);
+    const [following, setFollowing] = useState<Array<User>>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isOpenFollowers, setIsOpenFollowers] = useState(false);
+    const [isOpenFollowing, setIsOpenFollowing] = useState(false);
     
     useEffect(() =>
     {
         if (login)
         {
-            loadUser(login);
-            const currentUser = JSON.parse(sessionStorage.getItem("user") || "null") as User | null;
-            if(currentUser && login === currentUser.login)
-            {
-                setIsMe(true);
-            }
+            const loadUserAndCheck = async () => {
+                await loadUser(login);
+                const currentUser = JSON.parse(sessionStorage.getItem("user") || "null") as User | null;
+                if(currentUser && login === currentUser.login)
+                {
+                    setIsMe(true);
+                }
+            }; 
+            loadUserAndCheck();
         }
     }, [login]);
+
+    const toggleFollow = async () => {
+        if(user) {
+            await FollowUser(user.id);
+            setIsFollowing(!isFollowing);
+            await fetchFollowers();
+            if (login) {
+                await loadUser(login);
+            }
+        }
+    };
+
+
+    const fetchFollowers = async () => {
+        if (!user) return;
+
+        let res1 = null;
+        let res2 = null;
+
+        res1 = await GetUserFollowers(user.id);
+        res2 = await GetUserFollowing(user.id);
+
+        setFollowers(res1);
+        setFollowing(res2);
+        setIsLoading(false);
+    };
+
+    useEffect(()  =>  { 
+        if (user) {
+            console.log("User loaded, isFollowing:", user.isFollowing);
+            setIsFollowing(user.isFollowing);
+            fetchFollowers();
+        }
+    }, [user]);
 
     const loadUser = async (login: string) =>
     {   
@@ -40,14 +81,7 @@ export default function Profile() {
         console.log(res);
     };
 
-    const toggleFollow = () =>
-    {
-        setIsFollowing(prev => !prev);
-    };
-
-    console.log(user);
-
-    if (!user)
+    if (!user || isLoading)
     {
         return <Loader/>
     }
@@ -62,7 +96,22 @@ export default function Profile() {
                         className="avatarWrapper"
                         onClick={() => setIsAvatarOpen(true)}
                     >
-                        <Avatar className="avatar" size={100} src={user.imageUrl || logo} icon={<UserOutlined />} />
+                        <div
+                            onMouseEnter={() => SetHovered(true)}
+                            onMouseLeave={() => SetHovered(false)}
+                        >
+                            <Avatar 
+                                className="avatar" 
+                                size={100} 
+                                src={user.imageUrl || avatarHolder}
+                                icon={<UserOutlined />}
+                                
+                                style={{ boxShadow: IsHovered
+                                        ? `0 0 0 2px ${user.race.themeColorHex}`
+                                        : "none" 
+                                }}
+                            />
+                        </div>
                     </div>
 
                     <div className="profileNames">
@@ -84,8 +133,16 @@ export default function Profile() {
 
                 <div className="profileStats">
                     <div><b>{user.posts}</b> Posts</div>
-                    <div><b>{user.followers}</b> Followers</div>
-                    <div><b>{user.following}</b> Following</div>
+                    <div
+                        onClick={() => setIsOpenFollowers(true)}
+                    >
+                        <b>{followers.length}</b> Followers
+                    </div>
+                    <div
+                        onClick={() => setIsOpenFollowing(true)}
+                    >
+                        <b>{following.length}</b> Following
+                    </div>
                 </div>
 
                 <Divider className="divider" />
@@ -131,10 +188,6 @@ export default function Profile() {
 
             <div className="postsConteiner">
 
-                {/* <Post id={1} userId="" text="Test post 1" image={preview} description="" tags={[]} />
-                <Post id={2} userId="" text="Second post without image" description="" tags={[]} />
-                <Post id={3} userId="" text="Test post 3" image={preview} description="" tags={[]} /> */}
-
             </div>
 
         </div>
@@ -148,8 +201,22 @@ export default function Profile() {
             className="avatarModal"
         >
             <div className="avatarModalContent">
-                <img src={user.imageUrl || logo} className="avatarPreview" />
+                <img src={user.imageUrl || avatarHolder} className="avatarPreview" />
             </div>
         </Modal>
+
+        <FollowersModal
+            open={isOpenFollowers}
+            onClose={() => setIsOpenFollowers(false)}
+            type="followers"
+            users={followers}
+        />
+
+        <FollowersModal
+            open={isOpenFollowing}
+            onClose={() => setIsOpenFollowing(false)}
+            type="following"
+            users={following}
+        />
     </>
 }
