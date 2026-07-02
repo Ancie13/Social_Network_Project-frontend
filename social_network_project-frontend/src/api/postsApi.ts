@@ -108,7 +108,8 @@ export async function AddPostApi(data: any)
         `${API_URL}/api/post/add`,
         {
             method: "POST",
-            body: formData
+            body: formData,
+            credentials: "include",
         }
     );
 

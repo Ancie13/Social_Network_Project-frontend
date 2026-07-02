@@ -149,6 +149,7 @@ export async function GetUserProfile(data: any)
     const response = await fetch(
         `${API_URL}/api/user/profileById/${data}`,
         {
+            credentials: "include",
             method: "GET",
         }
     );
@@ -171,6 +172,7 @@ export async function GetUserProfileByLogin(data: any)
     const response = await fetch(
         `${API_URL}/api/user/profileByLogin/${data}`,
         {
+            credentials: "include",
             method: "GET",
         }
     );
