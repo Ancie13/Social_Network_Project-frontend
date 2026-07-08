@@ -17,13 +17,22 @@ import {
 import ThemeToggle from "../Components/Theme/ThemeToggle";
 import { Link, useLocation } from "react-router-dom";
 import type { User } from "../types/Types";
+import { GetMe } from "../api/userApi";
+import Loader from "../Components/loader/Loader";
 
 export default function Header({ onOpenSearch, onOpenAddPost }:
      { onOpenSearch: () => void; onOpenAddPost: () => void })
 {
     const location = useLocation();
-    const user = JSON.parse(sessionStorage.getItem("user") || "null") as User;
+    const [user, setUser] = useState<User | null>(null);
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            const user = await GetMe();
+            setUser(user);
+        };
+        fetchUser();
+    }, []);
     const activeTab = (() => {
         if (location.pathname === "/home") return "home";
         if (location.pathname === "/messages") return "messages";
@@ -113,6 +122,10 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
         },
     ];
 
+    if(!user)
+    {
+        return <Loader/>
+    }
     return <>
         <div className="pageBox">
 

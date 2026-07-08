@@ -38,11 +38,13 @@ export type PostProps = {
     tags: TagType[];
     onClick?: () => void;
     comments: Comment[] | [];
+    myId: string;
 };
 
 export type PostPropsModal = {
     open: boolean;
     onClose: () => void;
+    id: string;
     text: string;
     imageUrl?: string | null;
     description?: string;

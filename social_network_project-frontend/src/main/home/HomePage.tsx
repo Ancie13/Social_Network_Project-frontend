@@ -6,7 +6,7 @@ import PostModal from "../../Components/Post/PostModal";
 import Loader from "../../Components/loader/Loader";
 import type { PostProps, User } from "../../types/Types";
 import Post from "../../Components/Post/Post";
-import { GetUserProfile } from "../../api/userApi";
+import { GetMe, GetUserProfile } from "../../api/userApi";
 
 
 export default function HomeContent() 
@@ -20,32 +20,32 @@ export default function HomeContent()
     const [users, setUsers] = useState<Record<number, User>>({});
     const [usersRace, setUsersRace] = useState<Record<number, User>>({});
     const [isRacePage, setIsRacePage] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
 
-    const Posts = () => {
-        
-        useEffect(() =>
-        {
-            const loadPosts = async () =>
-            {
-                const res = await GetPostsHome();
-                const resRace = await GetPostsRace();
 
-                setPosts(res.data);
-                // console.log(setPostsRace);
-                setPostsRace(resRace.data);
-                console.log(users); // REMOVE____________________________
-            };
+    useEffect(() => {
+        const loadData = async () => {
+            setLoading(true);
 
-            loadPosts();
-        }, []);
+            try {
+                const [user, posts, racePosts] = await Promise.all([
+                    GetMe(),
+                    GetPostsHome(),
+                    GetPostsRace()
+                ]);
 
-        useEffect(() =>
-        {
-            if (posts.length > 0)
-            {
+                setUser(user);
+                setPosts(posts.data);
+                setPostsRace(racePosts.data);
+            } catch (err) {
+                console.error(err);
+            } finally {
                 setLoading(false);
             }
-        }, [posts, postsRace]);
+        };
+
+        loadData();
+    }, []);
 
         useEffect(() =>
         {
@@ -86,17 +86,7 @@ export default function HomeContent()
             }
         }, [posts]);
 
-        // const loadOwn = async (userId:string) =>
-        // {
-        //     const res = await GetOwn(userId);
-
-        //     console.log(res.stringify);
-        // };
-
-
-        // if(loading) {
-        //     return <Loader></Loader>;
-        // }
+    const Posts = () => {
         return (
             <>
                 {!loading ?
@@ -110,6 +100,7 @@ export default function HomeContent()
                         description={post.bio}
                         tags={post.interests}
                         comments={post.comments}
+                        myId={user.id}
                         onClick={() =>
                         {
                             setSelectedPost({
@@ -120,6 +111,7 @@ export default function HomeContent()
                                 description: post.bio,
                                 tags: post.interests,
                                 comments: post.comments,
+                                myId: user.id
                             });
 
                             setOpenModal(true);
@@ -134,6 +126,7 @@ export default function HomeContent()
                             setOpenModal(false);
                             setSelectedPost(null);
                         }}
+                        id={selectedPost.id.toString()}
                         text={selectedPost.text}
                         imageUrl={selectedPost.imageUrl}
                         description={selectedPost.description}
@@ -146,35 +139,37 @@ export default function HomeContent()
         );
     };
 
-    return <>
-        <div className="homeContainer">
-            <div className="menuContainer">
-                <Button
-                    className={`menuItem ${active === "first" ? "active" : ""}`}
-                    onClick={() => {
-                        setActive("first")
-                        setIsRacePage(false)
-                    }}
-                >
-                    Main
-                </Button>
+    return (
+        <>
+            <div className="homeContainer">
+                <div className="menuContainer">
+                    <Button
+                        className={`menuItem ${active === "first" ? "active" : ""}`}
+                        onClick={() => {
+                            setActive("first")
+                            setIsRacePage(false)
+                        }}
+                    >
+                        Main
+                    </Button>
 
-                <Button
-                    className={`menuItem ${active === "second" ? "active" : ""}`}
-                    onClick={() => {
-                        setActive("second")
-                        setIsRacePage(true)
+                    <Button
+                        className={`menuItem ${active === "second" ? "active" : ""}`}
+                        onClick={() => {
+                            setActive("second")
+                            setIsRacePage(true)
 
-                    }}
-                >
-                    Race
-                </Button>
+                        }}
+                    >
+                        Race
+                    </Button>
+                </div>
+                <div className="postsConteiner">
+
+                    {Posts()}
+                </div>
+                
             </div>
-            <div className="postsConteiner">
-
-                {Posts()}
-            </div>
-            
-        </div>
-    </>
+        </>
+    );
 }

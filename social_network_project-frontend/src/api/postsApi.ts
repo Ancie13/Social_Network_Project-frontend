@@ -41,8 +41,6 @@ export async function GetOwn(data: any)
     );
 
     const dataResponse = await response.json();
-    
-    console.log("BODY:", dataResponse);
 
 
     if (!response.ok)
@@ -73,8 +71,6 @@ export async function GetPostsRace()
     );
 
     const dataResponse = await response.json();
-    
-    console.log("BODY:", dataResponse);
 
 
     if (!response.ok)
@@ -124,4 +120,47 @@ export async function AddPostApi(data: any)
     }
 
     return dataResponse;
+}
+
+// /api/post/{postId}/likes
+
+export async function GetPostLikes(data: any)
+{
+    const response = await fetch(
+        `${API_URL}/api/post/${data}/likes`,
+        {
+            credentials: "include",
+            method: "GET",
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch likes");
+    }
+
+    return dataResponse.data;
+}
+
+// /api/post/toggleLike/{postId}
+export async function LikePost(data: any)
+{
+    const response = await fetch(
+        `${API_URL}/api/post/toggleLike/${data}`,
+        {
+            credentials: "include",
+            method: "POST",
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch like");
+    }
+
+    return dataResponse.data;
 }

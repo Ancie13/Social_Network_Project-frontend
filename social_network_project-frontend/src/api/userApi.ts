@@ -44,10 +44,10 @@ export async function SignUp(data: any)
 
     if (dataResponse?.status?.isOk && dataResponse?.data)
     {
-        sessionStorage.setItem(
-            "user",
-            JSON.stringify(dataResponse.data)
-        );
+        // sessionStorage.setItem(
+        //     "user",
+        //     JSON.stringify(dataResponse.data)
+        // );
     }
     else
     {
@@ -82,10 +82,10 @@ export async function SignIn(data: any)
         throw new Error("Logining failed");
     }
 
-    localStorage.setItem(
-        "user",
-        JSON.stringify(dataResponse.data)
-    );
+    // localStorage.setItem(
+    //     "user",
+    //     JSON.stringify(dataResponse.data)
+    // );
 
     return dataResponse;
 }
@@ -259,6 +259,28 @@ export async function FollowUser(data: any)
     if (!response.ok)
     {
         throw new Error(dataResponse?.message || "Failed to fetch profile");
+    }
+
+    return dataResponse.data;
+}
+
+// /api/user/getCurrentUser
+export async function GetMe()
+{
+    const response = await fetch(
+        `${API_URL}/api/user/getCurrentUser`,
+        {
+            credentials: "include",
+            method: "GET",
+        }
+    );
+
+    const dataResponse = await response.json();
+
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch user");
     }
 
     return dataResponse.data;

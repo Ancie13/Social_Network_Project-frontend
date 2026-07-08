@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import SearchModal from "../Components/Search/Search";
 import AddPost from "../Components/AddPost/AddPost";
 import type { User } from "../types/Types";
+import { GetMe } from "../api/userApi";
 
 export default function MainPage() {
     const [IsSearchOpen, setIsSearchOpen] = useState(false);
@@ -14,7 +15,11 @@ export default function MainPage() {
     const [user, setUser] = useState<User | null>(null);
     
     useEffect(() => {
-        setUser(JSON.parse(sessionStorage.getItem("user") || "null")as User);
+        const fetchUser = async () => {
+            const user = await GetMe();
+            setUser(user);
+        };
+        fetchUser();
     }, []);
 
     useEffect(() => {

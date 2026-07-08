@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type { User } from "../../types/Types";
 import { useParams } from "react-router-dom";
 import Loader from "../loader/Loader";
-import { FollowUser, GetUserFollowers, GetUserFollowing, GetUserProfileByLogin } from "../../api/userApi";
+import { FollowUser, GetMe, GetUserFollowers, GetUserFollowing, GetUserProfileByLogin } from "../../api/userApi";
 import FollowersModal from "../Followers/FollowersModal";
 
 export default function Profile() {
@@ -27,7 +27,7 @@ export default function Profile() {
         {
             const loadUserAndCheck = async () => {
                 await loadUser(login);
-                const currentUser = JSON.parse(sessionStorage.getItem("user") || "null") as User | null;
+                const currentUser = await GetMe();
                 if(currentUser && login === currentUser.login)
                 {
                     setIsMe(true);

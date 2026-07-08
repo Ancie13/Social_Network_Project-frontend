@@ -109,6 +109,24 @@
     margin-bottom: 10px;
 }
 
+.likesBox
+{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.likesCount
+{
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    font-size: 15px;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 5px;
+}
+
 /*  quickEmojis_____________________________________________________________________*/
 .emojiBar 
 {

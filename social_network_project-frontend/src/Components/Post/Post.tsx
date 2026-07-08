@@ -14,22 +14,27 @@ import type { PostProps, User } from "../../types/Types";
 import { useNavigate } from "react-router-dom";
 import Loader from "../loader/Loader";
 import { GetUserProfile } from "../../api/userApi";
+import { GetPostLikes, LikePost } from "../../api/postsApi";
 
 export default function Post(
-{       userId,
+{       id,
+        userId,
         text,
         imageUrl,
         description,
         tags,
-        onClick
+        onClick,
+        myId
     }: PostProps)
 {
     const navigate = useNavigate();
+    const [likes, setLikes] = useState<Array<User> | null>(null);
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [isQuickEmojisOpen, setIsQuickEmojisOpen] = useState(false);
     const [user, setUser] = useState<User | null>(null);
+    
  
     const quickEmojis = ["🔥", "😂", "❤️", "👍", "😢", "😀"];
     const addEmoji = (emoji: string) => {
@@ -41,13 +46,42 @@ export default function Post(
 
         loadUser(userId);
     }, [userId]);
+    useEffect(() =>
+    {
+        if (!id) return;
+
+        loadPostLikes(id.toString());
+    }, [id]);
+
+    const toggleLike = async () => {
+        if(likes) {
+            await LikePost(id);
+            setLiked(!liked);
+            await loadPostLikes(id.toString());
+        }
+    };
+    
 
     const loadUser = async (userId: string) =>
     {
         const res = await GetUserProfile(userId);
         setUser(res);
-        // console.log(res);
     };
+
+    const loadPostLikes = async (postId: string) =>
+    {
+        const res = await GetPostLikes(postId);
+        setLikes(res);
+    };
+
+    useEffect(()  =>  { 
+        if (myId && likes) {
+            if(likes.find(user => user.id === myId))
+            {
+                setLiked(true);
+            }
+        }
+    }, [myId, likes]);
 
     const sendComment = () =>
     {
@@ -63,7 +97,7 @@ export default function Post(
 
     // console.log(user);
 
-    if (!user)
+    if (!user || !likes)
     {
         return <Loader/>;
     }
@@ -116,15 +150,19 @@ export default function Post(
             {description && <div className="postDesc">{description}</div>}
 
             <div className="postActions">
-
-                <Button
-                    type="text"
-                    icon={liked ? <LikeFilled /> : <LikeOutlined />}
-                    onClick={(e) => {
-                        setLiked(!liked);
-                        e.stopPropagation();
-                    }}
-                />
+                <div className="likesBox">
+                    <Button
+                        type="text"
+                        icon={liked ? <LikeFilled /> : <LikeOutlined />}
+                        onClick={(e) => {
+                            toggleLike();
+                            e.stopPropagation();
+                        }}
+                    />
+                    <div className="likesCount">{likes.length}</div>
+                </div>
+                
+                
 
                 <Button
                     type="text"

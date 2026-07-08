@@ -165,7 +165,11 @@ export default function PostModal({
                     </div>
 
                     <div className="commentsSection">
-
+                        {comments.length === 0 && (
+                            <div className="commentsPlaceHolder">Enjoy this post?<br/>Be the first to comment.</div>
+                        )
+                        
+                        }
                         {comments.map(comment => (
 
                             <div
@@ -205,7 +209,6 @@ export default function PostModal({
                             </div>
 
                         ))}
-
                     </div>
 
                     <div className="commentBottom">
