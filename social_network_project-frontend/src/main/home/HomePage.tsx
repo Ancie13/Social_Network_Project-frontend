@@ -17,8 +17,8 @@ export default function HomeContent()
     const [selectedPost, setSelectedPost] = useState<PostProps | null>(null);
     const [openModal, setOpenModal] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [users, setUsers] = useState<Record<number, User>>({});
-    const [usersRace, setUsersRace] = useState<Record<number, User>>({});
+    const [users, setUsers] = useState<Record<string, User>>({});
+    const [usersRace, setUsersRace] = useState<Record<string, User>>({});
     const [isRacePage, setIsRacePage] = useState(false);
     const [user, setUser] = useState<User | null>(null);
 
@@ -51,8 +51,8 @@ export default function HomeContent()
         {
             const LoadUsers = async () =>
             {
-                const map: Record<number, User> = {};
-                const map2: Record<number, User> = {};
+                const map: Record<string, User> = {};
+                const map2: Record<string, User> = {};
 
                 await Promise.all(
                     posts.map(async (post) =>
@@ -87,9 +87,9 @@ export default function HomeContent()
         }, [posts]);
 
     const Posts = () => {
-        return (
+                return (
             <>
-                {!loading ?
+                {!loading && user ?
                 (isRacePage ? postsRace : posts).map((post) => (
                     <Post
                         key={post.id}
@@ -100,10 +100,10 @@ export default function HomeContent()
                         description={post.bio}
                         tags={post.interests}
                         comments={post.comments}
-                        myId={user.id}
+                        myId={user?.id ?? ""}
                         onClick={() =>
                         {
-                            setSelectedPost({
+                                setSelectedPost({
                                 id: post.id,
                                 userId: post.userId,
                                 text: post.title,
@@ -111,7 +111,7 @@ export default function HomeContent()
                                 description: post.bio,
                                 tags: post.interests,
                                 comments: post.comments,
-                                myId: user.id
+                                myId: user?.id ?? ""
                             });
 
                             setOpenModal(true);

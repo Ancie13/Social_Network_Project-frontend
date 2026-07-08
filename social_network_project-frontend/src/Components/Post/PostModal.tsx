@@ -30,22 +30,22 @@ export default function PostModal({
 {
     const [commentText, setCommentText] = useState("");
     const [isPickerOpen, setIsPickerOpen] = useState(false);
-    const [commentators, setCommentators] = useState<Record<number, User>>({});
+    const [commentators, setCommentators] = useState<Record<string, User>>({});
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     const LoadCommentators = async () =>
     {
-        const map: Record<number, User> = {};
+        const map: Record<string, User> = {};
 
         await Promise.all(
             comments.map(async (comment) =>
             {
-                if (!map[comment.userId])
-                {
-                    const user = await GetUserProfile(comment.userId);
-                    map[comment.userId] = user;
-                }
+                    if (!map[comment.userId])
+                    {
+                        const user = await GetUserProfile(comment.userId);
+                        map[comment.userId] = user;
+                    }
             })
         );
 
@@ -176,12 +176,13 @@ export default function PostModal({
                                 key={comment.id}
                                 className="modalComment"
                             >
-                                <Avatar 
+                                    <Avatar 
                                     size={32}
                                     className="userAvatar"
                                     src={commentators[comment.userId]?.imageUrl || avatarHolder}
                                     onClick={() => {
-                                        navigate(`/profile/${commentators[comment.userId].login}`);
+                                        const c = commentators[comment.userId];
+                                        if (c) navigate(`/profile/${c.login}`);
                                     }}
                                 />
 
@@ -190,7 +191,8 @@ export default function PostModal({
                                     <span 
                                         className="commentUser"
                                         onClick={() => {
-                                            navigate(`/profile/${commentators[comment.userId].login}`);
+                                            const c = commentators[comment.userId];
+                                            if (c) navigate(`/profile/${c.login}`);
                                         }}
                                     >
                                         {commentators[comment.userId]?.nickname}

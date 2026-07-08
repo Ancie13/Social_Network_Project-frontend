@@ -30,7 +30,7 @@ export type TagType = {
 };
 
 export type PostProps = {
-    id: number;
+    id: string;
     userId: string;
     text: string;
     imageUrl?: string | null;
