@@ -25,14 +25,18 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
 {
     const location = useLocation();
     const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchUser = async () => {
             const user = await GetMe();
             setUser(user);
+            setIsLoading(false);
         };
+        setIsLoading(true);
         fetchUser();
     }, []);
+
     const activeTab = (() => {
         if (location.pathname === "/home") return "home";
         if (location.pathname === "/messages") return "messages";
@@ -122,7 +126,7 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
         },
     ];
 
-    if(!user)
+    if(isLoading)
     {
         return <Loader/>
     }
