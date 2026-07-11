@@ -14,7 +14,7 @@ import type { PostProps, User } from "../../types/Types";
 import { useNavigate } from "react-router-dom";
 import Loader from "../loader/Loader";
 import { GetUserProfile } from "../../api/userApi";
-import { GetPostLikes, LikePost } from "../../api/postsApi";
+import { AddComment, GetPostLikes, LikePost } from "../../api/postsApi";
 
 export default function Post(
 {       id,
@@ -83,7 +83,7 @@ export default function Post(
         }
     }, [myId, likes]);
 
-    const sendComment = () =>
+    const sendComment = async () =>
     {
         if (!commentText.trim()) return;
 
@@ -91,6 +91,9 @@ export default function Post(
         //     ...prev,
         //     { id: Date.now(), text: commentText }
         // ]);
+        console.log(commentText);
+        console.log(id);
+        await AddComment(id, commentText);
 
         setCommentText("");
     };
@@ -148,82 +151,83 @@ export default function Post(
             {imageUrl && <img className="postImage" src={imageUrl} />}
 
             {description && <div className="postDesc">{description}</div>}
+            
+            <div className="bottomPart">
+                <div className="postActions">
+                    <div className="likesBox">
+                        <Button
+                            type="text"
+                            icon={liked ? <LikeFilled /> : <LikeOutlined />}
+                            onClick={(e) => {
+                                toggleLike();
+                                e.stopPropagation();
+                            }}
+                        />
+                        <div className="likesCount">{likes.length}</div>
+                    </div>
+                    
+                    
 
-            <div className="postActions">
-                <div className="likesBox">
                     <Button
                         type="text"
-                        icon={liked ? <LikeFilled /> : <LikeOutlined />}
+                        icon={<MessageOutlined />}
+                    />
+
+                    <Button
+                        type="text"
+                        icon={saved ? <StarFilled/> : <StarOutlined/>}
                         onClick={(e) => {
-                            toggleLike();
+                            setSaved(!saved);
                             e.stopPropagation();
                         }}
                     />
-                    <div className="likesCount">{likes.length}</div>
                 </div>
+
+                {/* COMMENTS */}
+                {isQuickEmojisOpen && (
+                    <div className="emojiBar">
+
+                    {quickEmojis.map((emoji, i) => (
+                        <button
+                            key={i}
+                            className="emojiBtn"
+                            onClick={(e) => {
+                                addEmoji(emoji);
+                                setIsQuickEmojisOpen(false);
+                                e.stopPropagation();
+                            }}
+                        >
+                            {emoji}
+                        </button>
+                    ))}
+                    </div>
+                )}
                 
-                
+                <div className="commentInput">
+                    <Input
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        placeholder="Write a comment..."
+                        className="commentField"
+                        onFocus={() => setIsQuickEmojisOpen(true)}
+                        onClick={(e) => e.stopPropagation()}
+                        // onBlur={() => setIsQuickEmojisOpen(false)}
+                        onBlur={() => {
+                            setTimeout(() => setIsQuickEmojisOpen(false), 150);
+                        }}
+                    />
 
-                <Button
-                    type="text"
-                    icon={<MessageOutlined />}
-                />
-
-                <Button
-                    type="text"
-                    icon={saved ? <StarFilled/> : <StarOutlined/>}
-                    onClick={(e) => {
-                        setSaved(!saved);
-                        e.stopPropagation();
-                    }}
-                />
-            </div>
-
-            {/* COMMENTS */}
-            {isQuickEmojisOpen && (
-                <div className="emojiBar">
-
-                {quickEmojis.map((emoji, i) => (
-                    <button
-                        key={i}
-                        className="emojiBtn"
+                    <Button
+                        type="text"
+                        className="sendBtn"
+                        icon={<SendOutlined />}
                         onClick={(e) => {
-                            addEmoji(emoji);
-                            setIsQuickEmojisOpen(false);
+                            sendComment();
                             e.stopPropagation();
                         }}
-                    >
-                        {emoji}
-                    </button>
-                ))}
+                    />
                 </div>
-            )}
-            
-            <div className="commentInput">
-                <Input
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                    placeholder="Write a comment..."
-                    className="commentField"
-                    onFocus={() => setIsQuickEmojisOpen(true)}
-                    onClick={(e) => e.stopPropagation()}
-                    // onBlur={() => setIsQuickEmojisOpen(false)}
-                    // onBlur={() => {
-                    //     setTimeout(() => setIsQuickEmojisOpen(false), 150);
-                    // }}
-                />
-
-                <Button
-                    type="text"
-                    className="sendBtn"
-                    icon={<SendOutlined />}
-                    onClick={(e) => {
-                        sendComment;
-                        e.stopPropagation();
-                    }}
-                />
             </div>
-
         </div>
     </>
 }

@@ -164,3 +164,34 @@ export async function LikePost(data: any)
 
     return dataResponse.data;
 }
+
+// /api/comment/add
+export async function AddComment(PostId: string, Bio: string)
+{
+    const formData = new FormData();
+
+    formData.append("PostId", PostId);
+    formData.append("Bio", Bio);
+    console.log(formData);
+    
+    const response = await fetch(
+        `${API_URL}/api/comment/add`,
+        {
+            credentials: "include",
+            method: "POST",
+            body: formData,
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    console.log("send comm BODY:", dataResponse);
+
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch comment add");
+    }
+
+    return dataResponse.data;
+}

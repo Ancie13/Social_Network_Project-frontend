@@ -49,7 +49,7 @@ export type PostPropsModal = {
     imageUrl?: string | null;
     description?: string;
     tags: TagType[];
-    user: User;
+    user?: User;
     comments: Comment[] | [];
 };
 
@@ -57,4 +57,11 @@ export type Race = {
     id: string;
     name:string;
     themeColorHex:string;
+};
+
+export type interes = {
+  id: string;
+  name: string;
+  emoji: string;
+  color: string;
 };

@@ -2,9 +2,12 @@ import { Button, Input, Modal, Radio } from "antd";
 import "./AddPostStyle.css";
 import { InboxOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Dragger from "antd/es/upload/Dragger";
 import { AddPostApi } from "../../api/postsApi";
+import { GetAdditionalInfo } from "../../api/userApi";
+import type { interes } from "../../types/Types";
+import Loader from "../loader/Loader";
 
 export default function AddPost({ open, onClose }: { open: boolean; onClose: () => void })
 {
@@ -13,7 +16,9 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
     const [SelectedTags, setSelectedTags] = useState<string[]>([]);
     const [Visibility, setVisibility] = useState("public");
     const [Image, setImage] = useState(null);
-
+    const [interests, setInterests] = useState<Array<interes>>([]);
+    const [loading, setLoading] = useState(true);
+    
     // const [data, setData] = useState({
     //     UserId: "",
     //     Title: "",
@@ -27,35 +32,28 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
         tags: ""
     });
 
-    const interests = [
-        { name: "Sports", emoji: "⚽", color: "#3b82ff" },
-        { name: "Books", emoji: "📚", color: "#8b5cf6" },
-        { name: "Movies", emoji: "🎬", color: "#ff3b3b" },
-        { name: "Music", emoji: "🎵", color: "#ff7a3b" },
-        { name: "Gaming", emoji: "🎮", color: "#22c55e" },
-        { name: "Coding", emoji: "💻", color: "#06b6d4" },
-        { name: "Travel", emoji: "✈️", color: "#facc15" },
-        { name: "Fitness", emoji: "🏋️", color: "#ef4444" },
-        { name: "Anime", emoji: "🍥", color: "#f472b6" },
-        { name: "Technology", emoji: "🧠", color: "#0ea5e9" },
-        { name: "Art", emoji: "🎨", color: "#a855f7" },
-        { name: "Photography", emoji: "📸", color: "#14b8a6" },
-        { name: "Science", emoji: "🔬", color: "#6366f1" },
-        { name: "History", emoji: "🏺", color: "#b45309" },
-        { name: "Cooking", emoji: "🍳", color: "#f97316" },
-        { name: "Nature", emoji: "🌿", color: "#16a34a" },
-        { name: "Psychology", emoji: "🧠", color: "#7c3aed" },
-        { name: "Business", emoji: "💼", color: "#64748b" },
-        { name: "Cars", emoji: "🚗", color: "#dc2626" },
-        { name: "Space", emoji: "🚀", color: "#002f9dff" }
-    ];
+      useEffect(() => {
+        const fetchAdditionalInfo = async () => {
+            try {
+                setLoading(true);
+    
+                const info = await GetAdditionalInfo();
+    
+                setInterests(info.data.interests);
+            }
+            finally {
+                setLoading(false);
+            }
+        };
+          fetchAdditionalInfo();
+      }, []);
 
-    const toggleTag = (tag: string) =>
+    const toggleTag = (tagId: string) =>
     {
-        if (SelectedTags.includes(tag))
-            setSelectedTags(SelectedTags.filter(t => t !== tag));
+        if (SelectedTags.includes(tagId))
+            setSelectedTags(SelectedTags.filter(t => t !== tagId));
         else
-            setSelectedTags([...SelectedTags, tag]);
+            setSelectedTags([...SelectedTags, tagId]);
     };
 
     const handleSubmit = async () =>
@@ -114,6 +112,9 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
         });
     };
 
+    if(loading) {
+        return <Loader/>
+    }
     return <>
         <Modal
             open={open}
@@ -130,12 +131,19 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
                         Title <span className="required">*</span>
                     </label>
 
-                    <Input
-                        value={Title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className={`postInput ${Errors.title ? "error" : ""}`}
-                        placeholder="Post title..."
-                    />
+                    <div className="inputWrapper">
+                        <Input
+                            value={Title}
+                            maxLength={50}
+                            onChange={(e) => setTitle(e.target.value)}
+                            className={`postInput ${Errors.title ? "error" : ""}`}
+                            placeholder="Post title..."
+                        />
+
+                        <span className="charCounter">
+                            {Title.length}/50
+                        </span>
+                    </div>
 
                     {Errors.title && <div className="errorText">{Errors.title}</div>}
                 </div>
@@ -181,14 +189,21 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
                     </div>
                 )}
 
+                <div className="inputWrapper">
+                    <TextArea
+                        placeholder="Description..."
+                        value={Description}
+                        maxLength={500}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="postInput"
+                        rows={3}
+                    />
+
+                    <span className="charCounterDesc">
+                        {Description.length}/500
+                    </span>
+                </div>
                 
-                <TextArea
-                    placeholder="Description..."
-                    value={Description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="postInput"
-                    rows={3}
-                />
                 <div className="formField">
 
                     <label>
@@ -199,8 +214,8 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
                         {interests.map(tag => (
                             <Button
                                 key={tag.name}
-                                className={`interestBtn ${SelectedTags.includes(tag.name) ? "active" : ""}`}
-                                onClick={() => toggleTag(tag.name)}
+                                className={`interestBtn ${SelectedTags.includes(tag.id) ? "active" : ""}`}
+                                onClick={() => toggleTag(tag.id)}
                                 style={{ "--interest-color": tag.color } as React.CSSProperties}
                             >
                                 {tag.emoji} {tag.name}

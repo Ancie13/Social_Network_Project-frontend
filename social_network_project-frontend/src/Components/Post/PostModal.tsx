@@ -66,7 +66,8 @@ export default function PostModal({
     {
         if(!commentText.trim())
             return;
-
+        // const currentComment = null: Comment;
+        // comments.push()
         // setComments(prev => [
         //     ...prev,
         //     {
@@ -74,6 +75,15 @@ export default function PostModal({
         //         text: commentText
         //     }
         // ]);
+        // export type Comment = {
+        //     id: string;
+        //     userId: string;
+        //     postId: string;
+        //     likesQnt: number;
+        //     isLiked: boolean;
+        //     createdAt: string;
+        //     bio: string;
+        // };
 
         setCommentText("");
     };

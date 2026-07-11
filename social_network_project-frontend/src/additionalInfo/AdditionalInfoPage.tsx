@@ -6,13 +6,7 @@ import { InboxOutlined } from "@ant-design/icons";
 import { GetAdditionalInfo, SignUp } from "../api/userApi";
 import Dragger from "antd/es/upload/Dragger";
 import Loader from "../Components/loader/Loader";
-
-type interes = {
-  id: string;
-  name: string;
-  emoji: string;
-  color: string;
-};
+import type { interes } from "../types/Types";
 
 type race = {
   id: string;

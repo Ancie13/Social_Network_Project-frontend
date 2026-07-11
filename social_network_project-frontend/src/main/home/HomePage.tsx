@@ -28,15 +28,17 @@ export default function HomeContent()
             setLoading(true);
 
             try {
-                const [user, posts, racePosts] = await Promise.all([
+                const [user, postsResponse, racePostsResponse] = await Promise.all([
                     GetMe(),
                     GetPostsHome(),
                     GetPostsRace()
                 ]);
 
                 setUser(user);
-                setPosts(posts.data);
-                setPostsRace(racePosts.data);
+                setPosts(postsResponse.data);
+                setPostsRace(racePostsResponse.data);
+
+                await LoadUsers(postsResponse.data, racePostsResponse.data);
             } catch (err) {
                 console.error(err);
             } finally {
@@ -47,44 +49,37 @@ export default function HomeContent()
         loadData();
     }, []);
 
-        useEffect(() =>
-        {
-            const LoadUsers = async () =>
-            {
-                const map: Record<string, User> = {};
-                const map2: Record<string, User> = {};
+    const LoadUsers = async (postsList: any[], postsRaceList: any[]) => {
+        const map: Record<string, User> = {};
+        const map2: Record<string, User> = {};
 
-                await Promise.all(
-                    posts.map(async (post) =>
-                    {
-                        if (!map[post.userId])
-                        {
-                            const user = await GetUserProfile(post.userId);
-                            map[post.userId] = user;
-                        }
-                    })
-                );
+        await Promise.all(
+            postsList.map(async (post) => {
+                if (!map[post.userId]) {
+                    const user = await GetUserProfile(post.userId);
+                    map[post.userId] = user;
+                }
+            })
+        );
 
-                await Promise.all(
-                    postsRace.map(async (post) =>
-                    {
-                        if (!map2[post.userId])
-                        {
-                            const user = await GetUserProfile(post.userId);
-                            map2[post.userId] = user;
-                        }
-                    })
-                );
+        await Promise.all(
+            postsRaceList.map(async (post) => {
+                if (!map2[post.userId]) {
+                    const user = await GetUserProfile(post.userId);
+                    map2[post.userId] = user;
+                }
+            })
+        );
 
-                setUsers(map);
-                setUsersRace(map2);
-            };
+        setUsers(map);
+        setUsersRace(map2);
+    };
 
-            if (posts.length > 0)
-            {
-                LoadUsers();
-            }
-        }, [posts]);
+    const selectedPostUser = selectedPost
+        ? active === "first"
+            ? users[selectedPost.userId]
+            : usersRace[selectedPost.userId]
+        : undefined;
 
     const Posts = () => {
                 return (
@@ -118,7 +113,7 @@ export default function HomeContent()
                         }}
                     />
                 )) : <Loader></Loader>}
-                {selectedPost && (
+                {selectedPost && selectedPostUser && (
                     <PostModal
                         open={openModal}
                         onClose={() =>
@@ -131,7 +126,7 @@ export default function HomeContent()
                         imageUrl={selectedPost.imageUrl}
                         description={selectedPost.description}
                         tags={selectedPost.tags}
-                        user={active === "first" ? users[selectedPost.userId] : usersRace[selectedPost.userId]}
+                        user={selectedPostUser}
                         comments={selectedPost.comments}
                     />
                 )}
