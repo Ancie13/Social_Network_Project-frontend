@@ -14,7 +14,7 @@ import type { PostProps, User } from "../../types/Types";
 import { useNavigate } from "react-router-dom";
 import Loader from "../loader/Loader";
 import { GetUserProfile } from "../../api/userApi";
-import { AddComment, GetPostLikes, LikePost } from "../../api/postsApi";
+import { AddComment, GetPostLikes, GetPostSaves, LikePost, SavePost } from "../../api/postsApi";
 
 export default function Post(
 {       id,
@@ -24,12 +24,14 @@ export default function Post(
         description,
         tags,
         onClick,
-        myId
+        myId,
+        comments
     }: PostProps)
 {
     const navigate = useNavigate();
     const [likes, setLikes] = useState<Array<User> | null>(null);
     const [liked, setLiked] = useState(false);
+    const [saves, setSaves] = useState<Array<User> | null>(null);
     const [saved, setSaved] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [isQuickEmojisOpen, setIsQuickEmojisOpen] = useState(false);
@@ -51,6 +53,7 @@ export default function Post(
         if (!id) return;
 
         loadPostLikes(id.toString());
+        loadPostSaves(id.toString());
     }, [id]);
 
     const toggleLike = async () => {
@@ -60,8 +63,15 @@ export default function Post(
             await loadPostLikes(id.toString());
         }
     };
-    
 
+    const toggleSave = async () => {
+        if(saves) {
+            await SavePost(id);
+            setSaved(!saved);
+            await loadPostSaves(id.toString());
+        }
+    };
+    
     const loadUser = async (userId: string) =>
     {
         const res = await GetUserProfile(userId);
@@ -74,6 +84,12 @@ export default function Post(
         setLikes(res);
     };
 
+    const loadPostSaves = async (postId: string) =>
+    {
+        const res = await GetPostSaves(postId);
+        setSaves(res);
+    };
+
     useEffect(()  =>  { 
         if (myId && likes) {
             if(likes.find(user => user.id === myId))
@@ -83,16 +99,21 @@ export default function Post(
         }
     }, [myId, likes]);
 
+    useEffect(()  =>  { 
+        if (myId && saves) {
+            if(saves.find(user => user.id === myId))
+            {
+                setSaved(true);
+            }
+        }
+    }, [myId, saves]);
+
     const sendComment = async () =>
     {
         if (!commentText.trim()) return;
 
-        // setComments(prev => [
-        //     ...prev,
-        //     { id: Date.now(), text: commentText }
-        // ]);
-        console.log(commentText);
-        console.log(id);
+        // console.log(commentText);
+        // console.log(id);
         await AddComment(id, commentText);
 
         setCommentText("");
@@ -167,17 +188,20 @@ export default function Post(
                     </div>
                     
                     
-
-                    <Button
-                        type="text"
-                        icon={<MessageOutlined />}
-                    />
+                    <div className="likesBox">
+                        <Button
+                            type="text"
+                            icon={<MessageOutlined />}
+                        />
+                        <div className="likesCount">{comments.length}</div>
+                    </div>
+                    
 
                     <Button
                         type="text"
                         icon={saved ? <StarFilled/> : <StarOutlined/>}
                         onClick={(e) => {
-                            setSaved(!saved);
+                            toggleSave();
                             e.stopPropagation();
                         }}
                     />

@@ -10,14 +10,16 @@ import { useEffect, useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 import "./PostModalStyle.css";
 import avatarHolder from "../../assets/avatar_holder.jpg";
-import type { PostPropsModal, User, Comment } from "../../types/Types";
+import type { PostPropsModal, User } from "../../types/Types";
 import { useNavigate } from "react-router-dom";
 import { GetUserProfile } from "../../api/userApi";
 import Loader from "../loader/Loader";
 import formatDate from "../../shared/Date/FormatDate";
+import { AddComment } from "../../api/postsApi";
 
 
 export default function PostModal({
+    id,
     open,
     onClose,
     text,
@@ -31,9 +33,9 @@ export default function PostModal({
     const [commentText, setCommentText] = useState("");
     const [isPickerOpen, setIsPickerOpen] = useState(false);
     const [commentators, setCommentators] = useState<Record<string, User>>({});
-    const [loading, setLoading] = useState(true);
+    const [isloading, setIsLoading] = useState(true);
     const navigate = useNavigate();
-    const [localComments, setLocalComments] = useState<Array<Comment>>([]);
+    // const [newComments, setNewComments] = useState<Array<Comment>>([]);
 
     const LoadCommentators = async () =>
     {
@@ -51,49 +53,31 @@ export default function PostModal({
         );
 
         setCommentators(map);
-        setLoading(false);
+        setIsLoading(false);
     };
 
     useEffect(() => {
-        setLocalComments(comments);
         if(comments.length > 0)
         {
-            setLoading(true);
+            setIsLoading(true);
             LoadCommentators();
         }
-        setLoading(false);
+        setIsLoading(false);
     }, [comments]);
 
-    const sendComment = () =>
+    const sendComment = async () =>
     {
+        // setIsLoading(true);
         if(!commentText.trim())
             return;
-        const newComment: Comment = {
-            id: "",
-            userId: user.id,
-            postId: "",
-            likesQnt: 0,
-            isLiked: false,
-            createdAt: new Date().toISOString(),
-            bio: commentText,
-        }
 
-        setLocalComments(prev => [...prev, newComment]);
-        // export type Comment = {
-        //     id: string;
-        //     userId: string;
-        //     postId: string;
-        //     likesQnt: number;
-        //     isLiked: boolean;
-        //     createdAt: string;
-        //     bio: string;
-        // };
+        await AddComment(id, commentText);
 
         setCommentText("");
     };
 
 
-    if(loading) {
+    if(isloading) {
         return <Loader/>
     }
     return (
@@ -184,7 +168,7 @@ export default function PostModal({
                         )
                         
                         }
-                        {(localComments ? localComments : comments).map(comment => (
+                        {/* {(newComments ? newComments : comments)*/ comments.map(comment => ( 
 
                             <div
                                 key={comment.id}

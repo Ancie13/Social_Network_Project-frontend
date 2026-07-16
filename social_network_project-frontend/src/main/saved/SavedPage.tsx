@@ -16,12 +16,12 @@ export default function SavedPage()
         const [openModal, setOpenModal] = useState(false);
         const [isloading, setIsLoading] = useState(true);
         const [users, setUsers] = useState<Record<string, User>>({});
-        const { user, loading } = useAuth();
+        const { me, loading } = useAuth();
     
     
         useEffect(() => {
         
-            if (loading || !user)
+            if (loading || !me)
             {
                 return;
             }
@@ -51,7 +51,7 @@ export default function SavedPage()
             };
         
             loadData();
-        }, [loading, user]);
+        }, [loading, me]);
         
             const LoadUsers = async (postsList: any[]) => {
                 const map: Record<string, User> = {};
@@ -76,7 +76,7 @@ export default function SavedPage()
             const Posts = () => {
                             return (
                         <>
-                            {!loading && user && !isloading ?
+                            {!loading && me && !isloading ?
                             posts.map((post) => (
                                 <Post
                                     key={post.id}
@@ -87,7 +87,7 @@ export default function SavedPage()
                                     description={post.bio}
                                     tags={post.interests}
                                     comments={post.comments}
-                                    myId={user?.id ?? ""}
+                                    myId={me?.id ?? ""}
                                     onClick={() =>
                                     {
                                             setSelectedPost({
@@ -98,7 +98,7 @@ export default function SavedPage()
                                             description: post.bio,
                                             tags: post.interests,
                                             comments: post.comments,
-                                            myId: user?.id ?? ""
+                                            myId: me?.id ?? ""
                                         });
             
                                         setOpenModal(true);

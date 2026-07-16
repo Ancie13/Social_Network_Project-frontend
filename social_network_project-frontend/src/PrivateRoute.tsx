@@ -12,7 +12,7 @@ export default function PrivateRoute(
     }
 )
 {
-    const { user, loading } = useAuth();
+    const { me, loading } = useAuth();
 
 
     if (loading)
@@ -21,7 +21,7 @@ export default function PrivateRoute(
     }
 
 
-    if (!user)
+    if (!me)
     {
         return <Navigate to="/" replace />;
     }

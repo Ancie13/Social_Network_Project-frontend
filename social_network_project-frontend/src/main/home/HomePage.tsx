@@ -21,12 +21,12 @@ export default function HomeContent()
     const [users, setUsers] = useState<Record<string, User>>({});
     const [usersRace, setUsersRace] = useState<Record<string, User>>({});
     const [isRacePage, setIsRacePage] = useState(false);
-    const { user, loading } = useAuth();
+    const { me, loading } = useAuth();
 
 
 useEffect(() => {
 
-    if (loading || !user)
+    if (loading || !me)
     {
         return;
     }
@@ -59,7 +59,7 @@ useEffect(() => {
     };
 
     loadData();
-}, [loading, user]);
+}, [loading, me]);
 
     const LoadUsers = async (postsList: any[], postsRaceList: any[]) => {
         const map: Record<string, User> = {};
@@ -96,7 +96,7 @@ useEffect(() => {
     const Posts = () => {
                 return (
             <>
-                {!loading && user && !isloading ?
+                {!loading && me && !isloading ?
                 (isRacePage ? postsRace : posts).map((post) => (
                     <Post
                         key={post.id}
@@ -107,7 +107,7 @@ useEffect(() => {
                         description={post.bio}
                         tags={post.interests}
                         comments={post.comments}
-                        myId={user?.id ?? ""}
+                        myId={me?.id ?? ""}
                         onClick={() =>
                         {
                                 setSelectedPost({
@@ -118,7 +118,7 @@ useEffect(() => {
                                 description: post.bio,
                                 tags: post.interests,
                                 comments: post.comments,
-                                myId: user?.id ?? ""
+                                myId: me?.id ?? ""
                             });
 
                             setOpenModal(true);

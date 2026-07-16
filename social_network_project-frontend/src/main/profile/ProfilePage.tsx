@@ -1,27 +1,16 @@
 import "./ProfileStyle.css";
-import type { User } from "../../types/Types";
 import { Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { GetMe } from "../../api/userApi";
 import Loader from "../../Components/loader/Loader";
+import { useAuth } from "../../api/AuthContext";
 
 
 export default function ProfilePage()
 {
-    const [user, setUser] = useState<User | null>(null);
-    
+    const { me, loading } = useAuth();
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            const user = await GetMe();
-            setUser(user);
-        };
-        fetchUser();
-    }, []);
-
-    if (!user) {
+    if (loading) {
         return <Loader/>;
     }
 
-    return <Navigate to={`/profile/${user.login}`} replace />;
+    return <Navigate to={`/profile/${me.login}`} replace />;
 }

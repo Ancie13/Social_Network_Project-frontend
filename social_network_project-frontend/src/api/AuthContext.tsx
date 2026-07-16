@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { GetMe } from "./userApi";
 
 interface AuthContextType {
-    user: User | null;
+    me: User | null;
     loading: boolean;
 }
 
@@ -11,7 +11,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode })
 {
-    const [user, setUser] = useState<User | null>(null);
+    const [me, setMe] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
 
@@ -21,12 +21,12 @@ export function AuthProvider({ children }: { children: React.ReactNode })
             try
             {
                 const user = await GetMe();
-                setUser(user);
+                setMe(user);
             }
             catch(error)
             {
                 console.error(error);
-                setUser(null);
+                setMe(null);
             }
             finally
             {
@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode })
 
 
     return (
-        <AuthContext.Provider value={{ user, loading }}>
+        <AuthContext.Provider value={{ me, loading }}>
             {children}
         </AuthContext.Provider>
     );

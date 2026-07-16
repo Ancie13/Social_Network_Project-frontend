@@ -165,6 +165,50 @@ export async function LikePost(data: any)
     return dataResponse.data;
 }
 
+// /api/post/{postId}/saves
+export async function GetPostSaves(data: any)
+{
+    const response = await fetch(
+        `${API_URL}/api/post/${data}/saves`,
+        {
+            credentials: "include",
+            method: "GET",
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    console.log("getpost saves res" + dataResponse);
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch saves");
+    }
+
+    return dataResponse.data;
+}
+
+// /api/post/toggleSave/{postId}
+export async function SavePost(data: any)
+{
+    const response = await fetch(
+        `${API_URL}/api/post/toggleSave/${data}`,
+        {
+            credentials: "include",
+            method: "POST",
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch save");
+    }
+
+    return dataResponse.data;
+}
+
 // /api/comment/add
 export async function AddComment(PostId: string, Bio: string)
 {

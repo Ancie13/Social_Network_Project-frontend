@@ -17,26 +17,19 @@ export default function App() {
     <BrowserRouter>
 
             <Routes>
-
-                {/* Public */}
-
                 <Route 
                     path="/" 
                     element={<LoginPage />} 
                 />
-
                 <Route
                     path="/registration"
                     element={<RegisterPage />}
                 />
-
                 <Route
                     path="/addInfo"
                     element={<AdditionalInfoPage />}
                 />
 
-
-                {/* Protected */}
 
                 <Route element={<ProtectedLayout />}>
 
@@ -46,27 +39,22 @@ export default function App() {
                             path="/home"
                             element={<HomePage />}
                         />
-
                         <Route
                             path="/profile/:login"
                             element={<Profile />}
                         />
-
                         <Route
                             path="/profile"
                             element={<ProfilePage />}
                         />
-
                         <Route
                             path="/messages"
                             element={<MessagesPage />}
                         />
-
                         <Route
                             path="/likes"
                             element={<LikesPage />}
                         />
-
                         <Route
                             path="/saved"
                             element={<SavedPage />}

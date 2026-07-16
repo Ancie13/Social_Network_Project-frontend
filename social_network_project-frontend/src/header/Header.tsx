@@ -23,7 +23,7 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
      { onOpenSearch: () => void; onOpenAddPost: () => void })
 {
     const location = useLocation();
-    const { user, loading } = useAuth();
+    const { me, loading } = useAuth();
     // const [isLoading, setIsLoading] = useState(true);
 
     // useEffect(() => {
@@ -169,7 +169,7 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
                         >
                             <Avatar
                                 size={40}
-                                src={user?.imageUrl || avatarHolder}
+                                src={me?.imageUrl || avatarHolder}
                             />
                             <div className="profileText">Profile</div>
                             

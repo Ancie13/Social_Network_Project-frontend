@@ -11,7 +11,7 @@ export default function MainPage() {
     const [IsSearchOpen, setIsSearchOpen] = useState(false);
     const [IsAddPostOpen, setIsAddPostOpen] = useState(false);
     const [isloading, setIsLoading] = useState(true);
-    const { user, loading } = useAuth();
+    const { me, loading } = useAuth();
     
     // useEffect(() => {
     //     const fetchUser = async () => {
@@ -22,16 +22,16 @@ export default function MainPage() {
     // }, []);
 
     useEffect(() => {
-        if(user)
+        if(me)
         {
             document.documentElement.style.setProperty(
                 "--race-color",
-                user.race.themeColorHex
+                me.race.themeColorHex
             );
         }
 
         setIsLoading(false);
-    }, [user]);
+    }, [me]);
     
 
     if(loading || isloading) {
