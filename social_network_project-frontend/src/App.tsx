@@ -10,29 +10,74 @@ import MessagesPage from "./main/messages/MessagesPage";
 import LikesPage from "./main/likes/LikesPage";
 import SavedPage from "./main/saved/SavedPage";
 import Profile from "./Components/profile/Profile";
+import ProtectedLayout from "./ProtectedLayout";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-                <Route path="/registration" element={
-                    <RegisterPage />
-                } />
-                <Route path="/addInfo" element={
-                    <AdditionalInfoPage />
-                } />
-                
-                <Route element={<MainPage />}>
-                        <Route path="/home" element={<HomePage />} />
-                        <Route path="/profile/:login" element={<Profile />} />
-                        <Route path="/profile/" element={<ProfilePage />} />
-                        <Route path="/messages" element={<MessagesPage />} />
-                        <Route path="/likes" element={<LikesPage />} />
-                        <Route path="/saved" element={<SavedPage />} />
+
+            <Routes>
+
+                {/* Public */}
+
+                <Route 
+                    path="/" 
+                    element={<LoginPage />} 
+                />
+
+                <Route
+                    path="/registration"
+                    element={<RegisterPage />}
+                />
+
+                <Route
+                    path="/addInfo"
+                    element={<AdditionalInfoPage />}
+                />
+
+
+                {/* Protected */}
+
+                <Route element={<ProtectedLayout />}>
+
+                    <Route element={<MainPage />}>
+
+                        <Route
+                            path="/home"
+                            element={<HomePage />}
+                        />
+
+                        <Route
+                            path="/profile/:login"
+                            element={<Profile />}
+                        />
+
+                        <Route
+                            path="/profile"
+                            element={<ProfilePage />}
+                        />
+
+                        <Route
+                            path="/messages"
+                            element={<MessagesPage />}
+                        />
+
+                        <Route
+                            path="/likes"
+                            element={<LikesPage />}
+                        />
+
+                        <Route
+                            path="/saved"
+                            element={<SavedPage />}
+                        />
+
+                    </Route>
+
                 </Route>
 
-      </Routes>
-    </BrowserRouter>
+            </Routes>
+
+        </BrowserRouter>
   );
 }

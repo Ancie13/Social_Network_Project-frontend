@@ -195,3 +195,61 @@ export async function AddComment(PostId: string, Bio: string)
 
     return dataResponse.data;
 }
+
+
+// /api/user/likedPosts/{page?}/?pageSize={pageSize}
+export async function GetLikedPosts(page = 1, pageSize = 5)
+{
+    if (postsCache)
+    {
+        return { data: postsCache };
+    }
+
+    const response = await fetch(
+        `${API_URL}/api/user/likedPosts/${page}/?pageSize=${pageSize}`,
+        {
+            credentials: "include",
+            method: "GET",
+        }
+    );
+
+    const dataResponse = await response.json();
+    
+    // console.log("BODY:", dataResponse);
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch liked posts");
+    }
+
+    return dataResponse;
+}
+
+
+// /api/user/savedPosts/{page?}/?pageSize={pageSize}
+export async function GetSavedPosts(page = 1, pageSize = 5)
+{
+    if (postsCache)
+    {
+        return { data: postsCache };
+    }
+
+    const response = await fetch(
+        `${API_URL}/api/user/savedPosts/${page}/?pageSize=${pageSize}`,
+        {
+            credentials: "include",
+            method: "GET",
+        }
+    );
+
+    const dataResponse = await response.json();
+    
+    // console.log("BODY:", dataResponse);
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch saved posts");
+    }
+
+    return dataResponse;
+}

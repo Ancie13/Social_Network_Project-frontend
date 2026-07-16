@@ -16,26 +16,25 @@ import {
 } from "@ant-design/icons";
 import ThemeToggle from "../Components/Theme/ThemeToggle";
 import { Link, useLocation } from "react-router-dom";
-import type { User } from "../types/Types";
-import { GetMe } from "../api/userApi";
 import Loader from "../Components/loader/Loader";
+import { useAuth } from "../api/AuthContext";
 
 export default function Header({ onOpenSearch, onOpenAddPost }:
      { onOpenSearch: () => void; onOpenAddPost: () => void })
 {
     const location = useLocation();
-    const [user, setUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const { user, loading } = useAuth();
+    // const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            const user = await GetMe();
-            setUser(user);
-            setIsLoading(false);
-        };
-        setIsLoading(true);
-        fetchUser();
-    }, []);
+    // useEffect(() => {
+    //     const fetchUser = async () => {
+    //         const user = await GetMe();
+    //         setUser(user);
+    //         setIsLoading(false);
+    //     };
+    //     setIsLoading(true);
+    //     fetchUser();
+    // }, []);
 
     const activeTab = (() => {
         if (location.pathname === "/home") return "home";
@@ -126,7 +125,7 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
         },
     ];
 
-    if(isLoading)
+    if(loading)
     {
         return <Loader/>
     }

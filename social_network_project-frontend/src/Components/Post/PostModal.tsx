@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 import "./PostModalStyle.css";
 import avatarHolder from "../../assets/avatar_holder.jpg";
-import type { PostPropsModal, User } from "../../types/Types";
+import type { PostPropsModal, User, Comment } from "../../types/Types";
 import { useNavigate } from "react-router-dom";
 import { GetUserProfile } from "../../api/userApi";
 import Loader from "../loader/Loader";
@@ -33,6 +33,7 @@ export default function PostModal({
     const [commentators, setCommentators] = useState<Record<string, User>>({});
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const [localComments, setLocalComments] = useState<Array<Comment>>([]);
 
     const LoadCommentators = async () =>
     {
@@ -54,6 +55,7 @@ export default function PostModal({
     };
 
     useEffect(() => {
+        setLocalComments(comments);
         if(comments.length > 0)
         {
             setLoading(true);
@@ -66,15 +68,17 @@ export default function PostModal({
     {
         if(!commentText.trim())
             return;
-        // const currentComment = null: Comment;
-        // comments.push()
-        // setComments(prev => [
-        //     ...prev,
-        //     {
-        //         id: Date.now(),
-        //         text: commentText
-        //     }
-        // ]);
+        const newComment: Comment = {
+            id: "",
+            userId: user.id,
+            postId: "",
+            likesQnt: 0,
+            isLiked: false,
+            createdAt: new Date().toISOString(),
+            bio: commentText,
+        }
+
+        setLocalComments(prev => [...prev, newComment]);
         // export type Comment = {
         //     id: string;
         //     userId: string;
@@ -180,7 +184,7 @@ export default function PostModal({
                         )
                         
                         }
-                        {comments.map(comment => (
+                        {(localComments ? localComments : comments).map(comment => (
 
                             <div
                                 key={comment.id}

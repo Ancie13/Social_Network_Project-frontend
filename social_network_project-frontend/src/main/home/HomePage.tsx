@@ -6,7 +6,8 @@ import PostModal from "../../Components/Post/PostModal";
 import Loader from "../../Components/loader/Loader";
 import type { PostProps, User } from "../../types/Types";
 import Post from "../../Components/Post/Post";
-import { GetMe, GetUserProfile } from "../../api/userApi";
+import { GetUserProfile } from "../../api/userApi";
+import { useAuth } from "../../api/AuthContext";
 
 
 export default function HomeContent() 
@@ -16,38 +17,49 @@ export default function HomeContent()
     const [postsRace, setPostsRace] = useState<any[]>([]);
     const [selectedPost, setSelectedPost] = useState<PostProps | null>(null);
     const [openModal, setOpenModal] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [isloading, setIsLoading] = useState(true);
     const [users, setUsers] = useState<Record<string, User>>({});
     const [usersRace, setUsersRace] = useState<Record<string, User>>({});
     const [isRacePage, setIsRacePage] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
+    const { user, loading } = useAuth();
 
 
-    useEffect(() => {
-        const loadData = async () => {
-            setLoading(true);
+useEffect(() => {
 
-            try {
-                const [user, postsResponse, racePostsResponse] = await Promise.all([
-                    GetMe(),
-                    GetPostsHome(),
-                    GetPostsRace()
-                ]);
+    if (loading || !user)
+    {
+        return;
+    }
 
-                setUser(user);
-                setPosts(postsResponse.data);
-                setPostsRace(racePostsResponse.data);
+    const loadData = async () => {
+        setIsLoading(true);
 
-                await LoadUsers(postsResponse.data, racePostsResponse.data);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
+        try {
+            const [postsResponse, racePostsResponse] = await Promise.all([
+                GetPostsHome(),
+                GetPostsRace()
+            ]);
 
-        loadData();
-    }, []);
+            setPosts(postsResponse.data);
+            setPostsRace(racePostsResponse.data);
+
+            await LoadUsers(
+                postsResponse.data,
+                racePostsResponse.data
+            );
+        }
+        catch (err)
+        {
+            console.error(err);
+        }
+        finally
+        {
+            setIsLoading(false);
+        }
+    };
+
+    loadData();
+}, [loading, user]);
 
     const LoadUsers = async (postsList: any[], postsRaceList: any[]) => {
         const map: Record<string, User> = {};
@@ -84,7 +96,7 @@ export default function HomeContent()
     const Posts = () => {
                 return (
             <>
-                {!loading && user ?
+                {!loading && user && !isloading ?
                 (isRacePage ? postsRace : posts).map((post) => (
                     <Post
                         key={post.id}

@@ -1,0 +1,9 @@
+.savedPostsPlaceHolder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    font-size: 1.4vw;
+    text-align: center;
+    color: var(--secondary-text-add);
+}
