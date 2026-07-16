@@ -272,7 +272,7 @@ export default function AdditionalInfoPage() {
             </Form.Item>
 
             <Form.Item>
-              <div className="buttonsBox">
+              <div className="buttonsBoxAddInfo">
                 <Button
                   className="buttonBack"
                   type="primary"

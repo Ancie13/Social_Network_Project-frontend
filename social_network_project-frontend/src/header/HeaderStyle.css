@@ -114,7 +114,7 @@
 
 .searchBox
 {
-    width:250px;
+    width:20vw;
     height: auto;
 }
 
@@ -191,9 +191,9 @@
 
 /* ProfileBtn---------------------------------------------------------------------- */
 .profileBtn {
-    height: 80px !important;
+    height: 7vh !important;
     padding: 6px 10px !important;
-    width: 80px;
+    width: 4.5vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -255,7 +255,7 @@
 
 
 /* MOBILE___________________________________________________________________________ */
-@media (max-width: 768px)
+@media (max-width: 830px)
 {
     .wrapperHeader
     {

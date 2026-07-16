@@ -11,10 +11,10 @@ export default function RegisterPage() {
 
     return <>
         <div className="registerWrapper">
-            <img src={logo} alt="logo" className="logo" />
-            <div className="previewBox">
+            <img src={logo} alt="logo" className="logoRegister" />
+            <div className="previewBoxRegister">
                 <span>Enjoy speaking in EtherLink with your friends!</span>
-                <img src={preview} alt="preview" className="preview" />
+                <img src={preview} alt="preview" className="previewRegister" />
             </div>
             
 
@@ -30,8 +30,6 @@ export default function RegisterPage() {
                                 values.login + ":" + values.password
                             )
                         };
-
-                        console.log(registerData);
 
                         navigate("/addInfo", {
                             state: registerData

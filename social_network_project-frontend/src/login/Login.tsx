@@ -11,10 +11,10 @@ export default function LoginPage() {
     
     return <>
         <div className="loginWrapper">
-            <img src={logo} alt="logo" className="logo" />
-            <div className="previewBox">
+            <img src={logo} alt="logo" className="logoLogin" />
+            <div className="previewBoxLogin">
                 <span>Enjoy speaking in EtherLink with your friends!</span>
-                <img src={preview} alt="preview" className="preview" />
+                <img src={preview} alt="preview" className="previewLogin" />
             </div>
             
 

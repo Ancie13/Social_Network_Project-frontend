@@ -88,17 +88,19 @@
     text-decoration: underline;
 }
 
-.logo
+.logoLogin
 {
     height: 100px;
     width: 100px;
-    padding-bottom: 41%;
+    padding-bottom: 80vh;
     padding-left: 2%;
     object-fit: cover;
 }
-.previewBox
+.previewBoxLogin
 {
-    font-size: 4vh;
+    height: 70vh;
+    width: 50vw;
+    font-size: 2.2vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -106,9 +108,61 @@
     color: var(--text-color);
 }
 
-.preview
+.previewLogin
 {
     padding-top: 20px;
-    height: 65vh;
-    width: 65vw;
+    height: 600px;
+    width: 600px;
+}
+
+
+/* mobile_____________________________________________________________________________________ */
+
+@media (max-width: 830px)
+{
+    .loginWrapper
+    {
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .previewBoxLogin
+    {
+        display: none;
+    }
+
+    .loginContainer
+    {
+        width: 100%;
+        max-width: 420px;
+        height: auto;
+        padding: 32px 24px;
+    }
+
+    .logoLogin
+    {
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 80px;
+        padding: 0;
+    }
+
+    .loginTitle
+    {
+        font-size: 28px;
+    }
+
+    .loginInput
+    {
+        margin-top: 12px;
+    }
+
+    .loginButton
+    {
+        margin-top: 20px;
+    }
 }

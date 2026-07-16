@@ -111,6 +111,16 @@
     color: var(--text-color);
 }
 
+.buttonsBox
+{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    padding: 5px;
+    border-bottom: 1px solid var(--border-color);
+}
+
 .commentsSection
 {
     flex: 1;
@@ -208,7 +218,7 @@
 }
 
 
-@media (max-width: 768px)
+@media (max-width: 830px)
 {
     .postModal .ant-modal-content
     {

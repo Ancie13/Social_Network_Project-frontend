@@ -178,8 +178,6 @@ export async function GetPostSaves(data: any)
 
     const dataResponse = await response.json();
 
-    console.log("getpost saves res" + dataResponse);
-
     if (!response.ok)
     {
         throw new Error(dataResponse?.message || "Failed to fetch saves");

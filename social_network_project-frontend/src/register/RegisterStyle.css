@@ -10,7 +10,7 @@
 
 .registerContainer 
 {
-    width: 500px;
+    width: 27vw;
     height: 90%;
     padding: 30px;
     background-color: var(--card-color);
@@ -88,17 +88,20 @@
     text-decoration: underline;
 }
 
-.logo
+.logoRegister
 {
     height: 100px;
     width: 100px;
-    padding-bottom: 41%;
+    padding-bottom: 80vh;
     padding-left: 2%;
+    object-fit: cover;
 }
 
-.previewBox
+.previewBoxRegister
 {
-    font-size: 45px;
+    height: 70vh;
+    width: 50vw;
+    font-size: 2.2vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -106,9 +109,65 @@
     color: var(--text-color);
 }
 
-.preview
+.previewRegister
 {
     padding-top: 20px;
-    height: 650px;
-    width: 650px;
+    height: 600px;
+    width: 600px;
+}
+
+
+/* mobile_____________________________________________________________________________________ */
+@media (max-width: 830px)
+{
+    .registerWrapper
+    {
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .previewBoxRegister
+    {
+        display: none;
+    }
+
+    .registerContainer
+    {
+        width: 100%;
+        max-width: 420px;
+        height: auto;
+        padding: 32px 24px;
+    }
+
+    .logoRegister
+    {
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 80px;
+        padding: 0;
+    }
+
+    .registerTitle
+    {
+        font-size: 28px;
+    }
+
+    .registerInput
+    {
+        margin-top: 12px;
+    }
+
+    .registerButton
+    {
+        margin-top: 20px;
+    }
+
+    .registerFooter
+    {
+        margin-top: 16px;
+    }
 }

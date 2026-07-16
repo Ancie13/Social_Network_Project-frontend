@@ -3,7 +3,11 @@ import { Modal, Tag, Input, Button, Avatar } from "antd";
 import {
     SendOutlined,
     CloseOutlined,
-    SmileOutlined
+    SmileOutlined,
+    LikeFilled,
+    LikeOutlined,
+    StarOutlined,
+    StarFilled
 } from "@ant-design/icons";
 
 import { useEffect, useState } from "react";
@@ -15,7 +19,8 @@ import { useNavigate } from "react-router-dom";
 import { GetUserProfile } from "../../api/userApi";
 import Loader from "../loader/Loader";
 import formatDate from "../../shared/Date/FormatDate";
-import { AddComment } from "../../api/postsApi";
+import { AddComment, GetPostLikes, GetPostSaves, LikePost, SavePost } from "../../api/postsApi";
+import { useAuth } from "../../api/AuthContext";
 
 
 export default function PostModal({
@@ -27,14 +32,19 @@ export default function PostModal({
     description,
     tags,
     user,
-    comments
+    comments,
 }: PostPropsModal)
 {
+    const [liked, setLiked] = useState(false);
+    const [likes, setLikes] = useState<User[]>([]);
+    const [saves, setSaves] = useState<User[]>([]);
+    const [saved, setSaved] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [isPickerOpen, setIsPickerOpen] = useState(false);
     const [commentators, setCommentators] = useState<Record<string, User>>({});
     const [isloading, setIsLoading] = useState(true);
     const navigate = useNavigate();
+    const { me, loading } = useAuth();
     // const [newComments, setNewComments] = useState<Array<Comment>>([]);
 
     const LoadCommentators = async () =>
@@ -52,18 +62,26 @@ export default function PostModal({
             })
         );
 
+        loadPostLikes(id.toString());
+        loadPostSaves(id.toString());
         setCommentators(map);
-        setIsLoading(false);
     };
 
-    useEffect(() => {
-        if(comments.length > 0)
+useEffect(() => {
+    async function load()
+    {
+        setIsLoading(true);
+        try
         {
-            setIsLoading(true);
-            LoadCommentators();
+            await LoadCommentators();
         }
-        setIsLoading(false);
-    }, [comments]);
+        finally
+        {
+            setIsLoading(false);
+        }
+    }
+    load();
+}, [comments]);
 
     const sendComment = async () =>
     {
@@ -75,9 +93,56 @@ export default function PostModal({
 
         setCommentText("");
     };
+    
+    const toggleLike = async () => {
+        if(likes) {
+            await LikePost(id);
+            setLiked(!liked);
+            await loadPostLikes(id.toString());
+        }
+    };
+
+    const toggleSave = async () => {
+        if(saves) {
+            await SavePost(id);
+            setSaved(!saved);
+            await loadPostSaves(id.toString());
+        }
+    };
+
+    const loadPostLikes = async (postId: string) =>
+    {
+        const res = await GetPostLikes(postId);
+        setLikes(res);
+    };
+
+    const loadPostSaves = async (postId: string) =>
+    {
+        const res = await GetPostSaves(postId);
+        setSaves(res);
+    };
+
+    useEffect(()  =>  { 
+        if (me.id && likes) {
+            if(likes.find(user => user.id === me.id))
+            {
+                setLiked(true);
+            }
+        }
+    }, [me, likes]);
+
+    useEffect(()  =>  { 
+        if (me.id && saves) {
+            if(saves.find(user => user.id === me.id))
+            {
+                setSaved(true);
+            }
+        }
+    }, [me, saves]);
+    
 
 
-    if(isloading) {
+    if(isloading && loading) {
         return <Loader/>
     }
     return (
@@ -156,6 +221,28 @@ export default function PostModal({
 
                         </div>
 
+                    </div>
+
+                    <div className="buttonsBox">
+                        <div className="likesBox">
+                            <Button
+                                type="text"
+                                icon={liked ? <LikeFilled /> : <LikeOutlined />}
+                                onClick={(e) => {
+                                    toggleLike();
+                                    e.stopPropagation();
+                                }}
+                            />
+                            <div className="likesCount">{likes.length}</div>
+                        </div>
+                        <Button
+                            type="text"
+                            icon={saved ? <StarFilled/> : <StarOutlined/>}
+                            onClick={(e) => {
+                                toggleSave();
+                                e.stopPropagation();
+                            }}
+                        />
                     </div>
 
                     <div className="descriptionBox">
