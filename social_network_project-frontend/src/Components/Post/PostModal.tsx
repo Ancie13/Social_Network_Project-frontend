@@ -123,7 +123,7 @@ useEffect(() => {
     };
 
     useEffect(()  =>  { 
-        if (me.id && likes) {
+        if (me && me.id && likes) {
             if(likes.find(user => user.id === me.id))
             {
                 setLiked(true);
@@ -132,7 +132,7 @@ useEffect(() => {
     }, [me, likes]);
 
     useEffect(()  =>  { 
-        if (me.id && saves) {
+        if (me && me.id && saves) {
             if(saves.find(user => user.id === me.id))
             {
                 setSaved(true);
@@ -188,40 +188,42 @@ useEffect(() => {
 
                 <div className="rightSide">
 
-                    <div className="userHeader">
+                    {user && (
+                        <div className="userHeader">
 
-                        <Avatar
-                            size={50}
-                            className="userAvatar"
-                            src={user.imageUrl || avatarHolder}
-                            onClick={() => {
-                                navigate(`/profile/${user.login}`);
-                            }}
-                        />
-
-                        <div className="userInfo">
-
-                            <div 
-                                className="nickname"
+                            <Avatar
+                                size={50}
+                                className="userAvatar"
+                                src={user.imageUrl || avatarHolder}
                                 onClick={() => {
                                     navigate(`/profile/${user.login}`);
                                 }}
-                            >
-                                {user.nickname}
-                            </div>
+                            />
 
-                            <div 
-                                className="username"
-                                onClick={() => {
-                                    navigate(`/profile/${user.login}`);
-                                }}
-                            >
-                                @{user.login}
+                            <div className="userInfo">
+
+                                <div 
+                                    className="nickname"
+                                    onClick={() => {
+                                        navigate(`/profile/${user.login}`);
+                                    }}
+                                >
+                                    {user.nickname}
+                                </div>
+
+                                <div 
+                                    className="username"
+                                    onClick={() => {
+                                        navigate(`/profile/${user.login}`);
+                                    }}
+                                >
+                                    @{user.login}
+                                </div>
+
                             </div>
 
                         </div>
-
-                    </div>
+                    )}
 
                     <div className="buttonsBox">
                         <div className="likesBox">

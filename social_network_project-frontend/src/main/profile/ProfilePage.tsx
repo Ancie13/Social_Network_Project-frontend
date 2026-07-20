@@ -12,5 +12,9 @@ export default function ProfilePage()
         return <Loader/>;
     }
 
+    if (!me) {
+        return <Navigate to="/login" replace />;
+    }
+
     return <Navigate to={`/profile/${me.login}`} replace />;
 }
