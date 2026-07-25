@@ -20,6 +20,10 @@ export default function LikesPage()
 
 
     useEffect(() => {
+        document.title = "Likes | EtherLink";
+    }, []);
+
+    useEffect(() => {
     
         if (loading || !me)
         {

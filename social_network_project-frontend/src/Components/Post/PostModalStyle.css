@@ -218,6 +218,12 @@
 }
 
 
+.antBtmModal 
+{
+    font-size: 20px;
+}
+
+
 @media (max-width: 830px)
 {
     .postModal .ant-modal-content

@@ -5,10 +5,15 @@ import logo from "../assets/logo_holder.png";
 import preview from "../assets/Preview.webp";
 import Base64 from "../shared/Base64/Base64";
 import { SignIn } from "../api/userApi";
+import { useEffect } from "react";
 
 export default function LoginPage() {
     const navigate = useNavigate();
     
+    useEffect(() => {
+        document.title = "Login | EtherLink";
+    }, []);
+
     return <>
         <div className="loginWrapper">
             <img src={logo} alt="logo" className="logoLogin" />
@@ -24,8 +29,10 @@ export default function LoginPage() {
                     onFinish={async (values) => {
                         const data = "Basic " + Base64.encode(values.login + ":" + values.password);
                         try {
-                            SignIn(data)
-                            navigate("/home");
+                            const res = await SignIn(data)
+                            if(res.status.isOk === true) {
+                                navigate("/home");
+                            }
                         }
                         catch(error: unknown)
                         {

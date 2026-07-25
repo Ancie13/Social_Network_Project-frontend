@@ -23,43 +23,47 @@ export default function HomeContent()
     const [isRacePage, setIsRacePage] = useState(false);
     const { me, loading } = useAuth();
 
+    useEffect(() => {
+        document.title = "Home | EtherLink";
+    }, []);
 
-useEffect(() => {
 
-    if (loading || !me)
-    {
-        return;
-    }
+    useEffect(() => {
 
-    const loadData = async () => {
-        setIsLoading(true);
-
-        try {
-            const [postsResponse, racePostsResponse] = await Promise.all([
-                GetPostsHome(),
-                GetPostsRace()
-            ]);
-
-            setPosts(postsResponse.data);
-            setPostsRace(racePostsResponse.data);
-
-            await LoadUsers(
-                postsResponse.data,
-                racePostsResponse.data
-            );
-        }
-        catch (err)
+        if (loading || !me)
         {
-            console.error(err);
+            return;
         }
-        finally
-        {
-            setIsLoading(false);
-        }
-    };
 
-    loadData();
-}, [loading, me]);
+        const loadData = async () => {
+            setIsLoading(true);
+
+            try {
+                const [postsResponse, racePostsResponse] = await Promise.all([
+                    GetPostsHome(),
+                    GetPostsRace()
+                ]);
+
+                setPosts(postsResponse.data);
+                setPostsRace(racePostsResponse.data);
+
+                await LoadUsers(
+                    postsResponse.data,
+                    racePostsResponse.data
+                );
+            }
+            catch (err)
+            {
+                console.error(err);
+            }
+            finally
+            {
+                setIsLoading(false);
+            }
+        };
+
+        loadData();
+    }, [loading, me]);
 
     const LoadUsers = async (postsList: any[], postsRaceList: any[]) => {
         const map: Record<string, User> = {};

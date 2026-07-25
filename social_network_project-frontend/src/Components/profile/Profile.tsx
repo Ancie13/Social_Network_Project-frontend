@@ -2,13 +2,21 @@ import { Avatar, Button, Divider, Modal, Tag } from "antd";
 import avatarHolder from "../../assets/avatar_holder.jpg";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import type { User } from "../../types/Types";
+import type { PostProps, User } from "../../types/Types";
 import { useParams } from "react-router-dom";
 import Loader from "../loader/Loader";
-import { FollowUser, GetMe, GetUserFollowers, GetUserFollowing, GetUserProfileByLogin } from "../../api/userApi";
+import { FollowUser, GetMe, GetUserFollowers, GetUserFollowing, GetUserProfile, GetUserProfileByLogin } from "../../api/userApi";
 import FollowersModal from "../Followers/FollowersModal";
+import { useAuth } from "../../api/AuthContext";
+import { GetUserPosts } from "../../api/postsApi";
+import Post from "../Post/Post";
+import PostModal from "../Post/PostModal";
 
 export default function Profile() {
+    const [posts, setPosts] = useState<any[]>([]);
+    const [selectedPost, setSelectedPost] = useState<PostProps | null>(null);
+    const [openModal, setOpenModal] = useState(false);
+    const [users, setUsers] = useState<Record<string, User>>({});
     const [IsAvatarOpen, setIsAvatarOpen] = useState(false);
     const { login } = useParams();
     const [user, setUser] = useState<User | null>(null);
@@ -20,7 +28,12 @@ export default function Profile() {
     const [isLoading, setIsLoading] = useState(true);
     const [isOpenFollowers, setIsOpenFollowers] = useState(false);
     const [isOpenFollowing, setIsOpenFollowing] = useState(false);
+    const { me, loading } = useAuth();
     
+    useEffect(() => {
+        document.title = "EtherLink";
+    }, []);
+
     useEffect(() =>
     {
         if (login)
@@ -65,7 +78,7 @@ export default function Profile() {
 
     useEffect(()  =>  { 
         if (user) {
-            console.log("User loaded, isFollowing:", user.isFollowing);
+            // console.log("User loaded, isFollowing:", user.isFollowing);
             setIsFollowing(user.isFollowing);
             fetchFollowers();
         }
@@ -78,10 +91,123 @@ export default function Profile() {
         res = await GetUserProfileByLogin(login);
         
         setUser(res);
-        console.log(res);
     };
 
-    if (!user || isLoading)
+    useEffect(() => {
+        if (loading || !me || !user)
+        {
+            return;
+        }
+
+        const loadData = async () => {
+            setIsLoading(true);
+
+            try {
+                console.log(user.id);
+                const [postsResponse] = await Promise.all([
+                    GetUserPosts(user.id),
+                ]);
+
+                setPosts(postsResponse.data);
+
+                await LoadUsers(postsResponse.data);
+            }
+            catch (err)
+            {
+                console.error(err);
+            }
+            finally
+            {
+                setIsLoading(false);
+            }
+        };
+
+        loadData();
+    }, [loading, me, user]);
+        
+            const LoadUsers = async (postsList: any[]) => {
+                const map: Record<string, User> = {};
+        
+                await Promise.all(
+                    postsList.map(async (post) => {
+                        if (!map[post.userId]) {
+                            const user = await GetUserProfile(post.userId);
+                            map[post.userId] = user;
+                        }
+                    })
+                );
+        
+                setUsers(map);
+            };
+    
+    
+            const selectedPostUser = selectedPost
+                ? users[selectedPost.userId]
+            : undefined;
+    
+            const Posts = () => {
+                            return (
+                        <>
+                            {!loading && me && !isLoading ?
+                            posts.map((post) => (
+                                <Post
+                                    key={post.id}
+                                    id={post.id}
+                                    userId={post.userId}
+                                    text={post.title}
+                                    imageUrl={post.imageUrl}
+                                    description={post.bio}
+                                    tags={post.interests}
+                                    comments={post.comments}
+                                    myId={me?.id ?? ""}
+                                    onClick={() =>
+                                    {
+                                            setSelectedPost({
+                                            id: post.id,
+                                            userId: post.userId,
+                                            text: post.title,
+                                            imageUrl: post.imageUrl,
+                                            description: post.bio,
+                                            tags: post.interests,
+                                            comments: post.comments,
+                                            myId: me?.id ?? ""
+                                        });
+            
+                                        setOpenModal(true);
+                                    }}
+                                />
+                            )) : <Loader></Loader>}
+                            {posts.length > 0 ?
+                                <></> :
+                                <div className="likedPostsPlaceHolder">
+                                    {isMe
+                                        ? "You don't have any posts yet."
+                                        : "This user doesn't have any posts yet."
+                                    }
+                                </div>
+                            }
+                            {selectedPost && selectedPostUser && (
+                                <PostModal
+                                    open={openModal}
+                                    onClose={() =>
+                                    {
+                                        setOpenModal(false);
+                                        setSelectedPost(null);
+                                    }}
+                                    id={selectedPost.id.toString()}
+                                    text={selectedPost.text}
+                                    imageUrl={selectedPost.imageUrl}
+                                    description={selectedPost.description}
+                                    tags={selectedPost.tags}
+                                    user={selectedPostUser}
+                                    comments={selectedPost.comments}
+                                />
+                            )}
+                        </>
+                    );
+                };
+
+    if (!user || isLoading || loading)
     {
         return <Loader/>
     }
@@ -126,10 +252,15 @@ export default function Profile() {
 
 
                 <div className="profileBio">
-                    {user.bio || "Write something about you..."} 
+                    {user.bio || isMe ? "Write something about you..." : null} 
                 </div>
 
-                <Divider className="divider" />
+                {user.bio ? (
+                    <Divider className="divider" />
+                ) : (
+                    isMe && !user.bio ? (<Divider className="divider" />) : ("")
+                )
+                }
 
                 <div className="profileStats">
                     <div><b>{user.posts}</b> Posts</div>
@@ -187,7 +318,7 @@ export default function Profile() {
 
 
             <div className="postsConteiner">
-
+                {Posts()}
             </div>
 
         </div>

@@ -204,7 +204,7 @@ export async function GetUserFollowers(data: any)
 
     const dataResponse = await response.json();
     
-    console.log("get followers BODY:", dataResponse);
+    // console.log("get followers BODY:", dataResponse);
 
 
     if (!response.ok)
@@ -229,7 +229,7 @@ export async function GetUserFollowing(data: any)
 
     const dataResponse = await response.json();
     
-    console.log("get following BODY:", dataResponse);
+    // console.log("get following BODY:", dataResponse);
 
 
     if (!response.ok)
@@ -277,6 +277,8 @@ export async function GetMe()
 
     const dataResponse = await response.json();
 
+    console.log("me BODY:", dataResponse);
+
 
     if (!response.ok)
     {
@@ -284,4 +286,98 @@ export async function GetMe()
     }
 
     return dataResponse.data;
+}
+
+// /api/user/signout
+export async function Signout()
+{
+    const response = await fetch(
+        `${API_URL}/api/user/signout`,
+        {
+            credentials: "include",
+            method: "POST",
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    // console.log("signout BODY:", dataResponse);
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to signout");
+    }
+
+    return dataResponse;
+}
+
+// /api/user/profile/edit
+export async function EditProfile({
+    Login,
+    Nickname,
+    Bio,
+    Email,
+    Avatar,
+    OldBase64Password,
+    Base64Password,
+    Interests,
+}: {
+    Login?: string;
+    Nickname?: string;
+    Bio?: string;
+    Email?: string;
+    Avatar?: string;
+    OldBase64Password?: string;
+    Base64Password?: string;
+    Interests?: string[];
+}) {
+    const formData = new FormData();
+    
+    if(Login) {
+        formData.append("Login", Login); 
+    }
+    if(Nickname) {
+        formData.append("Nickname", Nickname); 
+    }
+    if(Bio) {
+        formData.append("Bio", Bio); 
+    }
+    if(Email) {
+        formData.append("Email", Email); 
+    }
+    if(Avatar) {
+        formData.append("Avatar", Avatar); 
+    }
+    if(OldBase64Password) {
+        formData.append("OldBase64Password", OldBase64Password); 
+    }
+    if(Base64Password) {
+        formData.append("Base64Password", Base64Password); 
+    }
+    if (Interests) {
+        Interests.forEach((interest) => {
+            formData.append("Interests", interest);
+        });
+    }
+
+    const response = await fetch(
+        `${API_URL}/api/user/profile/edit`,
+        {
+            credentials: "include",
+            method: "PUT",
+            body: formData
+        }
+    );
+
+    const dataResponse = await response.json();
+    
+    console.log("STATUS:", response.status);
+    console.log("BODY:", dataResponse);
+
+    if(!response.ok)
+    {
+        throw new Error("Registration failed");
+    }
+
+    return dataResponse;
 }

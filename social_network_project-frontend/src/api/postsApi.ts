@@ -242,10 +242,6 @@ export async function AddComment(PostId: string, Bio: string)
 // /api/user/likedPosts/{page?}/?pageSize={pageSize}
 export async function GetLikedPosts(page = 1, pageSize = 5)
 {
-    if (postsCache)
-    {
-        return { data: postsCache };
-    }
 
     const response = await fetch(
         `${API_URL}/api/user/likedPosts/${page}/?pageSize=${pageSize}`,
@@ -271,10 +267,6 @@ export async function GetLikedPosts(page = 1, pageSize = 5)
 // /api/user/savedPosts/{page?}/?pageSize={pageSize}
 export async function GetSavedPosts(page = 1, pageSize = 5)
 {
-    if (postsCache)
-    {
-        return { data: postsCache };
-    }
 
     const response = await fetch(
         `${API_URL}/api/user/savedPosts/${page}/?pageSize=${pageSize}`,
@@ -291,6 +283,30 @@ export async function GetSavedPosts(page = 1, pageSize = 5)
     if (!response.ok)
     {
         throw new Error(dataResponse?.message || "Failed to fetch saved posts");
+    }
+
+    return dataResponse;
+}
+
+
+// /api/post/getUserPosts/{userId}/{page?}/?pageSize={pageSize}
+export async function GetUserPosts(id: string, page = 1, pageSize = 5)
+{
+    const response = await fetch(
+        `${API_URL}/api/post/getUserPosts/${id}/${page}/?pageSize=${pageSize}`,
+        {
+            credentials: "include",
+            method: "GET",
+        }
+    );
+
+    const dataResponse = await response.json();
+    
+    console.log("GetUserPosts:", dataResponse);
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to fetch user posts");
     }
 
     return dataResponse;

@@ -2,6 +2,7 @@ import "./ProfileStyle.css";
 import { Navigate } from "react-router-dom";
 import Loader from "../../Components/loader/Loader";
 import { useAuth } from "../../api/AuthContext";
+import { useEffect } from "react";
 
 
 export default function ProfilePage()
@@ -15,6 +16,10 @@ export default function ProfilePage()
     if (!me) {
         return <Navigate to="/login" replace />;
     }
+
+    useEffect(() => {
+        document.title = "EtherLink";
+    }, []);
 
     return <Navigate to={`/profile/${me.login}`} replace />;
 }

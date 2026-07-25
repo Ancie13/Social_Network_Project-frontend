@@ -18,6 +18,7 @@ export function AuthProvider({ children }: { children: React.ReactNode })
     useEffect(() => {
         async function loadUser()
         {
+            
             try
             {
                 const user = await GetMe();
@@ -34,7 +35,11 @@ export function AuthProvider({ children }: { children: React.ReactNode })
             }
         }
 
-        loadUser();
+        const timer = setTimeout(async () => {
+            loadUser();
+        }, 300);
+
+        return () => clearTimeout(timer);
     }, []);
 
 

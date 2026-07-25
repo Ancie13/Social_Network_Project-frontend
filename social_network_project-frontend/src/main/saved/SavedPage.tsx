@@ -12,12 +12,15 @@ import "./SavedStyle.css";
 export default function SavedPage()
 {
     const [posts, setPosts] = useState<any[]>([]);
-        const [selectedPost, setSelectedPost] = useState<PostProps | null>(null);
-        const [openModal, setOpenModal] = useState(false);
-        const [isloading, setIsLoading] = useState(true);
-        const [users, setUsers] = useState<Record<string, User>>({});
-        const { me, loading } = useAuth();
+    const [selectedPost, setSelectedPost] = useState<PostProps | null>(null);
+    const [openModal, setOpenModal] = useState(false);
+    const [isloading, setIsLoading] = useState(true);
+    const [users, setUsers] = useState<Record<string, User>>({});
+    const { me, loading } = useAuth();
     
+    useEffect(() => {
+        document.title = "Saved | EtherLink";
+    }, []);
     
         useEffect(() => {
         

@@ -11,6 +11,7 @@ import {
     MessageFilled,
     MessageOutlined,
     PlusOutlined,
+    SettingOutlined,
     StarFilled,
     StarOutlined,
 } from "@ant-design/icons";
@@ -18,11 +19,13 @@ import ThemeToggle from "../Components/Theme/ThemeToggle";
 import { Link, useLocation } from "react-router-dom";
 import Loader from "../Components/loader/Loader";
 import { useAuth } from "../api/AuthContext";
+import SettingsModal from "../Components/Settings/SettingsModal";
 
 export default function Header({ onOpenSearch, onOpenAddPost }:
      { onOpenSearch: () => void; onOpenAddPost: () => void })
 {
     const location = useLocation();
+    const [settingsOpen, setSettingsOpen] = useState(false);
     const { me, loading } = useAuth();
     // const [isLoading, setIsLoading] = useState(true);
 
@@ -35,13 +38,19 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
     //     setIsLoading(true);
     //     fetchUser();
     // }, []);
+    const isTabPage = [
+        "/home",
+        "/messages",
+        "/likes",
+        "/saved",
+    ].includes(location.pathname);
 
     const activeTab = (() => {
         if (location.pathname === "/home") return "home";
         if (location.pathname === "/messages") return "messages";
         if (location.pathname === "/likes") return "likes";
         if (location.pathname === "/saved") return "saved";
-        return "";
+        return undefined;
     })();
     const [showHeader, setShowHeader] = useState(true);
 
@@ -149,7 +158,7 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
                 <div className="btnsBox">
                     <ThemeToggle />
                     <Tabs
-                        className="customTabs"
+                        className={`customTabs ${!isTabPage ? "no-tab-active" : ""}`}
                         items={items}
                         activeKey={activeTab}
                     />
@@ -181,7 +190,18 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
 
             </div>
             
-            
+            <Button
+                className="settingsFloatingBtn"
+                shape="circle"
+                icon={<SettingOutlined />}
+                onClick={() => setSettingsOpen(true)}
+            />
+
+            <SettingsModal
+                User={me}
+                open={settingsOpen}
+                onClose={() => setSettingsOpen(false)}
+            />
         </div>
     </>
 }

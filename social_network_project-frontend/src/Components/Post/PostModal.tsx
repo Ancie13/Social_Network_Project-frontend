@@ -314,6 +314,7 @@ useEffect(() => {
                         />
 
                         <Button
+                            className="antBtmModal"
                             type="text"
                             icon={
                                 isPickerOpen
@@ -328,8 +329,9 @@ useEffect(() => {
                         />
 
                         <Button
+                            className="antBtmModal"
                             type="text"
-                            icon={<SendOutlined />}
+                            icon={<SendOutlined/>}
                             onClick={sendComment}
                         />
 

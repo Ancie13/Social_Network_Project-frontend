@@ -2,6 +2,7 @@ export type User = {
     id:string;
     nickname:string;
     login:string;
+    email:string;
     bio:string;
     race:Race;
     imageUrl:string;

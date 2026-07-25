@@ -38,6 +38,10 @@ export default function AdditionalInfoPage() {
       return URL.createObjectURL(data.Avatar);
   }, [data.Avatar]);
 
+    useEffect(() => {
+        document.title = "Registration | EtherLink";
+    }, []);
+
   useEffect(() => {
     const fetchAdditionalInfo = async () => {
         try {

@@ -5,9 +5,14 @@ import logo from "../assets/logo_holder.png";
 import preview from "../assets/Preview.webp";
 import { useNavigate } from "react-router-dom";
 import Base64 from "../shared/Base64/Base64";
+import { useEffect } from "react";
 
 export default function RegisterPage() {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        document.title = "Registration | EtherLink";
+    }, []);
 
     return <>
         <div className="registerWrapper">

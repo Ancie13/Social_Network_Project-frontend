@@ -217,7 +217,7 @@
     color: var(--text-color) !important;
 }
 
-/* AddPostBtn_____________________________________________________ _________________ */
+/* AddPostBtn_______________________________________________________________________ */
 .profileBtnsGroup
 {
     display: flex;
@@ -252,6 +252,63 @@
     transform: scale(0.98);
 }
 
+
+.no-tab-active .ant-tabs-ink-bar {
+    opacity: 0;
+}
+
+.no-tab-active .ant-tabs-tab-active {
+    color: inherit !important;
+}
+
+
+/* Settings_________________________________________________________________________ */
+
+.settingsFloatingBtn
+{
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    width: 50px !important;
+    height: 50px !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--card-color) !important;
+    color: var(--text-color) !important;
+
+    border: 2px solid var(--border-color) !important;
+
+    font-size: 24px;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.35);
+
+    transition: all 0.25s ease;
+
+    z-index: 1000;
+}
+
+
+.settingsFloatingBtn:hover
+{
+    color: white !important;
+
+    /* background-color: var(--primary-color) !important; */
+
+    border-color: var(--primary-color) !important;
+
+    transform: rotate(90deg) scale(1.1);
+}
+
+
+.settingsFloatingBtn:active
+{
+    transform: rotate(90deg) scale(0.95);
+}
 
 
 /* MOBILE___________________________________________________________________________ */
