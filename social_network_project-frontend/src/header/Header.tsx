@@ -197,11 +197,13 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
                 onClick={() => setSettingsOpen(true)}
             />
 
-            <SettingsModal
-                User={me}
-                open={settingsOpen}
-                onClose={() => setSettingsOpen(false)}
-            />
+            {me && (
+                <SettingsModal
+                    User={me}
+                    open={settingsOpen}
+                    onClose={() => setSettingsOpen(false)}
+                />
+            )}
         </div>
     </>
 }
