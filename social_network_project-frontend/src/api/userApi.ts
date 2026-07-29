@@ -326,7 +326,7 @@ export async function EditProfile({
     Nickname?: string;
     Bio?: string;
     Email?: string;
-    Avatar?: string;
+    Avatar?: File | null;
     OldBase64Password?: string;
     Base64Password?: string;
     Interests?: string[];
@@ -345,8 +345,12 @@ export async function EditProfile({
     if(Email) {
         formData.append("Email", Email); 
     }
-    if(Avatar) {
-        formData.append("Avatar", Avatar); 
+    if (Avatar !== undefined) {
+        if (Avatar === null) {
+            formData.append("Avatar", "");
+        } else {
+            formData.append("Avatar", Avatar);
+        }
     }
     if(OldBase64Password) {
         formData.append("OldBase64Password", OldBase64Password); 

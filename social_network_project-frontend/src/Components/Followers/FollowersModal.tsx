@@ -2,6 +2,7 @@ import { Avatar, Modal } from "antd";
 import "./FollowersModalStyle.css";
 import type { User } from "../../types/Types";
 import { useNavigate } from "react-router-dom";
+import avatarHolder from "../../assets/avatar_holder.jpg";
 
 interface FollowersModalProps {
     open: boolean;
@@ -53,7 +54,7 @@ export default function FollowersModal({
                             >
                                 <Avatar
                                     size={40}
-                                    src={user.imageUrl}
+                                    src={user.imageUrl ? `${user.imageUrl}?v=${Date.now()}` : avatarHolder}
                                 />
 
                                 <div className="userInfo">

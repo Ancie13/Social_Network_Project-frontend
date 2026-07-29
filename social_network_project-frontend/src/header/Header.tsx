@@ -177,8 +177,8 @@ export default function Header({ onOpenSearch, onOpenAddPost }:
                             type="text"
                         >
                             <Avatar
-                                size={40}
-                                src={me?.imageUrl || avatarHolder}
+                                size={50}
+                                src={me.imageUrl ? `${me.imageUrl}?v=${Date.now()}` : avatarHolder}
                             />
                             <div className="profileText">Profile</div>
                             

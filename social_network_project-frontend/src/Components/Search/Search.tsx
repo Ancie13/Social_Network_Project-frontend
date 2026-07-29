@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import "./SearchStyle.css";
 import { GetSearch } from "../../api/userApi";
 import { useNavigate } from "react-router-dom";
+import avatarHolder from "../../assets/avatar_holder.jpg";
+
 
 type User = {
     id: string,
@@ -98,7 +100,7 @@ export default function SearchModal({ open, onClose }: SearchModalProps)
                             >
                                 <Avatar
                                     size={40}
-                                    src={user.imageUrl}
+                                    src={user.imageUrl ? `${user.imageUrl}?v=${Date.now()}` : avatarHolder}
                                 />
 
                                 <div className="userInfo">

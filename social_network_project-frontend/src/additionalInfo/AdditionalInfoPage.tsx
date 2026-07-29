@@ -183,7 +183,7 @@ export default function AdditionalInfoPage() {
 
           <img
             src={avatarPreview || ""}
-            className="avatarPreview"
+            className="avatarPreviewAddInfo"
           />
         </div>
       )}</>;

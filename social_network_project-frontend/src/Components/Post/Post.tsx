@@ -229,6 +229,7 @@ export default function Post(
                 
                 <div className="commentInput">
                     <Input
+                        maxLength={500}
                         value={commentText}
                         onChange={(e) => setCommentText(e.target.value)}
                         placeholder="Write a comment..."

@@ -180,6 +180,9 @@
 {
     font-size: 14px;
     color: var(--secondary-text);
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .commentDate

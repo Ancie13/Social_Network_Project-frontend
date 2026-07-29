@@ -2,15 +2,16 @@ import { Avatar, Button, Divider, Modal, Tag } from "antd";
 import avatarHolder from "../../assets/avatar_holder.jpg";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import type { PostProps, User } from "../../types/Types";
+import type { interes, PostProps, User } from "../../types/Types";
 import { useParams } from "react-router-dom";
 import Loader from "../loader/Loader";
-import { FollowUser, GetMe, GetUserFollowers, GetUserFollowing, GetUserProfile, GetUserProfileByLogin } from "../../api/userApi";
+import { FollowUser, GetAdditionalInfo, GetMe, GetUserFollowers, GetUserFollowing, GetUserProfile, GetUserProfileByLogin } from "../../api/userApi";
 import FollowersModal from "../Followers/FollowersModal";
 import { useAuth } from "../../api/AuthContext";
 import { GetUserPosts } from "../../api/postsApi";
 import Post from "../Post/Post";
 import PostModal from "../Post/PostModal";
+import EditProfileModal from "../EditProfile/EditProfileModal";
 
 export default function Profile() {
     const [posts, setPosts] = useState<any[]>([]);
@@ -29,10 +30,26 @@ export default function Profile() {
     const [isOpenFollowers, setIsOpenFollowers] = useState(false);
     const [isOpenFollowing, setIsOpenFollowing] = useState(false);
     const { me, loading } = useAuth();
+    const [editProfileOpen, setEditProfileOpen] = useState(false);
+    const [interests, setInterests] = useState<Array<interes>>([]);
     
-    useEffect(() => {
-        document.title = "EtherLink";
-    }, []);
+
+
+   useEffect(() => {
+        const fetchAdditionalInfo = async () => {
+            try {
+                setIsLoading(true);
+    
+                const info = await GetAdditionalInfo();
+    
+                setInterests(info.data.interests);
+            }
+            finally {
+                setIsLoading(false);
+            }
+        };
+          fetchAdditionalInfo();
+      }, []);
 
     useEffect(() =>
     {
@@ -103,7 +120,6 @@ export default function Profile() {
             setIsLoading(true);
 
             try {
-                console.log(user.id);
                 const [postsResponse] = await Promise.all([
                     GetUserPosts(user.id),
                 ]);
@@ -229,7 +245,7 @@ export default function Profile() {
                             <Avatar 
                                 className="avatar" 
                                 size={100} 
-                                src={user.imageUrl || avatarHolder}
+                                src={user.imageUrl ? `${user.imageUrl}?v=${Date.now()}` : avatarHolder}
                                 icon={<UserOutlined />}
                                 
                                 style={{ boxShadow: IsHovered
@@ -252,7 +268,7 @@ export default function Profile() {
 
 
                 <div className="profileBio">
-                    {user.bio || isMe ? "Write something about you..." : null} 
+                    {user.bio ? user.bio : isMe ? "Tell something about yourself..." : null}
                 </div>
 
                 {user.bio ? (
@@ -263,7 +279,7 @@ export default function Profile() {
                 }
 
                 <div className="profileStats">
-                    <div><b>{user.posts}</b> Posts</div>
+                    <div><b>{posts.length}</b> Posts</div>
                     <div
                         onClick={() => setIsOpenFollowers(true)}
                     >
@@ -296,6 +312,7 @@ export default function Profile() {
                         className="editProfileBtn"
                         icon={<EditOutlined className="editIcon"/>}
                         block
+                        onClick={() => setEditProfileOpen(true)}
                     >
                         Edit Profile
                     </Button>
@@ -332,7 +349,7 @@ export default function Profile() {
             className="avatarModal"
         >
             <div className="avatarModalContent">
-                <img src={user.imageUrl || avatarHolder} className="avatarPreview" />
+                <img src={user.imageUrl ? `${user.imageUrl}?v=${Date.now()}` : avatarHolder} className="avatarPreview" />
             </div>
         </Modal>
 
@@ -348,6 +365,12 @@ export default function Profile() {
             onClose={() => setIsOpenFollowing(false)}
             type="following"
             users={following}
+        />
+        <EditProfileModal
+            User={me}
+            open={editProfileOpen}
+            onClose={() => setEditProfileOpen(false)}
+            interests={interests}
         />
     </>
 }

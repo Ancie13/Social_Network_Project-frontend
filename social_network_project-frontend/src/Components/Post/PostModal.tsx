@@ -194,7 +194,7 @@ useEffect(() => {
                             <Avatar
                                 size={50}
                                 className="userAvatar"
-                                src={user.imageUrl || avatarHolder}
+                                src={user.imageUrl ? `${user.imageUrl}?v=${Date.now()}` : avatarHolder}
                                 onClick={() => {
                                     navigate(`/profile/${user.login}`);
                                 }}
@@ -266,7 +266,7 @@ useEffect(() => {
                                     <Avatar 
                                     size={32}
                                     className="userAvatar"
-                                    src={commentators[comment.userId]?.imageUrl || avatarHolder}
+                                    src={commentators[comment.userId]?.imageUrl ? `${commentators[comment.userId]?.imageUrl}?v=${Date.now()}` : avatarHolder}
                                     onClick={() => {
                                         const c = commentators[comment.userId];
                                         if (c) navigate(`/profile/${c.login}`);
@@ -303,6 +303,7 @@ useEffect(() => {
                     <div className="commentBottom">
 
                         <Input
+                            maxLength={500}
                             value={commentText}
                             className="commentField"
                             placeholder="Write comment..."
