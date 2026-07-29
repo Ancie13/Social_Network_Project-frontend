@@ -367,7 +367,7 @@ export default function Profile() {
             users={following}
         />
         <EditProfileModal
-            User={me}
+            User={me!}
             open={editProfileOpen}
             onClose={() => setEditProfileOpen(false)}
             interests={interests}
