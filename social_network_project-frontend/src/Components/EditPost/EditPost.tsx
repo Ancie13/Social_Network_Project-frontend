@@ -204,7 +204,7 @@ export default function EditPost({
                 {imageUrlLocal && (
                     <div className="previewWrapper">
                         <img
-                            src={imageUrl}
+                            src={imageUrl!}
                             className="previewImage"
                         />
 
