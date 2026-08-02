@@ -12,6 +12,7 @@ import { GetUserPosts } from "../../api/postsApi";
 import Post from "../Post/Post";
 import PostModal from "../Post/PostModal";
 import EditProfileModal from "../EditProfile/EditProfileModal";
+import "../../main/profile/ProfileStyle.css";
 
 export default function Profile() {
     const [posts, setPosts] = useState<any[]>([]);
@@ -282,11 +283,13 @@ export default function Profile() {
                     <div><b>{posts.length}</b> Posts</div>
                     <div
                         onClick={() => setIsOpenFollowers(true)}
+                        className="followersCountClick"
                     >
                         <b>{followers.length}</b> Followers
                     </div>
                     <div
                         onClick={() => setIsOpenFollowing(true)}
+                        className="followersCountClick"
                     >
                         <b>{following.length}</b> Following
                     </div>

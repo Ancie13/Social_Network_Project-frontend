@@ -311,6 +311,33 @@ export async function Signout()
     return dataResponse;
 }
 
+// /api/user/deleteProfile
+export async function DeleteAccount(data: any)
+{
+    const formData = new FormData();
+
+    formData.append("Base64Password", data); 
+    const response = await fetch(
+        `${API_URL}/api/user/deleteProfile`,
+        {
+            credentials: "include",
+            method: "DELETE",
+            body: formData
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    console.log("delete BODY:", dataResponse);
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to delete account");
+    }
+
+    return dataResponse;
+}
+
 // /api/user/profile/edit
 export async function EditProfile({
     Login,

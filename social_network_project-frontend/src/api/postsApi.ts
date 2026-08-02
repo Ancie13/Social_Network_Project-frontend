@@ -311,3 +311,94 @@ export async function GetUserPosts(id: string, page = 1, pageSize = 5)
 
     return dataResponse;
 }
+
+// /api/post/edit
+// body (formData): {
+//   string PostId
+//   string? Title
+//   IFormFile? PostImage
+//   string? Bio
+//   string[]? Interests 
+//   bool? IsPrivate
+// }
+export async function EditPostApi({PostId, Title, PostImage, Bio, Interests, IsPrivate } : 
+    {
+        PostId: string;
+        Title?: string;
+        PostImage?: File | null;
+        Bio?: string;
+        Interests?: string[];
+        IsPrivate?: boolean;
+    }
+)
+{
+    const formData = new FormData();
+
+    formData.append("PostId", PostId);
+    if(Title) {
+        formData.append("Title", Title);
+    }
+    if (PostImage !== undefined) {
+        if (PostImage === null) {
+            formData.append("PostImage", "");
+        } else {
+            formData.append("PostImage", PostImage);
+        }
+    }
+    if(Bio) {
+        formData.append("Bio", Bio);
+    }
+    if(Interests) {
+        Interests.forEach((x: string, index: number) =>
+        {
+            formData.append(`Interests[${index}]`, x);
+        });
+    }
+    if(IsPrivate) {
+        formData.append("IsPrivate", IsPrivate.toString());
+    }
+
+
+    const response = await fetch(
+        `${API_URL}/api/post/edit`,
+        {
+            method: "PUT",
+            body: formData,
+            credentials: "include",
+        }
+    );
+
+    const dataResponse = await response.json();
+    
+    console.log("BODY EDIT POST:", dataResponse);
+
+    if(!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to edit post");
+    }
+
+    return dataResponse;
+}
+
+// /api/post/{postId}/delete
+export async function DeletePost(id: string)
+{
+    const response = await fetch(
+        `${API_URL}/api/post/${id}/delete`,
+        {
+            credentials: "include",
+            method: "DELETE",
+        }
+    );
+
+    const dataResponse = await response.json();
+    
+    console.log("DELETE POST:", dataResponse);
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to delete post");
+    }
+
+    return dataResponse;
+}

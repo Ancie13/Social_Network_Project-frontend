@@ -1,0 +1,122 @@
+.alertModal .ant-modal-content {
+    background: var(--card-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.alertContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.alertTitle {
+    margin: 0;
+    text-align: center;
+    color: var(--text-color);
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.alertMessage {
+    color: var(--secondary-text);
+    text-align: center;
+    font-size: 15px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.alertFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.leftButtons,
+.rightButtons {
+    display: flex;
+    gap: 10px;
+}
+
+.alertBtn {
+    min-width: 90px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.alertBtnPrimary {
+    background: var(--primary-color) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.alertBtnPrimary:hover {
+    background: var(--primary-color-hover) !important;
+    color: white !important;
+}
+
+.alertBtnPrimary:active {
+    background: var(--primary-color-active) !important;
+    color: white !important;
+}
+
+.alertBtnDefault {
+    background: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+.alertBtnDefault:hover {
+    border-color: var(--primary-color-hover) !important;
+    color: var(--primary-color-hover) !important;
+    background: transparent !important;
+}
+
+.alertBtnDefault:active {
+    border-color: var(--primary-color-active) !important;
+    color: var(--primary-color-active) !important;
+    background: transparent !important;
+}
+
+.alertBtnDanger {
+    background: rgb(190, 0, 0) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.alertBtnDanger:hover {
+    background: rgb(215, 0, 0) !important;
+    color: white !important;
+}
+
+.alertBtnDanger:active {
+    background: rgb(165, 0, 0) !important;
+    color: white !important;
+}
+
+.alertInput {
+    background-color: var(--input-bg-color) !important;
+    color: var(--text-color) !important;
+
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px;
+
+    transition: all 0.2s ease;
+    margin: 0 !important;
+}
+
+.alertInput:hover {
+    border-color: var(--primary-color-hover) !important;
+}
+
+.alertInput:focus,
+.alertInput:focus-within {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(81, 0, 203, 0.25);
+}
+
+.alertInput::placeholder
+{
+    color: var(--secondary-text);
+}

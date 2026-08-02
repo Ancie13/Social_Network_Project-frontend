@@ -36,7 +36,7 @@ export type PostProps = {
     text: string;
     imageUrl?: string | null;
     description?: string;
-    tags: TagType[];
+    tags: interes[];
     onClick?: () => void;
     comments: Comment[] | [];
     myId: string;
@@ -49,7 +49,7 @@ export type PostPropsModal = {
     text: string;
     imageUrl?: string | null;
     description?: string;
-    tags: TagType[];
+    tags: interes[];
     user?: User;
     comments: Comment[] | [];
 };

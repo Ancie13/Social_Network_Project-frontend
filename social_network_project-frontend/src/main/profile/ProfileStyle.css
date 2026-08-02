@@ -235,6 +235,10 @@ body.header-visible .profileCard {
     color: black !important;
 }
 
+.followersCountClick {
+    cursor: pointer;
+}
+
 .followBtn
 {
     width: 100%;

@@ -224,10 +224,56 @@
 .userHeaderPost
 {
     display: flex;
+    justify-content: space-between;
     gap: 10px;
     
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border-color);
+}
+
+.userInfoPostBlock {
+    display: flex;
+    gap: 10px;
+}
+
+.editPostBtn {
+    position: relative;
+    top: 0;
+    right: 0;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--secondary-text);
+    border-radius: 50%;
+}
+
+.deletePostBtn {
+    position: relative;
+    width: 32px;
+    height: 32px;
+}
+
+.deletePostButtonLogo {
+    color: rgb(107, 26, 26) !important;
+}
+
+.myPostButtonsBlock {
+    display: flex;
+    justify-content: end;
+}
+
+.deletePostBtn:hover {
+    background: rgba(255, 0, 0, 0.1) !important;
+}
+
+.userPostBlock {
+    display: flex;
+    flex-direction: column;
 }
 
 .userInfoPost

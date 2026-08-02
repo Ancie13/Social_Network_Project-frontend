@@ -7,6 +7,8 @@ import {
     SendOutlined,
     StarFilled,
     StarOutlined,
+    EditOutlined,
+    DeleteOutlined,
 } from "@ant-design/icons";
 import "./PostStyle.css";
 import avatarHolder from "../../assets/avatar_holder.jpg";
@@ -14,7 +16,9 @@ import type { PostProps, User } from "../../types/Types";
 import { useNavigate } from "react-router-dom";
 import Loader from "../loader/Loader";
 import { GetUserProfile } from "../../api/userApi";
-import { AddComment, GetPostLikes, GetPostSaves, LikePost, SavePost } from "../../api/postsApi";
+import { AddComment, DeletePost, GetPostLikes, GetPostSaves, LikePost, SavePost } from "../../api/postsApi";
+import EditPost from "../EditPost/EditPost";
+import { AlertModal } from "../Alert/Alert";
 
 export default function Post(
 {       id,
@@ -36,6 +40,11 @@ export default function Post(
     const [commentText, setCommentText] = useState("");
     const [isQuickEmojisOpen, setIsQuickEmojisOpen] = useState(false);
     const [user, setUser] = useState<User | null>(null);
+    const [editPostOpen, setEditPostOpen] = useState(false);
+
+    const [deletePostOpen, setDeletePostOpen] = useState(false);
+    const [deletePostSuccessfullyOpen, setDeletePostSuccessfullyOpen] = useState(false);
+    const [deletePostErrorOpen, setDeletePostErrorOpen] = useState(false);
     
  
     const quickEmojis = ["🔥", "😂", "❤️", "👍", "😢", "😀"];
@@ -61,6 +70,18 @@ export default function Post(
             await LikePost(id);
             setLiked(!liked);
             await loadPostLikes(id.toString());
+        }
+    };
+
+    const handleDelete = async () => {
+        if(id) {
+            let res = await DeletePost(id);
+            if(res.status.isOk === true) {
+                setDeletePostSuccessfullyOpen(true);
+            }
+            else {
+                setDeletePostErrorOpen(true);
+            }
         }
     };
 
@@ -127,36 +148,60 @@ export default function Post(
     }
     return <>
         
-        <div className="postContainer" onClick={onClick}>
+        <div className="postContainer">
             
             <div className="userHeaderPost">
-                <Avatar
-                    className="userAvatarPost"
-                    size={40}
-                    src={user.imageUrl || avatarHolder}
-                    onClick={() => {
-                        navigate(`/profile/${user.login}`);
-                    }}
-                />
+                <div className="userInfoPostBlock">
+                    <Avatar
+                        className="userAvatarPost"
+                        size={40}
+                        src={user.imageUrl || avatarHolder}
+                        onClick={() => navigate(`/profile/${user.login}`)}
+                    />
 
-                <div className="userInfoPost">
+                    <div className="userInfoPost">
+                        <div
+                            className="nicknamePost"
+                            onClick={() => navigate(`/profile/${user.login}`)}
+                        >
+                            {user.nickname}
+                        </div>
 
-                    <div className="nicknamePost" 
-                        onClick={() => {
-                            navigate(`/profile/${user.login}`);
-                        }}>
-                        {user.nickname}
+                        <div
+                            className="usernamePost"
+                            onClick={() => navigate(`/profile/${user.login}`)}
+                        >
+                            @{user.login}
+                        </div>
                     </div>
-
-                    <div className="usernamePost" onClick={() => navigate(`/profile/${user.login}`)}>
-                        @{user.login}
-                    </div>
-
                 </div>
+                
+                { userId === myId && <div className="myPostButtonsBlock">
+                    <Button
+                        type="text"
+                        icon={<EditOutlined />}
+                        className="editPostBtn"
+                        onClick={(e) => {
+                            setEditPostOpen(true);
+                            e.stopPropagation();
+                        }}
+                    />
+                    <Button
+                        className="deletePostBtn"
+                        danger
+                        type="text"
+                        icon={<DeleteOutlined className="deletePostButtonLogo" />}
+                        onClick={() => setDeletePostOpen(true)}
+                    />
+                </div>
+                    
+                    
+                }
+                
             </div>
             
 
-            <div className="postText">{text}</div>
+            <div className="postText" onClick={onClick}>{text}</div>
 
             <div className="tagsBox">
                 {tags.map((tag) => (
@@ -164,12 +209,13 @@ export default function Post(
                         key={tag.id}
                         className="customTag"
                         style={{ "--interest-color": tag.color } as React.CSSProperties}
+                        onClick={onClick}
                     >{tag.name}</Tag>
                 ))}
             </div>
             
 
-            {imageUrl && <img className="postImage" src={imageUrl} />}
+            {imageUrl && <img className="postImage" src={imageUrl} onClick={onClick} />}
 
             {description && <div className="postDesc">{description}</div>}
             
@@ -192,6 +238,7 @@ export default function Post(
                         <Button
                             type="text"
                             icon={<MessageOutlined />}
+                            onClick={onClick}
                         />
                         <div className="likesCount">{comments.length}</div>
                     </div>
@@ -236,7 +283,6 @@ export default function Post(
                         className="commentField"
                         onFocus={() => setIsQuickEmojisOpen(true)}
                         onClick={(e) => e.stopPropagation()}
-                        // onBlur={() => setIsQuickEmojisOpen(false)}
                         onBlur={() => {
                             setTimeout(() => setIsQuickEmojisOpen(false), 150);
                         }}
@@ -254,5 +300,69 @@ export default function Post(
                 </div>
             </div>
         </div>
+
+        { userId === myId && 
+            <EditPost
+                open={editPostOpen}
+                onClose={() => setEditPostOpen(false)}
+
+                id={id}
+                userId={userId}
+                text={text}
+                imageUrl={imageUrl}
+                description={description}
+                tags={tags}
+                myId={myId}
+                comments={comments}
+            />
+        }
+        { userId === myId && 
+        <>
+            <AlertModal
+                open={deletePostOpen}
+                title="Delete Post"
+                message="Are you sure you want to delete this post?"
+                buttons={["cancel", "delete"]}
+                onAction={(action) => {
+                    if (action === "delete") {
+                        handleDelete();
+                    }
+            
+                    setDeletePostOpen(false);
+                }}
+                onClose={() => setDeletePostOpen(false)}
+            />
+
+            <AlertModal
+                open={deletePostErrorOpen}
+                title="Oops..."
+                message="Something went wrong. Check your connection or try again."
+                buttons={["ok"]}
+                onAction={() => {
+                    setDeletePostErrorOpen(false);
+                }}
+               onClose={() => setDeletePostErrorOpen(false)}
+            />
+
+            <AlertModal
+                open={deletePostSuccessfullyOpen}
+                title="Successfully"
+                message="Your post was successfully deleted."
+                buttons={["ok"]}
+                onAction={() => {
+                    setDeletePostSuccessfullyOpen(false);
+                    window.location.reload();
+                }}
+                onClose={() => {
+                        setDeletePostSuccessfullyOpen(false);
+                        window.location.reload();
+                    }
+                }
+            />
+        </>
+            
+        }
+        
+
     </>
 }
