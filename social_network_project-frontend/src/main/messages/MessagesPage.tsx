@@ -122,12 +122,10 @@ export default function MessagesPage() {
 
       const isCurrentChat = selectedChat?.user.id === senderId;
 
-      // Add message to currently opened chat
       if (isCurrentChat) {
         setMessages((prev) => [...prev, message]);
       }
 
-      // Update chat
       setChats((prev) => {
         const chatExists = prev.some((chat) => chat.user.id === senderId);
 
@@ -149,8 +147,6 @@ export default function MessagesPage() {
 
             lastMessageDate: message.createdAt,
 
-            // If chat is currently open -> read
-            // Otherwise -> unread
             unread: isCurrentChat ? 0 : chat.unread + 1,
           };
         });
@@ -265,7 +261,7 @@ export default function MessagesPage() {
             <div
               key={chat.id}
               className={`chatListItem ${
-                selectedChat.id === chat.id ? "chatListItemActive" : ""
+                selectedChat?.id === chat.id ? "chatListItemActive" : ""
               }`}
               onClick={() => {
                 setSelectedChat(chat);
@@ -342,7 +338,7 @@ export default function MessagesPage() {
             <section className="chatMessages">
               <div className="chatMessagesInner">
                 {messages.map((message) => {
-                  const isMine = message.senderId === me.id;
+                  const isMine = message.senderId === me?.id;
 
                   return (
                     <div

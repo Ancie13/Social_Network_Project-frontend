@@ -7,12 +7,18 @@ import Base64 from "../shared/Base64/Base64";
 import { SignIn } from "../api/userApi";
 import { useEffect, useState } from "react";
 import { AlertModal } from "../Components/Alert/Alert";
+import type { FormProps } from "antd";
+
+type LoginValues = {
+    login: string;
+    password: string;
+};
 
 export default function LoginPage() {
     const [loginErrorOpen, setLoginErrorOpen] = useState(false);
     
 
-  const toggleLogin = async (values) => {
+  const toggleLogin: FormProps<LoginValues>["onFinish"] = async (values) => {
     const data = "Basic " + Base64.encode(values.login + ":" + values.password);
     try {
       const res = await SignIn(data);
