@@ -202,7 +202,7 @@ export default function MessagesPage() {
         const data = await GetMessages(selectedChat.user.id);
 
         const loadedMessages = (data.data ?? []).sort(
-            (a, b) =>
+            (a: Message, b: Message) =>
                 new Date(a.createdAt).getTime() -
                 new Date(b.createdAt).getTime()
         );
