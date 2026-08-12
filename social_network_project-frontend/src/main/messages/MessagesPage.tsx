@@ -201,7 +201,13 @@ export default function MessagesPage() {
       try {
         const data = await GetMessages(selectedChat.user.id);
 
-        setMessages(data.data ?? []);
+        const loadedMessages = (data.data ?? []).sort(
+            (a, b) =>
+                new Date(a.createdAt).getTime() -
+                new Date(b.createdAt).getTime()
+        );
+
+        setMessages(loadedMessages);
       } catch (error) {
         console.error(error);
       }
@@ -232,6 +238,9 @@ export default function MessagesPage() {
       chat.user.nickname.toLowerCase().includes(searchText.toLowerCase()) ||
       chat.user.login.toLowerCase().includes(searchText.toLowerCase()),
   );
+
+
+
 
   return (
     <div className="chatPage">
@@ -287,7 +296,7 @@ export default function MessagesPage() {
                 <div className="chatPreviewTop">
                   <span className="chatUserName">{chat.user.nickname}</span>
 
-                  <span className="chatDate">{chat.lastMessageDate}</span>
+                  <span className="chatDate">{formatChatDate(chat.lastMessageDate)}</span>
                 </div>
 
                 <div className="chatPreviewBottom">
