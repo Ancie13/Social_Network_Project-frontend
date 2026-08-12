@@ -3,7 +3,7 @@ const API_URL = "https://socialmedia-bbf3gnguh9hbdyh9.canadacentral-01.azurewebs
 
 let postsCache: any[] | null = null;
 
-export async function GetPostsHome()
+export async function GetPostsHome(page = 1, pageSize = 5)
 {
     if (postsCache)
     {
@@ -11,7 +11,7 @@ export async function GetPostsHome()
     }
 
     const response = await fetch(
-        `${API_URL}/api/home/posts`,
+        `${API_URL}/api/home/posts/${page}/?pageSize=${pageSize}`,
         {
             method: "GET",
         }
@@ -55,7 +55,7 @@ export async function GetOwn(data: any)
 
 let postsCacheRace: any[] | null = null;
 
-export async function GetPostsRace()
+export async function GetPostsRace(page = 1, pageSize = 5)
 {
     if (postsCacheRace)
     {
@@ -63,7 +63,7 @@ export async function GetPostsRace()
     }
 
     const response = await fetch(
-        `${API_URL}/api/home/posts/private`,
+        `${API_URL}/api/home/posts/private/${page}/?pageSize=${pageSize}`,
         {
             credentials: "include",
             method: "GET",

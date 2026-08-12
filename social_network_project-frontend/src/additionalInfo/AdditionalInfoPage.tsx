@@ -15,6 +15,7 @@ type race = {
 };
 
 export default function AdditionalInfoPage() {
+  const [form] = Form.useForm();
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(true);
@@ -25,6 +26,7 @@ export default function AdditionalInfoPage() {
   // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [interests, setInterests] = useState<Array<interes>>([]);
   const [races, setRaces] = useState<Array<race>>([]);
+  const [loadingResponse, setLoadingResponse] = useState(false);
 
   const [data, setData] = useState({
     Nickname: "",
@@ -34,29 +36,28 @@ export default function AdditionalInfoPage() {
   });
 
   const avatarPreview = useMemo(() => {
-      if (!data.Avatar) return null;
-      return URL.createObjectURL(data.Avatar);
+    if (!data.Avatar) return null;
+    return URL.createObjectURL(data.Avatar);
   }, [data.Avatar]);
 
-    useEffect(() => {
-        document.title = "Registration | EtherLink";
-    }, []);
+  useEffect(() => {
+    document.title = "Registration | EtherLink";
+  }, []);
 
   useEffect(() => {
     const fetchAdditionalInfo = async () => {
-        try {
-            setLoading(true);
+      try {
+        setLoading(true);
 
-            const info = await GetAdditionalInfo();
+        const info = await GetAdditionalInfo();
 
-            setInterests(info.data.interests);
-            setRaces(info.data.races);
-        }
-        finally {
-            setLoading(false);
-        }
+        setInterests(info.data.interests);
+        setRaces(info.data.races);
+      } finally {
+        setLoading(false);
+      }
     };
-      fetchAdditionalInfo();
+    fetchAdditionalInfo();
   }, []); // TODO: Move it on app page and preload
 
   const toggle = (index: number) => {
@@ -73,40 +74,43 @@ export default function AdditionalInfoPage() {
     });
   };
 
-  // useEffect(() => {
-  //   if (!data.Avatar) {
-  //     setPreviewUrl(null);
-  //     return;
-  //   }
-  //   console.log(data.Avatar);
-  //   const url = URL.createObjectURL(data.Avatar);
-  //   console.log(url);
-
-  //   setPreviewUrl(url);
-
-  //   return () => {
-  //     URL.revokeObjectURL(url);
-  //   };
-  // }, [data.Avatar]);
-
   const percent = (current / total) * 100;
   const Next = async () => {
-    if (current <= 3) {
-      setCurrent((prev) => prev + 1);
-    } else {
-      try {
+    try {
+      if (current === 1) {
+        await form.validateFields(["nickname"]);
+      }
+
+      if (current === 3) {
+        if (!data.RaceId) {
+          // SHOW ERROR----------------------------
+          return;
+        }
+      }
+
+      if (current === 4) {
+        if (selectedInterests.length < 3) {
+          return;
+        }
+
+        setLoadingResponse(true);
+
         const firstStepData = location.state;
-        console.log(firstStepData);
+
         const fullData = {
           ...firstStepData,
           ...data,
         };
+
         await SignUp(fullData);
 
         navigate("/home");
-      } catch (error) {
-        console.log(error);
+        return;
       }
+
+      setCurrent((prev) => prev + 1);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -131,6 +135,7 @@ export default function AdditionalInfoPage() {
             className="input"
             placeholder="Nickname"
             size="large"
+            value={data.Nickname}
             onChange={(e) =>
               setData((prev) => ({
                 ...prev,
@@ -141,113 +146,132 @@ export default function AdditionalInfoPage() {
         </>
       );
     } else if (current === 2) {
-      return <>
-      {!data.Avatar && (
-        <Dragger
-          className="uploadDragger"
-          beforeUpload={() => false}
-          onChange={(info) => {
-            console.log("File: " + info.file);
-            console.log(info.file);
-
-            setData((prev) => ({
-              ...prev,
-              Avatar: info.file as unknown as File,
-            }));
-          }}
-          showUploadList={false}
-        >
-          <p className="uploadIcon">
-            <InboxOutlined />
-          </p>
-
-          <p className="uploadText">Click or drag image here</p>
-
-          <p className="uploadHint">PNG, JPG, GIF</p>
-        </Dragger>
-        )}
-        
-        {data.Avatar &&  (
-        <div className="avatarPreviewContainer">
-          <button
-            className="removeAvatarBtn"
-            onClick={() => {
-              setData((prev) => ({
-                ...prev,
-                Avatar: null,
-              }));
-            }}
-          >
-            ✕
-          </button>
-
-          <img
-            src={avatarPreview || ""}
-            className="avatarPreviewAddInfo"
-          />
-        </div>
-      )}</>;
-    } else if (current === 3) {
       return (
         <>
-          <div className="racesContainer">
-            {races.map((race, index) => (
-              <Button
-                key={race.name}
-                className={`raceBtn ${selectedRace === index ? "active" : ""}`}
-                style={{ "--race-color": race.themeColorHex } as React.CSSProperties}
-                onClick={() => {
-                  setSelectedRace(index);
+          {!data.Avatar && (
+            <Dragger
+              className="uploadDragger"
+              beforeUpload={() => false}
+              onChange={(info) => {
+                console.log("File: " + info.file);
+                console.log(info.file);
 
+                setData((prev) => ({
+                  ...prev,
+                  Avatar: info.file as unknown as File,
+                }));
+              }}
+              showUploadList={false}
+            >
+              <p className="uploadIcon">
+                <InboxOutlined />
+              </p>
+
+              <p className="uploadText">Click or drag image here</p>
+
+              <p className="uploadHint">PNG, JPG, GIF</p>
+            </Dragger>
+          )}
+
+          {data.Avatar && (
+            <div className="avatarPreviewContainer">
+              <button
+                className="removeAvatarBtn"
+                onClick={() => {
                   setData((prev) => ({
                     ...prev,
-                    RaceId: races[index].id as string,
+                    Avatar: null,
                   }));
                 }}
               >
-                {race.name}
-              </Button>
-            ))}
-          </div>
+                ✕
+              </button>
+
+              <img src={avatarPreview || ""} className="avatarPreviewAddInfo" />
+            </div>
+          )}
+        </>
+      );
+    } else if (current === 3) {
+      return (
+        <>
+          <Form.Item
+            validateStatus={!selectedRace ? "error" : ""}
+            help={!selectedRace ? "* Please select a race" : ""}
+          >
+            <div className="racesContainer">
+              {races.map((race, index) => (
+                <Button
+                  key={race.name}
+                  className={`raceBtn ${selectedRace === index ? "active" : ""}`}
+                  style={
+                    {
+                      "--race-color": race.themeColorHex,
+                    } as React.CSSProperties
+                  }
+                  onClick={() => {
+                    setSelectedRace(index);
+
+                    setData((prev) => ({
+                      ...prev,
+                      RaceId: race.id,
+                    }));
+                  }}
+                >
+                  {race.name}
+                </Button>
+              ))}
+            </div>
+          </Form.Item>
         </>
       );
     } else if (current === 4) {
       return (
         <>
-          <div className="interestsContainer">
-            {interests.map((item, index) => (
-              <Button
-                key={item.name}
-                className={`interestBtn ${selectedInterests.includes(index) ? "active" : ""}`}
-                style={
-                  { "--interest-color": item.color } as React.CSSProperties
-                }
-                onClick={() => {
-                  toggle(index);
+          <Form.Item
+            validateStatus={selectedInterests.length < 3 ? "error" : ""}
+            help={
+              selectedInterests.length < 3
+                ? "* Please select at least 3 interests"
+                : ""
+            }
+          >
+            <div className="interestsContainer">
+              {interests.map((item, index) => (
+                <Button
+                  key={item.name}
+                  className={`interestBtn ${selectedInterests.includes(index) ? "active" : ""}`}
+                  style={
+                    { "--interest-color": item.color } as React.CSSProperties
+                  }
+                  onClick={() => {
+                    toggle(index);
 
-                  setData((prev) => {
-                    const id = interests[index].id;
+                    setData((prev) => {
+                      const id = interests[index].id;
 
-                    const isSelected = prev.Interests.includes(id);
+                      const isSelected = prev.Interests.includes(id);
 
-                    return {
-                      ...prev,
-                      Interests: isSelected
-                        ? prev.Interests.filter((i: string) => i !== id.toString())
-                        : [...prev.Interests, id],
-                    };
-                  });
-                }}
-              >
-                {item.emoji} {item.name}
-              </Button>
-            ))}
-          </div>
+                      return {
+                        ...prev,
+                        Interests: isSelected
+                          ? prev.Interests.filter(
+                              (i: string) => i !== id.toString(),
+                            )
+                          : [...prev.Interests, id],
+                      };
+                    });
+                  }}
+                >
+                  {item.emoji} {item.name}
+                </Button>
+              ))}
+            </div>
+          </Form.Item>
         </>
       );
     }
   };
-
 
   if (loading) {
     return <Loader></Loader>;
@@ -266,7 +290,7 @@ export default function AdditionalInfoPage() {
             />
           </div>
 
-          <Form>
+          <Form form={form}>
             <Form.Item
               className="ant-form-item"
               name="nickname"
@@ -294,6 +318,7 @@ export default function AdditionalInfoPage() {
                   block
                   size="large"
                   onClick={Next}
+                  loading={loadingResponse}
                 >
                   {current === 4 ? "Finish" : "Continue"}
                 </Button>

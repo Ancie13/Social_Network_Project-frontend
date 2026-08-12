@@ -14,7 +14,6 @@ import "./PostStyle.css";
 import avatarHolder from "../../assets/avatar_holder.jpg";
 import type { PostProps, User } from "../../types/Types";
 import { useNavigate } from "react-router-dom";
-import Loader from "../loader/Loader";
 import { GetUserProfile } from "../../api/userApi";
 import { AddComment, DeletePost, GetPostLikes, GetPostSaves, LikePost, SavePost } from "../../api/postsApi";
 import EditPost from "../EditPost/EditPost";
@@ -144,7 +143,7 @@ export default function Post(
 
     if (!user || !likes)
     {
-        return <Loader/>;
+        return;
     }
     return <>
         

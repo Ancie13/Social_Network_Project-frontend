@@ -66,3 +66,11 @@ export type interes = {
   emoji: string;
   color: string;
 };
+
+export type Chat = {
+    id: string;
+    user: User;
+    lastMessage: string;
+    lastMessageDate: string;
+    unread: number;
+};

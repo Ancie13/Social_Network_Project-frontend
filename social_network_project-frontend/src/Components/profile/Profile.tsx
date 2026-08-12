@@ -1,9 +1,9 @@
 import { Avatar, Button, Divider, Modal, Tag } from "antd";
 import avatarHolder from "../../assets/avatar_holder.jpg";
-import { EditOutlined, UserOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { EditOutlined, MessageOutlined, UserOutlined } from "@ant-design/icons";
+import { useEffect, useRef, useState } from "react";
 import type { interes, PostProps, User } from "../../types/Types";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../loader/Loader";
 import { FollowUser, GetAdditionalInfo, GetMe, GetUserFollowers, GetUserFollowing, GetUserProfile, GetUserProfileByLogin } from "../../api/userApi";
 import FollowersModal from "../Followers/FollowersModal";
@@ -15,6 +15,7 @@ import EditProfileModal from "../EditProfile/EditProfileModal";
 import "../../main/profile/ProfileStyle.css";
 
 export default function Profile() {
+    const navigate = useNavigate();
     const [posts, setPosts] = useState<any[]>([]);
     const [selectedPost, setSelectedPost] = useState<PostProps | null>(null);
     const [openModal, setOpenModal] = useState(false);
@@ -33,8 +34,36 @@ export default function Profile() {
     const { me, loading } = useAuth();
     const [editProfileOpen, setEditProfileOpen] = useState(false);
     const [interests, setInterests] = useState<Array<interes>>([]);
+
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+    const loadingMoreRef = useRef(false);
     
 
+    const startChat = () => {
+        if (!user) return;
+
+        const newChat = {
+            id: user.id,
+            user: {
+                id: user.id,
+                nickname: user.nickname,
+                login: user.login,
+                imageUrl: user.imageUrl
+            },
+            lastMessage: "",
+            lastMessageDate: "",
+            unread: 0
+        };
+
+        navigate("/messages", {
+            state: {
+                chat: newChat
+            }
+        });
+    };
 
    useEffect(() => {
         const fetchAdditionalInfo = async () => {
@@ -52,20 +81,23 @@ export default function Profile() {
           fetchAdditionalInfo();
       }, []);
 
-    useEffect(() =>
-    {
-        if (login)
-        {
-            const loadUserAndCheck = async () => {
-                await loadUser(login);
-                const currentUser = await GetMe();
-                if(currentUser && login === currentUser.login)
-                {
-                    setIsMe(true);
-                }
-            }; 
-            loadUserAndCheck();
-        }
+    useEffect(() => {
+        if (!login) return;
+
+        const loadUserAndCheck = async () => {
+            setIsMe(false);
+
+            const currentUser = await GetMe();
+            const profileUser = await GetUserProfileByLogin(login);
+
+            setUser(profileUser);
+
+            setIsMe(
+                currentUser?.id === profileUser?.id
+            );
+        };
+
+        loadUserAndCheck();
     }, [login]);
 
     const toggleFollow = async () => {
@@ -112,8 +144,7 @@ export default function Profile() {
     };
 
     useEffect(() => {
-        if (loading || !me || !user)
-        {
+        if (loading || !me || !user) {
             return;
         }
 
@@ -121,25 +152,30 @@ export default function Profile() {
             setIsLoading(true);
 
             try {
-                const [postsResponse] = await Promise.all([
-                    GetUserPosts(user.id),
-                ]);
+                const postsResponse = await GetUserPosts(
+                    user.id,
+                    1,
+                    5
+                );
 
                 setPosts(postsResponse.data);
 
+                setPage(1);
+
+                setHasMore(postsResponse.data.length === 5);
+
                 await LoadUsers(postsResponse.data);
             }
-            catch (err)
-            {
+            catch (err) {
                 console.error(err);
             }
-            finally
-            {
+            finally {
                 setIsLoading(false);
             }
         };
 
         loadData();
+
     }, [loading, me, user]);
         
             const LoadUsers = async (postsList: any[]) => {
@@ -156,75 +192,201 @@ export default function Profile() {
         
                 setUsers(map);
             };
+
+    const loadMorePosts = async () => {
+        if (
+            loadingMoreRef.current ||
+            isLoading ||
+            loading ||
+            !me ||
+            !user ||
+            isLoadingMore ||
+            !hasMore
+        ) {
+            return;
+        }
+
+        loadingMoreRef.current = true;
+        setIsLoadingMore(true);
+
+        try {
+
+            const nextPage = page + 1;
+
+            console.log("Loading profile page:", nextPage);
+
+            const response = await GetUserPosts(
+                user.id,
+                nextPage,
+                5
+            );
+
+            if (response.data.length === 0) {
+                setHasMore(false);
+                return;
+            }
+
+            // IMPORTANT:
+            // append new posts, don't replace old ones
+            setPosts(prev => [
+                ...prev,
+                ...response.data
+            ]);
+
+            setPage(nextPage);
+
+            if (response.data.length < 5) {
+                setHasMore(false);
+            }
+
+            await LoadUsers(response.data);
+
+        }
+        catch (err) {
+            console.error(
+                "Failed to load more profile posts:",
+                err
+            );
+        }
+        finally {
+            loadingMoreRef.current = false;
+            setIsLoadingMore(false);
+        }
+    };
     
     
             const selectedPostUser = selectedPost
                 ? users[selectedPost.userId]
             : undefined;
     
-            const Posts = () => {
-                            return (
-                        <>
-                            {!loading && me && !isLoading ?
-                            posts.map((post) => (
-                                <Post
-                                    key={post.id}
-                                    id={post.id}
-                                    userId={post.userId}
-                                    text={post.title}
-                                    imageUrl={post.imageUrl}
-                                    description={post.bio}
-                                    tags={post.interests}
-                                    comments={post.comments}
-                                    myId={me?.id ?? ""}
-                                    onClick={() =>
-                                    {
-                                            setSelectedPost({
-                                            id: post.id,
-                                            userId: post.userId,
-                                            text: post.title,
-                                            imageUrl: post.imageUrl,
-                                            description: post.bio,
-                                            tags: post.interests,
-                                            comments: post.comments,
-                                            myId: me?.id ?? ""
-                                        });
-            
-                                        setOpenModal(true);
-                                    }}
-                                />
-                            )) : <Loader></Loader>}
-                            {posts.length > 0 ?
-                                <></> :
-                                <div className="likedPostsPlaceHolder">
-                                    {isMe
-                                        ? "You don't have any posts yet."
-                                        : "This user doesn't have any posts yet."
-                                    }
-                                </div>
-                            }
-                            {selectedPost && selectedPostUser && (
-                                <PostModal
-                                    open={openModal}
-                                    onClose={() =>
-                                    {
-                                        setOpenModal(false);
-                                        setSelectedPost(null);
-                                    }}
-                                    id={selectedPost.id.toString()}
-                                    text={selectedPost.text}
-                                    imageUrl={selectedPost.imageUrl}
-                                    description={selectedPost.description}
-                                    tags={selectedPost.tags}
-                                    user={selectedPostUser}
-                                    comments={selectedPost.comments}
-                                />
-                            )}
-                        </>
-                    );
-                };
+    const Posts = () => {
+        if (loading || !me) {
+            return <Loader />;
+        }
 
-    if (!user || isLoading || loading)
+        if (isLoading && posts.length === 0) {
+            return <Loader />;
+        }
+
+        return (
+            <>
+                {posts.map((post) => (
+                    <Post
+                        key={post.id}
+                        id={post.id}
+                        userId={post.userId}
+                        text={post.title}
+                        imageUrl={post.imageUrl}
+                        description={post.bio}
+                        tags={post.interests}
+                        comments={post.comments}
+                        myId={me?.id ?? ""}
+                        onClick={() => {
+
+                            setSelectedPost({
+                                id: post.id,
+                                userId: post.userId,
+                                text: post.title,
+                                imageUrl: post.imageUrl,
+                                description: post.bio,
+                                tags: post.interests,
+                                comments: post.comments,
+                                myId: me?.id ?? ""
+                            });
+
+                            setOpenModal(true);
+                        }}
+                    />
+                ))}
+
+                {isLoadingMore && (
+                    <div className="loadMoreLoader">
+                        <div className="loadMoreSpinner"></div>
+                        <span>Loading more posts...</span>
+                    </div>
+                )}
+
+                {!hasMore && posts.length > 0 && (
+                    <div className="noMorePosts">
+                        No more posts
+                    </div>
+                )}
+
+                {posts.length === 0 && !isLoading && (
+                    <div className="likedPostsPlaceHolder">
+                        {isMe
+                            ? "You don't have any posts yet."
+                            : "This user doesn't have any posts yet."
+                        }
+                    </div>
+                )}
+
+                {selectedPost && selectedPostUser && (
+                    <PostModal
+                        open={openModal}
+                        onClose={() => {
+                            setOpenModal(false);
+                            setSelectedPost(null);
+                        }}
+                        id={selectedPost.id.toString()}
+                        text={selectedPost.text}
+                        imageUrl={selectedPost.imageUrl}
+                        description={selectedPost.description}
+                        tags={selectedPost.tags}
+                        user={selectedPostUser}
+                        comments={selectedPost.comments}
+                    />
+                )}
+            </>
+        );
+    };
+    useEffect(() => {
+        const handleScroll = () => {
+
+            if (
+                isLoading ||
+                loading ||
+                !me ||
+                !user ||
+                !hasMore
+            ) {
+                return;
+            }
+
+            const scrollPosition =
+                window.innerHeight + window.scrollY;
+
+            const pageHeight =
+                document.documentElement.scrollHeight;
+
+            if (scrollPosition >= pageHeight - 300) {
+                loadMorePosts();
+            }
+        };
+
+        window.addEventListener(
+            "scroll",
+            handleScroll
+        );
+
+        return () => {
+            window.removeEventListener(
+                "scroll",
+                handleScroll
+            );
+        };
+
+    }, [
+        page,
+        hasMore,
+        isLoading,
+        loading,
+        me,
+        user,
+        isLoadingMore
+    ]);
+
+    if (!user || loading)
     {
         return <Loader/>
     }
@@ -320,14 +482,26 @@ export default function Profile() {
                         Edit Profile
                     </Button>
                 }
+
                 {!isMe &&
-                    <Button
-                        className={`followBtn ${isFollowing ? "following" : ""}`}
-                        type={isFollowing ? "default" : "primary"}
-                        onClick={toggleFollow}
-                    >
-                        {isFollowing ? "Following" : "Follow"}
-                    </Button>
+                    <div className="bottomBtnsBox">
+                        <Button
+                            className="messageBtn"
+                            type="primary"
+                            onClick={startChat}
+                            icon={<MessageOutlined />}
+                        >
+                            Message
+                        </Button>
+
+                        <Button
+                            className={`followBtn ${isFollowing ? "following" : ""}`}
+                            type={isFollowing ? "default" : "primary"}
+                            onClick={toggleFollow}
+                        >
+                            {isFollowing ? "Following" : "Follow"}
+                        </Button>
+                    </div>
                 }
                 </div>
                 

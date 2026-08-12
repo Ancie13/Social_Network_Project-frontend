@@ -235,6 +235,40 @@ body.header-visible .profileCard {
     color: black !important;
 }
 
+.messageBtn {
+    background-color: color-mix(
+        in srgb,
+        var(--bg-color) 35%,
+        var(--secondary-text) 65%
+    );
+    color: var(--text-color);
+}
+
+.messageBtn:hover {
+    background-color: color-mix(
+        in srgb,
+        var(--bg-color) 45%,
+        var(--secondary-text) 55%
+    ) !important;
+}
+
+.messageBtn:active {
+    background-color: color-mix(
+        in srgb,
+        var(--bg-color) 55%,
+        var(--secondary-text) 45%
+    ) !important;
+}
+.bottomBtnsBox{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.messageIcon {
+    color: white !important;
+}
+
 .followersCountClick {
     cursor: pointer;
 }

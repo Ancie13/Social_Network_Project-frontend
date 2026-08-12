@@ -1,6 +1,7 @@
 import type { User } from "../types/Types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { GetMe } from "./userApi";
+import { connection } from "./signalR";
 
 interface AuthContextType {
     me: User | null;
@@ -40,6 +41,27 @@ export function AuthProvider({ children }: { children: React.ReactNode })
 
         return () => clearTimeout(timer);
     }, []);
+
+    useEffect(() => {
+        if (!me) return;
+
+        const startSignalR = async () => {
+            try {
+                if (connection.state === "Disconnected") {
+                    await connection.start();
+                    console.log("SignalR connected");
+                }
+            } catch (error) {
+                console.error("SignalR connection failed:", error);
+            }
+        };
+
+        startSignalR();
+
+        return () => {
+            
+        };
+    }, [me]);
 
 
     return (

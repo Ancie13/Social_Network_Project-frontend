@@ -8,6 +8,7 @@ import { AddPostApi } from "../../api/postsApi";
 import { GetAdditionalInfo } from "../../api/userApi";
 import type { interes } from "../../types/Types";
 import Loader from "../loader/Loader";
+import { AlertModal } from "../Alert/Alert";
 
 export default function AddPost({ open, onClose }: { open: boolean; onClose: () => void })
 {
@@ -18,6 +19,8 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
     const [Image, setImage] = useState(null);
     const [interests, setInterests] = useState<Array<interes>>([]);
     const [loading, setLoading] = useState(true);
+    const [blockAddPostBtn, setBlockAddPostBtn] = useState(true);
+    const [addPostErrorOpen, setAddPostErrorOpen] = useState(false);
     
     // const [data, setData] = useState({
     //     UserId: "",
@@ -26,6 +29,16 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
     //     Bio: "",
     //     Interests: [] as number[]
     // });
+
+    useEffect(() => {
+
+        if(SelectedTags.length >= 3 && Title.length >= 1) {
+            setBlockAddPostBtn(false);
+        }
+        else {
+            setBlockAddPostBtn(true);
+        }
+      }, [Title, SelectedTags]);
 
     const [Errors, setErrors] = useState({
         title: "",
@@ -50,8 +63,12 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
 
     const toggleTag = (tagId: string) =>
     {
-        if (SelectedTags.includes(tagId))
+        if (SelectedTags.includes(tagId)) {
+            if (SelectedTags.length <= 3) {
+                return;
+            }
             setSelectedTags(SelectedTags.filter(t => t !== tagId));
+        }
         else
             setSelectedTags([...SelectedTags, tagId]);
     };
@@ -85,17 +102,27 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
 
         try
         {
-            await AddPostApi(payload);
+            setBlockAddPostBtn(true);
+            let res;
+            res = await AddPostApi(payload);
+            if(res.status.isOk === false) {
+                throw console.error();
+            }
+            console.log(res);
+
+            
+            resetForm();
+            onClose();
+            window.location.reload();
         }
-            catch(error)
+        catch(error)
         {
-            console.log(error);
+            setAddPostErrorOpen(true);
         }
-
-        console.log({ Title, Description, SelectedTags, Visibility, Image });
-
-        resetForm();
-        onClose();
+        finally 
+        {
+            setBlockAddPostBtn(false);
+        }
     };
 
     const resetForm = () =>
@@ -241,6 +268,7 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
                         type="primary"
                         block
                         onClick={handleSubmit}
+                        loading={blockAddPostBtn}
                     >
                         Create Post
                     </Button>
@@ -250,5 +278,17 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
             </div>
 
         </Modal>
+
+
+        <AlertModal
+            open={addPostErrorOpen}
+            title="Oops..."
+            message="Something went wrong. Check your connection or try again."
+            buttons={["ok"]}
+            onAction={() => {
+                setAddPostErrorOpen(false);
+            }}
+            onClose={() => setAddPostErrorOpen(false)}
+        />
     </>;
 }

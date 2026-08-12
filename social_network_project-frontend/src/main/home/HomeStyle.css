@@ -75,6 +75,43 @@
     z-index: 2;
 }
 
+.loadMoreLoader {
+    width: 100%;
+    min-height: 80px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    color: var(--secondary-text);
+    font-size: 13px;
+}
+
+.loadMoreSpinner {
+    width: 24px;
+    height: 24px;
+
+    border: 3px solid var(--border-color);
+    border-top-color: var(--primary-color);
+
+    border-radius: 50%;
+
+    animation: loadMoreSpin 0.8s linear infinite;
+}
+
+@keyframes loadMoreSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 
 @media (max-width: 830px)
 {
@@ -90,7 +127,6 @@
         margin: 0;
     }
 
-    /* MAIN FEED CENTER */
     .postsConteiner
     {
         grid-column: auto;
@@ -99,7 +135,6 @@
         align-items: center;
     }
 
-    /* REMOVE FIXED SIDEBAR ON MOBILE */
     .menuContainer
     {
         position: relative !important;

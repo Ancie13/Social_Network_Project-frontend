@@ -412,3 +412,92 @@ export async function EditProfile({
 
     return dataResponse;
 }
+
+
+// signalR_________________________________________________________________________________________
+
+// /api/chat/{targetUserId}/messages/{page?}/?pageSize={pageSize}
+export async function GetMessages(
+    targetUserId: string,
+    page = 1,
+    pageSize = 20
+) {
+    const response = await fetch(
+        `${API_URL}/api/chat/${targetUserId}/messages?page=${page}&pageSize=${pageSize}`,
+        {
+            credentials: "include",
+            method: "GET"
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    console.log("GetMessages BODY:", dataResponse);
+
+    if (!response.ok) {
+        throw new Error(
+            dataResponse?.message || "Failed to get messages"
+        );
+    }
+
+    return dataResponse;
+}
+
+// /api/chat/send
+// body: {
+//   string TargetUserId
+//   string Text
+// }
+export async function SendMessage(targetUserId: string, text: string)
+{
+    const formData = new FormData();
+
+    formData.append("TargetUserId", targetUserId);
+    formData.append("Text", text);
+
+    const response = await fetch(
+        `${API_URL}/api/chat/send`,
+        {
+            credentials: "include",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: formData
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    console.log("SendMessage  BODY:", dataResponse);
+
+    if (!response.ok)
+    {
+        throw new Error(dataResponse?.message || "Failed to send messages");
+    }
+
+    return dataResponse;
+}
+
+// /api/chat/list
+export async function GetChats() {
+    const response = await fetch(
+        `${API_URL}/api/chat/list`,
+        {
+            credentials: "include",
+            method: "GET"
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    console.log("Get chats BODY:", dataResponse);
+
+    if (!response.ok) {
+        throw new Error(
+            dataResponse?.message || "Failed to get chats"
+        );
+    }
+
+    return dataResponse.data;
+}

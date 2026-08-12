@@ -67,21 +67,21 @@ export default function PostModal({
         setCommentators(map);
     };
 
-useEffect(() => {
-    async function load()
-    {
-        setIsLoading(true);
-        try
+    useEffect(() => {
+        async function load()
         {
-            await LoadCommentators();
+            setIsLoading(true);
+            try
+            {
+                await LoadCommentators();
+            }
+            finally
+            {
+                setIsLoading(false);
+            }
         }
-        finally
-        {
-            setIsLoading(false);
-        }
-    }
-    load();
-}, [comments]);
+        load();
+    }, [comments]);
 
     const sendComment = async () =>
     {

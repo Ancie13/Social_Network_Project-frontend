@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import type { interes, User } from "../../types/Types";
 import "./EditProfileModalStyle.css";
 import { EditProfile } from "../../api/userApi";
+import { AlertModal } from "../Alert/Alert";
 
 export default function EditProfileModal({
     User,
@@ -25,6 +26,8 @@ export default function EditProfileModal({
     const [currentAvatar, setCurrentAvatar] = useState<string>("");
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [removeAvatar, setRemoveAvatar] = useState(false);
+    const [editProfileErrorOpen, setEditProfileErrorOpen] = useState(false);
+    const [blockEditProfileBtn, setBlockEditProfileBtn] = useState(false);
 
     const toggleTag = (id: string) => {
         if (selectedTags.includes(id)) {
@@ -48,6 +51,7 @@ export default function EditProfileModal({
 
     const handleSave = async () => {
         try {
+            setBlockEditProfileBtn(true);
             let updatedAvatar;
 
             if (removeAvatar) {
@@ -64,18 +68,22 @@ export default function EditProfileModal({
                 Interests: selectedTags
             });
 
-            console.log(res);
-        }
-        catch(err) {
-            console.log(err);
-        }
-        finally {
+            if(res.status.isOk === false) {
+                throw console.error();
+            }
+
             onClose();
             window.location.reload();
         }
+        catch(err) {
+            setEditProfileErrorOpen(true);
+        }
+        finally {
+            setBlockEditProfileBtn(false);
+        }
     };
 
-    return (
+    return <>
         <Modal
             open={open}
             footer={null}
@@ -208,11 +216,23 @@ export default function EditProfileModal({
                     type="primary"
                     className="createPostBtn"
                     onClick={handleSave}
+                    loading={blockEditProfileBtn}
                 >
                     Save Changes
                 </Button>
 
             </div>
         </Modal>
-    );
+
+        <AlertModal
+            open={editProfileErrorOpen}
+            title="Oops..."
+            message="Something went wrong. Check your connection or try again."
+            buttons={["ok"]}
+            onAction={() => {
+                setEditProfileErrorOpen(false);
+            }}
+            onClose={() => setEditProfileErrorOpen(false)}
+        />
+    </>
 }
