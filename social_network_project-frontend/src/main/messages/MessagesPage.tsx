@@ -54,8 +54,8 @@ export default function MessagesPage() {
 
   const handleDeleteChat = async () => {
     setShowChatOptionsOpen(false);
-    if (selectedChat.id) {
-      let res = await DeleteChat(selectedChat.id);
+    if (selectedChat?.id) {
+      let res = await DeleteChat(selectedChat?.id);
       if (res.status.isOk === true) {
         setDeleteChatSuccessfullyOpen(true);
       } else {
