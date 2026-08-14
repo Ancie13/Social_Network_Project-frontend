@@ -7,6 +7,7 @@ import {
   SmileOutlined,
   MoreOutlined,
   CloseOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 
 import avatarHolder from "../../assets/avatar_holder.jpg";
@@ -27,7 +28,7 @@ type Message = {
 };
 
 export default function MessagesPage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [chats, setChats] = useState<Chat[]>([]);
@@ -35,8 +36,8 @@ export default function MessagesPage() {
   const [messageText, setMessageText] = useState("");
   const [searchText, setSearchText] = useState("");
   const { me } = useAuth();
-    const [isPickerOpen, setIsPickerOpen] = useState(false);
-
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
 
   useEffect(() => {
     const chat = location.state?.chat;
@@ -44,7 +45,7 @@ export default function MessagesPage() {
     if (!chat) return;
 
     setChats((prev) => {
-      const exists = prev.some((c) => c.id === chat.id);
+      const exists = prev.some((c) => c.user.id === chat.user.id);
 
       if (exists) {
         return prev;
@@ -53,10 +54,16 @@ export default function MessagesPage() {
       return [...prev, chat];
     });
 
-    setSelectedChat(chat);
+    setSelectedChat((current) => {
+      if (current?.user.id === chat.user.id) {
+        return current;
+      }
+
+      return chat;
+    });
 
     window.history.replaceState({}, document.title);
-  }, [location.state]);
+  }, [location.state, chats]);
 
   const sortChats = (chats: Chat[]) => {
     return [...chats].sort(
@@ -97,14 +104,6 @@ export default function MessagesPage() {
           );
 
           return sortChats([...localChats, ...sortedChats]);
-        });
-
-        setSelectedChat((current) => {
-          if (current) {
-            return current;
-          }
-
-          return sortedChats[0] ?? null;
         });
       } catch (error) {
         console.error("Failed to load chats:", error);
@@ -202,9 +201,8 @@ export default function MessagesPage() {
         const data = await GetMessages(selectedChat.user.id);
 
         const loadedMessages = (data.data ?? []).sort(
-            (a: Message, b: Message) =>
-                new Date(a.createdAt).getTime() -
-                new Date(b.createdAt).getTime()
+          (a: Message, b: Message) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         );
 
         setMessages(loadedMessages);
@@ -239,20 +237,21 @@ export default function MessagesPage() {
       chat.user.login.toLowerCase().includes(searchText.toLowerCase()),
   );
 
-
-
-
   return (
-    <div className="chatPage">
+    <div
+        className={`chatPage ${
+            isMobileChatOpen ? "mobileChatOpen" : ""
+        }`}
+    >
       <aside className="chatSidebar">
         <div className="chatSidebarHeader">
           <h2 className="chatSidebarTitle">Messages</h2>
 
-          <Button
+          {/* <Button
             type="text"
             icon={<MoreOutlined />}
             className="chatHeaderButton"
-          />
+          /> */}
         </div>
 
         <div className="chatSearch">
@@ -266,6 +265,11 @@ export default function MessagesPage() {
         </div>
 
         <div className="chatList">
+          {chats.length === 0 && (
+            <div className="noChatSelected">
+              No chats yet. Start a conversation and connect with someone!
+            </div>
+          )}
           {filteredChats.map((chat) => (
             <div
               key={chat.id}
@@ -274,11 +278,11 @@ export default function MessagesPage() {
               }`}
               onClick={() => {
                 setSelectedChat(chat);
-                setChats(prev =>
-                    prev.map(c =>
-                        c.id === chat.id ? {...c,  unread: 0} : c 
-                    ));
-                }}
+                setChats((prev) =>
+                  prev.map((c) => (c.id === chat.id ? { ...c, unread: 0 } : c)),
+                );
+                setIsMobileChatOpen(true);
+              }}
             >
               <div className="chatAvatarWrapper">
                 <Avatar
@@ -296,7 +300,9 @@ export default function MessagesPage() {
                 <div className="chatPreviewTop">
                   <span className="chatUserName">{chat.user.nickname}</span>
 
-                  <span className="chatDate">{formatChatDate(chat.lastMessageDate)}</span>
+                  <span className="chatDate">
+                    {formatChatDate(chat.lastMessageDate)}
+                  </span>
                 </div>
 
                 <div className="chatPreviewBottom">
@@ -317,6 +323,17 @@ export default function MessagesPage() {
         {selectedChat ? (
           <>
             <header className="chatWindowHeader">
+              <Button
+                  type="text"
+                  icon={<ArrowLeftOutlined />}
+                  className="mobileBackButton"
+                  onClick={() => {
+                      setIsMobileChatOpen(false)
+                      setSelectedChat(null);
+                    }
+                  }
+              />
+
               <Avatar
                 size={45}
                 src={
@@ -328,11 +345,21 @@ export default function MessagesPage() {
               />
 
               <div className="chatWindowUser">
-                <div className="chatWindowNickname" onClick={() => navigate(`/profile/${selectedChat.user.nickname}`)}>
+                <div
+                  className="chatWindowNickname"
+                  onClick={() =>
+                    navigate(`/profile/${selectedChat.user.nickname}`)
+                  }
+                >
                   {selectedChat.user.nickname}
                 </div>
 
-                <div className="chatWindowLogin" onClick={() => navigate(`/profile/${selectedChat.user.nickname}`)}>
+                <div
+                  className="chatWindowLogin"
+                  onClick={() =>
+                    navigate(`/profile/${selectedChat.user.nickname}`)
+                  }
+                >
                   @{selectedChat.user.login}
                 </div>
               </div>
@@ -389,19 +416,11 @@ export default function MessagesPage() {
 
             <footer className="chatInputArea">
               <Button
-                            className="antBtmModal"
-                            type="text"
-                            icon={
-                                isPickerOpen
-                                ? <CloseOutlined/>
-                                : <SmileOutlined/>
-                            }
-                            onClick={() =>
-                                setIsPickerOpen(
-                                    prev => !prev
-                                )
-                            }
-                        />
+                className="antBtmModal"
+                type="text"
+                icon={isPickerOpen ? <CloseOutlined /> : <SmileOutlined />}
+                onClick={() => setIsPickerOpen((prev) => !prev)}
+              />
               <Input
                 value={messageText}
                 placeholder="Write a message..."
@@ -423,22 +442,15 @@ export default function MessagesPage() {
         )}
       </main>
 
-      {isPickerOpen &&
-                          <div className="pickerBoxChat">
-      
-                              <EmojiPicker
-                                  onEmojiClick={(emoji)=>
-                                  {
-                                      setMessageText(
-                                          prev =>
-                                          prev + emoji.emoji
-                                      );
-                                  }}
-                              />
-      
-                          </div>
-                          }
+      {isPickerOpen && (
+        <div className="pickerBoxChat">
+          <EmojiPicker
+            onEmojiClick={(emoji) => {
+              setMessageText((prev) => prev + emoji.emoji);
+            }}
+          />
+        </div>
+      )}
     </div>
-    
   );
 }

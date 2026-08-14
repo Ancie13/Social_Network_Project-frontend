@@ -531,14 +531,32 @@
     z-index: 1000;
 }
 
+.mobileBackButton
+{
+    display: none;
+}
+
 /* mobile______________________________________________________________________ */
 
 @media (max-width: 830px)
 {
+    .chatPage .mobileBackButton {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+
+        color: var(--text-color) !important;
+        font-size: 20px;
+
+        width: 40px;
+        height: 40px;
+
+        flex-shrink: 0;
+    }
+
     .chatPage
     {
         height: 90vh;
-
         border-radius: 12px;
     }
 
@@ -551,6 +569,22 @@
     .chatWindow
     {
         display: none;
+        width: 100%;
+    }
+
+    .mobileBackButton
+    {
+        display: none;
+    }
+
+    .chatPage.mobileChatOpen .chatSidebar
+    {
+        display: none;
+    }
+
+    .chatPage.mobileChatOpen .chatWindow
+    {
+        display: flex;
     }
 
     .chatSidebarHeader
