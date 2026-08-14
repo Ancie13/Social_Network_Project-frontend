@@ -8,17 +8,24 @@ import {
   MoreOutlined,
   CloseOutlined,
   ArrowLeftOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 
 import avatarHolder from "../../assets/avatar_holder.jpg";
 import "./MessagesStyle.css";
 import { useAuth } from "../../api/AuthContext";
 import { connection } from "../../api/signalR";
-import { GetChats, GetMessages, GetUserProfile } from "../../api/userApi";
+import {
+  DeleteChat,
+  GetChats,
+  GetMessages,
+  GetUserProfile,
+} from "../../api/userApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { Chat } from "../../types/Types";
 import { formatChatDate } from "../../shared/Date/FormatDate";
 import EmojiPicker from "emoji-picker-react";
+import { AlertModal } from "../../Components/Alert/Alert";
 
 type Message = {
   id: number;
@@ -38,6 +45,24 @@ export default function MessagesPage() {
   const { me } = useAuth();
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
+  const [showChatOptionsOpen, setShowChatOptionsOpen] = useState(false);
+
+  const [deleteChatOpen, setDeleteChatOpen] = useState(false);
+  const [deleteChatSuccessfullyOpen, setDeleteChatSuccessfullyOpen] =
+    useState(false);
+  const [deleteChatErrorOpen, setDeleteChatErrorOpen] = useState(false);
+
+  const handleDeleteChat = async () => {
+    setShowChatOptionsOpen(false);
+    if (selectedChat.id) {
+      let res = await DeleteChat(selectedChat.id);
+      if (res.status.isOk === true) {
+        setDeleteChatSuccessfullyOpen(true);
+      } else {
+        setDeleteChatErrorOpen(true);
+      }
+    }
+  };
 
   useEffect(() => {
     const chat = location.state?.chat;
@@ -238,11 +263,7 @@ export default function MessagesPage() {
   );
 
   return (
-    <div
-        className={`chatPage ${
-            isMobileChatOpen ? "mobileChatOpen" : ""
-        }`}
-    >
+    <div className={`chatPage ${isMobileChatOpen ? "mobileChatOpen" : ""}`}>
       <aside className="chatSidebar">
         <div className="chatSidebarHeader">
           <h2 className="chatSidebarTitle">Messages</h2>
@@ -301,7 +322,7 @@ export default function MessagesPage() {
                   <span className="chatUserName">{chat.user.nickname}</span>
 
                   <span className="chatDate">
-                    {formatChatDate(chat.lastMessageDate)}
+                    {chat.lastMessageDate ? formatChatDate(chat.lastMessageDate) : null}
                   </span>
                 </div>
 
@@ -324,14 +345,13 @@ export default function MessagesPage() {
           <>
             <header className="chatWindowHeader">
               <Button
-                  type="text"
-                  icon={<ArrowLeftOutlined />}
-                  className="mobileBackButton"
-                  onClick={() => {
-                      setIsMobileChatOpen(false)
-                      setSelectedChat(null);
-                    }
-                  }
+                type="text"
+                icon={<ArrowLeftOutlined />}
+                className="mobileBackButton"
+                onClick={() => {
+                  setIsMobileChatOpen(false);
+                  setSelectedChat(null);
+                }}
               />
 
               <Avatar
@@ -348,7 +368,7 @@ export default function MessagesPage() {
                 <div
                   className="chatWindowNickname"
                   onClick={() =>
-                    navigate(`/profile/${selectedChat.user.nickname}`)
+                    navigate(`/profile/${selectedChat.user.login}`)
                   }
                 >
                   {selectedChat.user.nickname}
@@ -357,18 +377,33 @@ export default function MessagesPage() {
                 <div
                   className="chatWindowLogin"
                   onClick={() =>
-                    navigate(`/profile/${selectedChat.user.nickname}`)
+                    navigate(`/profile/${selectedChat.user.login}`)
                   }
                 >
                   @{selectedChat.user.login}
                 </div>
               </div>
 
-              <Button
-                type="text"
-                icon={<MoreOutlined />}
-                className="chatHeaderButton"
-              />
+              <div className="chatOptionsWrapper">
+                <Button
+                  type="text"
+                  icon={<MoreOutlined />}
+                  className="chatHeaderButton"
+                  onClick={() => setShowChatOptionsOpen((prev) => !prev)}
+                />
+
+                {showChatOptionsOpen && (
+                  <div className="chatOptionsMenu">
+                    <button
+                      className="chatOptionDelete"
+                      onClick={() => setDeleteChatOpen(true)}
+                    >
+                      <DeleteOutlined className="deleteLogoChatOption" />
+                      <span>Delete chat</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </header>
 
             <section className="chatMessages">
@@ -451,6 +486,45 @@ export default function MessagesPage() {
           />
         </div>
       )}
+
+      <AlertModal
+        open={deleteChatErrorOpen}
+        title="Oops..."
+        message="Something went wrong. Check your connection and try again."
+        buttons={["ok"]}
+        onAction={() => {
+          setDeleteChatErrorOpen(false);
+        }}
+        onClose={() => setDeleteChatErrorOpen(false)}
+      />
+      <AlertModal
+        open={deleteChatSuccessfullyOpen}
+        title="Successfully"
+        message="This chat was successfully deleted."
+        buttons={["ok"]}
+        onAction={() => {
+          setDeleteChatSuccessfullyOpen(false);
+          window.location.reload();
+        }}
+        onClose={() => {
+          setDeleteChatSuccessfullyOpen(false);
+          window.location.reload();
+        }}
+      />
+      <AlertModal
+        open={deleteChatOpen}
+        title="Delete Chat"
+        message="Are you sure you want to delete this chat?"
+        buttons={["cancel", "delete"]}
+        onAction={(action) => {
+          if (action === "delete") {
+            handleDeleteChat();
+          }
+
+          setDeleteChatOpen(false);
+        }}
+        onClose={() => setDeleteChatOpen(false)}
+      />
     </div>
   );
 }

@@ -87,7 +87,7 @@ export default function EditPost({
                 PostImage: Image || undefined,
                 Bio: Description || undefined,
                 Interests: SelectedTags,
-                IsPrivate: isPrivate
+                IsPrivate: isPrivate ? "True" : "False"
             });
 
             if(res.status.isOk === false) {

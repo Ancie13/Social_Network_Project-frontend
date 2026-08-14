@@ -501,3 +501,27 @@ export async function GetChats() {
 
     return dataResponse.data;
 }
+
+
+// /api/chat/{chatId}/delete
+export async function DeleteChat(chatId: string) {
+    const response = await fetch(
+        `${API_URL}/api/chat/${chatId}/delete`,
+        {
+            credentials: "include",
+            method: "DELETE"
+        }
+    );
+
+    const dataResponse = await response.json();
+
+    console.log("delete chat BODY:", dataResponse);
+
+    if (!response.ok) {
+        throw new Error(
+            dataResponse?.message || "Failed to delete chat"
+        );
+    }
+
+    return dataResponse.data;
+}

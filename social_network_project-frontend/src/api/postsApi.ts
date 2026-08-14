@@ -90,6 +90,7 @@ export async function AddPostApi(data: any)
     formData.append("UserId", data.UserId);
     formData.append("Title", data.Title);
     formData.append("Bio", data.Bio);
+    formData.append("IsPrivate", data.IsPrivate);
 
     if (data.PostImage) {
         formData.append("PostImage", data.PostImage);
@@ -328,7 +329,7 @@ export async function EditPostApi({PostId, Title, PostImage, Bio, Interests, IsP
         PostImage?: File | null;
         Bio?: string;
         Interests?: string[];
-        IsPrivate?: boolean;
+        IsPrivate?: string;
     }
 )
 {
@@ -355,7 +356,7 @@ export async function EditPostApi({PostId, Title, PostImage, Bio, Interests, IsP
         });
     }
     if(IsPrivate) {
-        formData.append("IsPrivate", IsPrivate.toString());
+        formData.append("IsPrivate", IsPrivate);
     }
 
 

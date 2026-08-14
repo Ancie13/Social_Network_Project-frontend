@@ -97,7 +97,8 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
             Title: Title,
             PostImage: Image,
             Bio: Description,
-            Interests: SelectedTags
+            Interests: SelectedTags,
+            IsPrivate: Visibility === "public" ? "True" : "False"
         };
 
         try
