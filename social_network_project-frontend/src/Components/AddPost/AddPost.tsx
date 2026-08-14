@@ -15,7 +15,7 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
     const [Title, setTitle] = useState("");
     const [Description, setDescription] = useState("");
     const [SelectedTags, setSelectedTags] = useState<string[]>([]);
-    const [Visibility, setVisibility] = useState("public");
+    const [isPrivate, setIsPrivate] = useState(false);
     const [Image, setImage] = useState(null);
     const [interests, setInterests] = useState<Array<interes>>([]);
     const [loading, setLoading] = useState(true);
@@ -98,7 +98,7 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
             PostImage: Image,
             Bio: Description,
             Interests: SelectedTags,
-            IsPrivate: Visibility === "public" ? "True" : "False"
+            IsPrivate: isPrivate ? "True" :  "False"
         };
 
         try
@@ -131,7 +131,7 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
         setTitle("");
         setDescription("");
         setSelectedTags([]);
-        setVisibility("public");
+        setIsPrivate(false);
         setImage(null);
 
         setErrors({
@@ -256,11 +256,11 @@ export default function AddPost({ open, onClose }: { open: boolean; onClose: () 
                 
 
                 <Radio.Group
-                    value={Visibility}
-                    onChange={(e) => setVisibility(e.target.value)}
+                    value={isPrivate}
+                    onChange={(e) => setIsPrivate(e.target.value)}
                 >
-                    <Radio value="public">Public</Radio>
-                    <Radio value="race">Only my race</Radio>
+                    <Radio value={false}>Public</Radio>
+                    <Radio value={true}>Only my race</Radio>
                 </Radio.Group>
 
                 <div className="createPostBtnContainer">

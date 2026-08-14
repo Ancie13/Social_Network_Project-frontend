@@ -33,8 +33,8 @@ export async function SignUp(data: any)
 
     const dataResponse = await response.json();
     
-    console.log("STATUS:", response.status);
-    console.log("BODY:", dataResponse);
+    // console.log("STATUS:", response.status);
+    // console.log("BODY:", dataResponse);
 
     if(!response.ok)
     {
@@ -127,7 +127,7 @@ export async function GetAdditionalInfo()
 
     const dataResponse = await response.json();
 
-    console.log("BODY:", dataResponse);
+    // console.log("BODY:", dataResponse);
 
     if (!response.ok)
     {
@@ -253,7 +253,7 @@ export async function FollowUser(data: any)
 
     const dataResponse = await response.json();
     
-    console.log("follow BODY:", dataResponse);
+    // console.log("follow BODY:", dataResponse);
 
 
     if (!response.ok)
@@ -277,7 +277,7 @@ export async function GetMe()
 
     const dataResponse = await response.json();
 
-    console.log("me BODY:", dataResponse);
+    // console.log("me BODY:", dataResponse);
 
 
     if (!response.ok)
@@ -328,7 +328,7 @@ export async function DeleteAccount(data: any)
 
     const dataResponse = await response.json();
 
-    console.log("delete BODY:", dataResponse);
+    // console.log("delete BODY:", dataResponse);
 
     if (!response.ok)
     {
@@ -402,8 +402,8 @@ export async function EditProfile({
 
     const dataResponse = await response.json();
     
-    console.log("STATUS:", response.status);
-    console.log("BODY:", dataResponse);
+    // console.log("STATUS:", response.status);
+    // console.log("BODY:", dataResponse);
 
     if(!response.ok)
     {
@@ -432,7 +432,7 @@ export async function GetMessages(
 
     const dataResponse = await response.json();
 
-    console.log("GetMessages BODY:", dataResponse);
+    // console.log("GetMessages BODY:", dataResponse);
 
     if (!response.ok) {
         throw new Error(
@@ -469,7 +469,7 @@ export async function SendMessage(targetUserId: string, text: string)
 
     const dataResponse = await response.json();
 
-    console.log("SendMessage  BODY:", dataResponse);
+    // console.log("SendMessage  BODY:", dataResponse);
 
     if (!response.ok)
     {
@@ -491,7 +491,7 @@ export async function GetChats() {
 
     const dataResponse = await response.json();
 
-    console.log("Get chats BODY:", dataResponse);
+    // console.log("Get chats BODY:", dataResponse);
 
     if (!response.ok) {
         throw new Error(
@@ -523,5 +523,5 @@ export async function DeleteChat(chatId: string) {
         );
     }
 
-    return dataResponse.data;
+    return dataResponse;
 }

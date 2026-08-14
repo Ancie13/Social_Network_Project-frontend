@@ -180,7 +180,7 @@ export default function MessagesPage() {
     };
 
     const messageSent = (message: Message) => {
-      console.log("Message sent:", message);
+      // console.log("Message sent:", message);
 
       if (selectedChat && message.senderId === me?.id) {
         setMessages((prev) => [...prev, message]);
@@ -261,6 +261,10 @@ export default function MessagesPage() {
       chat.user.nickname.toLowerCase().includes(searchText.toLowerCase()) ||
       chat.user.login.toLowerCase().includes(searchText.toLowerCase()),
   );
+
+  useEffect(() => {
+    document.title = "Messages | EtherLink";
+  }, []);
 
   return (
     <div className={`chatPage ${isMobileChatOpen ? "mobileChatOpen" : ""}`}>

@@ -147,14 +147,14 @@ export default function AdditionalInfoPage() {
       );
     } else if (current === 2) {
       return (
-        <>
+        <div className="draggerContainerAddinfo">
           {!data.Avatar && (
             <Dragger
               className="uploadDragger"
               beforeUpload={() => false}
               onChange={(info) => {
-                console.log("File: " + info.file);
-                console.log(info.file);
+                // console.log("File: " + info.file);
+                // console.log(info.file);
 
                 setData((prev) => ({
                   ...prev,
@@ -190,7 +190,7 @@ export default function AdditionalInfoPage() {
               <img src={avatarPreview || ""} className="avatarPreviewAddInfo" />
             </div>
           )}
-        </>
+        </div>
       );
     } else if (current === 3) {
       return (

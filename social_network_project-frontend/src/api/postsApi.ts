@@ -228,7 +228,7 @@ export async function AddComment(PostId: string, Bio: string)
 
     const dataResponse = await response.json();
 
-    console.log("send comm BODY:", dataResponse);
+    // console.log("send comm BODY:", dataResponse);
 
 
     if (!response.ok)
@@ -303,7 +303,7 @@ export async function GetUserPosts(id: string, page = 1, pageSize = 5)
 
     const dataResponse = await response.json();
     
-    console.log("GetUserPosts:", dataResponse);
+    // console.log("GetUserPosts:", dataResponse);
 
     if (!response.ok)
     {
@@ -371,7 +371,7 @@ export async function EditPostApi({PostId, Title, PostImage, Bio, Interests, IsP
 
     const dataResponse = await response.json();
     
-    console.log("BODY EDIT POST:", dataResponse);
+    // console.log("BODY EDIT POST:", dataResponse);
 
     if(!response.ok)
     {
@@ -394,7 +394,7 @@ export async function DeletePost(id: string)
 
     const dataResponse = await response.json();
     
-    console.log("DELETE POST:", dataResponse);
+    // console.log("DELETE POST:", dataResponse);
 
     if (!response.ok)
     {

@@ -401,7 +401,7 @@
 
 .chatMessageText
 {
-    color: var(--text-color);
+    color: white;
 
     font-size: 14px;
 
